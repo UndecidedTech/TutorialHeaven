@@ -12,6 +12,22 @@ const users = [{"_id": "1",
 
 // eslint-disable-next-line new-cap
 const router = express.Router();
+
+const redirectLogin = (req, res, next) => {
+  if (!req.session.userId) {
+    res.redirect("/login");
+  } else {
+    next();
+  }
+};
+
+const redirectHome = (req, res, next) => {
+  if (req.session.userId) {
+    res.redirect("/home");
+  } else {
+    next();
+  }
+};
 // Get POSTS
 router.get("/", (req, res) => {
   res.send("Here");
@@ -40,31 +56,33 @@ router.post("/create", async (req, res) => {
 });
 
 
-/*   router.post("/signin", async (req, res) => {
-    const user = {
-      "password": req.body.password,
-      "username": req.body.username
-      }
-    try {
-      const users = await mongoConnect();
-      const a = await users.findOne({"username": user.username})
-      const status = await bcrypt.compare(user.password,a.password)
-      if (status) {
-        req.session.user = user.username;
-        req.session.save();
-        delete a.password;
-        delete a.email;
-        res.send(a);
-        console.log(req.session);
-      } else {
-        res.status(500).send("Password was incorrect");
-      }
-    } catch(error) {
-      console.error(error);
-     }
- }); */
+/*
+ *   Router.post("/signin", async (req, res) => {
+ * const user = {
+ * "password": req.body.password,
+ * "username": req.body.username
+ * }
+ * try {
+ * const users = await mongoConnect();
+ * const a = await users.findOne({"username": user.username})
+ * const status = await bcrypt.compare(user.password,a.password)
+ * if (status) {
+ * req.session.user = user.username;
+ * req.session.save();
+ * delete a.password;
+ * delete a.email;
+ * res.send(a);
+ * console.log(req.session);
+ * } else {
+ * res.status(500).send("Password was incorrect");
+ * }
+ * } catch(error) {
+ * console.error(error);
+ * }
+ *});
+ */
 
-router.post("/signin", (req, res) => {
+router.post("/signin", redirectHome, (req, res) => {
   const userInput = {
     "password": req.body.password,
     "username": req.body.username
