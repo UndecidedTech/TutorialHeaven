@@ -61,7 +61,6 @@ export default {
         if(data.email.includes("@")){
           const res = await axios.post("http://localhost:5000/api/users/create",data);
           sessionStorage.setItem ('userData', JSON.stringify(res.data));
-
         }
         else{
           alert("Incorrect Email Format")

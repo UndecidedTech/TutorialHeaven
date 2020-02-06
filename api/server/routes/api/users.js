@@ -92,7 +92,7 @@ router.post("/signin", redirectHome, (req, res) => {
       if (user.username === userInput.username) {
         console.log("successful");
         req.session.cookie.secure = false;
-        req.session.some_var = userInput.username;
+        req.session.userId = userInput.username;
         res.send(user);
       }
     });
