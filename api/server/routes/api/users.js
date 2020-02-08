@@ -71,7 +71,7 @@ router.post("/signin", async (req, res) => {
       delete a.password;
       delete a.email;
       req.session.cookie.secure = false;
-      req.session.userId = userInput.username;
+      req.session.userId = user.username;
       res.send(a);
       console.log(req.session);
   } else {
