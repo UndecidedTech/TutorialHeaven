@@ -19,6 +19,7 @@
   <button id="signupButton" @click="createUser()" class="btn btn-lg btn-info btn-block d-none" type="submit">Sign up</button>
   <p id="date" class="mt-5 mb-3 text-muted"> </p>
 </form>
+<p id="date"/>
 </div>
 </template>
 <script>
@@ -49,7 +50,7 @@ export default {
           withCredentials: true
         });
         sessionStorage.setItem ('userData', JSON.stringify(res.data));
-        this.$router.push("/homepage")
+        this.$router.push("/")
       },
       async createUser() {
         var data = {
