@@ -12,9 +12,6 @@
       <li class="nav-item">
         <a @click="goTimeline()" class="nav-link text-white" >Timeline</a>
       </li>
-      <li>
-        <a @click="goSignIn()" class="nav-link text-white" >Login</a>
-      </li>
     </ul>
     <div class="nav-item dropdown">
         <a class="nav-link dropdown-toggle text-white"  id="navbarDropdown" role="button" data-toggle="dropdown">
@@ -49,9 +46,6 @@ export default {
       },
       goProfile(){
         this.$router.push({path: 'profile'})
-      },
-      goSignIn(){
-        this.$router.push({path: 'login'})
       }
   }
 }

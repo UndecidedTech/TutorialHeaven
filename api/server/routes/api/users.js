@@ -1,14 +1,18 @@
 /* eslint-disable strict */
 const express = require("express");
 const mongodb = require("mongodb");
-const {MongoClient} = require("mongodb");
+const {
+  MongoClient
+} = require("mongodb");
 const bcrypt = require("bcrypt");
 const session = require("express-session");
 const url = "mongodb://brainrainAdmin:Bra1nRa1n!@brainraindb:27017";
 
-const users = [{"_id": "1",
+const users = [{
+  "_id": "1",
   "username": "bran",
-  "password": "bran"}];
+  "password": "bran"
+}];
 
 // eslint-disable-next-line new-cap
 const router = express.Router();
@@ -40,47 +44,27 @@ router.post("/create", async (req, res) => {
 
 });
 
-
-/*
- *   Router.post("/signin", async (req, res) => {
- * const user = {
- * "password": req.body.password,
- * "username": req.body.username
- * }
- * try {
- * const users = await mongoConnect();
- * const a = await users.findOne({"username": user.username})
- * const status = await bcrypt.compare(user.password,a.password)
- * if (status) {
- * req.session.user = user.username;
- * req.session.save();
- * delete a.password;
- * delete a.email;
- * res.send(a);
- * console.log(req.session);
- * } else {
- * res.status(500).send("Password was incorrect");
- * }
- * } catch(error) {
- * console.error(error);
- * }
- *});
- */
-
-router.post("/signin", redirectHome, (req, res) => {
-  const userInput = {
+Router.post("/signin", async (req, res) => {
+  const user = {
     "password": req.body.password,
     "username": req.body.username
-  };
+  }
   try {
-    users.find((user) => {
-      if (user.username === userInput.username) {
-        console.log("successful");
-        req.session.cookie.secure = false;
-        req.session.userId = userInput.username;
-        res.send(user);
-      }
-    });
+    const users = await mongoConnect();
+    const a = await users.findOne({
+      "username": user.username
+    })
+    const status = await bcrypt.compare(user.password, a.password)
+    if (status) {
+      req.session.user = user.username;
+      req.session.save();
+      delete a.password;
+      delete a.email;
+      res.send(a);
+      console.log(req.session);
+    } else {
+      res.status(500).send("Password was incorrect");
+    }
   } catch (error) {
     console.error(error);
   }
@@ -125,4 +109,3 @@ async function mongoConnect() {
 // Delete Posts
 
 module.exports = router;
-
