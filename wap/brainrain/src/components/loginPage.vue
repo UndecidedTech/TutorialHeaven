@@ -50,7 +50,7 @@ export default {
           withCredentials: true
         });
         sessionStorage.setItem ('userData', JSON.stringify(res.data));
-        this.$router.push("/homepage")
+        this.$router.push("/")
       },
       async createUser() {
         var data = {

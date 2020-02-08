@@ -4,7 +4,7 @@ const mongodb = require("mongodb");
 const {MongoClient} = require("mongodb");
 const bcrypt = require("bcrypt");
 const session = require("express-session");
-const url = "mongodb://192.168.1.10:27017/SkillSite";
+const url = "mongodb://brainrainAdmin:Bra1nRa1n!@brainraindb:27017";
 
 const users = [{"_id": "1",
   "username": "bran",
@@ -56,50 +56,51 @@ router.post("/create", async (req, res) => {
 });
 
 
-/*
- *   Router.post("/signin", async (req, res) => {
- * const user = {
- * "password": req.body.password,
- * "username": req.body.username
- * }
- * try {
- * const users = await mongoConnect();
- * const a = await users.findOne({"username": user.username})
- * const status = await bcrypt.compare(user.password,a.password)
- * if (status) {
- * req.session.user = user.username;
- * req.session.save();
- * delete a.password;
- * delete a.email;
- * res.send(a);
- * console.log(req.session);
- * } else {
- * res.status(500).send("Password was incorrect");
- * }
- * } catch(error) {
- * console.error(error);
- * }
- *});
- */
-
-router.post("/signin", redirectHome, (req, res) => {
-  const userInput = {
+router.post("/signin", async (req, res) => {
+  const user = {
     "password": req.body.password,
     "username": req.body.username
-  };
-  try {
-    users.find((user) => {
-      if (user.username === userInput.username) {
-        console.log("successful");
-        req.session.cookie.secure = false;
-        req.session.some_var = userInput.username;
-        res.send(user);
-      }
-    });
-  } catch (error) {
-    console.error(error);
   }
-});
+  try {
+    const users = await mongoConnect();
+    const a = await users.findOne({"username": user.username})
+    const status = await bcrypt.compare(user.password,a.password)
+    if (status) {
+      req.session.user = user.username;
+      req.session.save();
+      delete a.password;
+      delete a.email;
+      req.session.cookie.secure = false;
+      req.session.userId = userInput.username;
+      res.send(a);
+      console.log(req.session);
+  } else {
+      res.status(500).send("Password was incorrect");
+  }
+  } catch(error) {
+  console.error(error);
+ }
+ });
+ 
+
+// router.post("/signin", redirectHome, (req, res) => {
+//   const userInput = {
+//     "password": req.body.password,
+//     "username": req.body.username
+//   };
+//   try {
+//     users.find((user) => {
+//       if (user.username === userInput.username) {
+//         console.log("successful");
+//         req.session.cookie.secure = false;
+//         req.session.some_var = userInput.username;
+//         res.send(user);
+//       }
+//     });
+//   } catch (error) {
+//     console.error(error);
+//   }
+// });
 
 
 router.get("/session", (req, res) => {
@@ -134,7 +135,7 @@ async function mongoConnect() {
   const client = await mongodb.MongoClient.connect(url, {
     "useNewUrlParser": true
   });
-  return client.db("SkillSite").collection("Users");
+  return client.db("BrainRain").collection("users");
 }
 
 // Delete Posts
