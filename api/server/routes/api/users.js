@@ -41,51 +41,50 @@ router.post("/create", async (req, res) => {
 });
 
 
-router.post("/signin", async (req, res) => {
-  const user = {
+/*
+ *   Router.post("/signin", async (req, res) => {
+ * const user = {
+ * "password": req.body.password,
+ * "username": req.body.username
+ * }
+ * try {
+ * const users = await mongoConnect();
+ * const a = await users.findOne({"username": user.username})
+ * const status = await bcrypt.compare(user.password,a.password)
+ * if (status) {
+ * req.session.user = user.username;
+ * req.session.save();
+ * delete a.password;
+ * delete a.email;
+ * res.send(a);
+ * console.log(req.session);
+ * } else {
+ * res.status(500).send("Password was incorrect");
+ * }
+ * } catch(error) {
+ * console.error(error);
+ * }
+ *});
+ */
+
+router.post("/signin", redirectHome, (req, res) => {
+  const userInput = {
     "password": req.body.password,
     "username": req.body.username
-  }
+  };
   try {
-    const users = await mongoConnect();
-    const a = await users.findOne({"username": user.username})
-    const status = await bcrypt.compare(user.password,a.password)
-    if (status) {
-      req.session.user = user.username;
-      req.session.save();
-      delete a.password;
-      delete a.email;
-      req.session.cookie.secure = false;
-      req.session.userId = user.username;
-      res.send(a);
-      console.log(req.session);
-  } else {
-      res.status(500).send("Password was incorrect");
+    users.find((user) => {
+      if (user.username === userInput.username) {
+        console.log("successful");
+        req.session.cookie.secure = false;
+        req.session.userId = userInput.username;
+        res.send(user);
+      }
+    });
+  } catch (error) {
+    console.error(error);
   }
-  } catch(error) {
-  console.error(error);
- }
- });
- 
-
-// router.post("/signin", redirectHome, (req, res) => {
-//   const userInput = {
-//     "password": req.body.password,
-//     "username": req.body.username
-//   };
-//   try {
-//     users.find((user) => {
-//       if (user.username === userInput.username) {
-//         console.log("successful");
-//         req.session.cookie.secure = false;
-//         req.session.some_var = userInput.username;
-//         res.send(user);
-//       }
-//     });
-//   } catch (error) {
-//     console.error(error);
-//   }
-// });
+});
 
 
 router.get("/session", (req, res) => {
