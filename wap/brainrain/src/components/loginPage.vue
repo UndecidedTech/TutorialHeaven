@@ -30,10 +30,9 @@ export default {
         
       return {
         signUp: false,
-        user:{
+        user: {
           username: "",
           password: "",
-
       },
       returnData:""
 
