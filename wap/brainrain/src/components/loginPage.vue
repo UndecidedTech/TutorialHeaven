@@ -1,4 +1,3 @@
-/* eslint-disable */
 <template>
 <div class="appBackground pt-1">
     <form class="form-signin">
@@ -49,6 +48,7 @@ export default {
         const res = await axios.post("http://localhost:5000/api/users/signin", data, {
           withCredentials: true
         });
+        console.log(res);
         sessionStorage.setItem ('userData', JSON.stringify(res.data));
         this.$router.push("/")
       },
@@ -59,7 +59,7 @@ export default {
           "password":this.user.password
         };
         if(data.email.includes("@")){
-          const res = await axios.post("http://localhost:5000/api/users/create",data);
+          const res = await axios.post("http://localhost:5000/api/users/create", data);
           sessionStorage.setItem ('userData', JSON.stringify(res.data));
         }
         else{

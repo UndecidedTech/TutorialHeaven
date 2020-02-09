@@ -8,6 +8,7 @@ import loginPage from './components/loginPage'
 import TodoList from './components/TodoList'
 import profile from './components/profile'
 import ganttChart from './components/ganttchart'
+import store from './store'
 Vue.config.productionTip = false;
 
 Vue.use(VueRouter);
@@ -26,5 +27,6 @@ const router = new VueRouter({
 
 new Vue({
   router,
+  store,
   "render": (h) => h(App)
 }).$mount("#app");

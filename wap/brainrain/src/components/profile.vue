@@ -8,7 +8,7 @@
             <div class="row">
               <div class="col-md-6 mb-3">
                 <label for="firstName">First name</label>
-                <input type="text" class="form-control" id="firstName" placeholder="" value="" required>
+                <input  type="text" class="form-control" id="firstName" placeholder="" value="" required>
                 <div class="invalid-feedback">
                   Valid first name is required.
                 </div>
@@ -40,10 +40,25 @@
   </body>
 </template>
 <script>
-
+import axios from "axios"
+axios.defaults.withCredentials = true;
 export default {
   name: "profile",
-  components: {}
+  data: function() {
+    return {
+      user: {}
+    }
+  },
+  methods: {
+    async getUserData() {
+      const res = await axios.get("http://localhost:5000/api/users/profile", {
+        withCredentials: true
+      });
+    }
+  },
+  mounted: function() {
+    this.getUserData()
+  }
 }
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->

@@ -44,23 +44,23 @@ router.post("/create", async (req, res) => {
 
 });
 
-Router.post("/signin", async (req, res) => {
+router.post("/signin", async (req, res) => {
   const user = {
     "password": req.body.password,
     "username": req.body.username
   }
   try {
     const users = await mongoConnect();
-    const a = await users.findOne({
+    const selectedUser = await users.findOne({
       "username": user.username
     })
-    const status = await bcrypt.compare(user.password, a.password)
+    const status = await bcrypt.compare(user.password, selectedUser.password)
     if (status) {
       req.session.user = user.username;
       req.session.save();
-      delete a.password;
-      delete a.email;
-      res.send(a);
+      delete selectedUser.password;
+      delete selectedUser.email;
+      res.send(selectedUser);
       console.log(req.session);
     } else {
       res.status(500).send("Password was incorrect");
@@ -70,10 +70,28 @@ Router.post("/signin", async (req, res) => {
   }
 });
 
+router.get("/profile", async (req, res) => {
+  console.log(req.session);
+  if (!req.session.userId) {
+    res.status(401).send("This user is not authenticated");
+  } else {
+    try {
+      console.log("Entered");
+      const users = await mongoConnect();
+      const selectedUser = await users.findOne({
+        "username": req.session.userId
+      });
+      delete selectedUser.password;
+      res.send(selectedUser);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+})
 
 router.get("/session", (req, res) => {
   console.log(req.session);
-  if (!req.session.user) {
+  if (!req.session.userId) {
     res.status(401).send("This user is not authenticated");
   } else {
     res.status(200).send("This user is authenticated");
