@@ -8,6 +8,7 @@ const bcrypt = require("bcrypt");
 const session = require("express-session");
 const url = "mongodb://brainrainAdmin:Bra1nRa1n!@brainraindb:27017";
 
+
 const users = [{
   "_id": "1",
   "username": "bran",
@@ -44,7 +45,27 @@ router.post("/create", async (req, res) => {
 
 });
 
+
 router.post("/signin", async (req, res) => {
+  console.log("here")
+  const user = {
+    "password": req.body.password,
+    "username": req.body.username
+  }
+
+  try {
+    const selectedUser = users[0];
+    req.session.count += 1;
+    console.log("Here: ", selectedUser);
+    res.send(selectedUser);
+  } catch(error) {
+    console.error(error)
+  }
+})
+
+
+
+/* router.post("/signin", async (req, res) => {
   const user = {
     "password": req.body.password,
     "username": req.body.username
@@ -56,10 +77,11 @@ router.post("/signin", async (req, res) => {
     })
     const status = await bcrypt.compare(user.password, selectedUser.password)
     if (status) {
-      req.session.user = user.username;
-      req.session.save();
-      delete selectedUser.password;
-      delete selectedUser.email;
+      const token = jwt.sign({ username }, jwtKey, {
+        algorithm: "HS256",
+        expiresIn: jwtExpirySeconds
+      })
+      console.log("token: ", token);
       res.send(selectedUser);
       console.log(req.session);
     } else {
@@ -68,7 +90,7 @@ router.post("/signin", async (req, res) => {
   } catch (error) {
     console.error(error);
   }
-});
+}); */
 
 router.get("/profile", async (req, res) => {
   console.log(req.session);
@@ -90,7 +112,9 @@ router.get("/profile", async (req, res) => {
 })
 
 router.get("/session", (req, res) => {
-  console.log(req.session);
+  console.log(req.sessionID);
+  console.log(req.session.count);
+  req.session.count += 1;
   if (!req.session.userId) {
     res.status(401).send("This user is not authenticated");
   } else {
@@ -100,21 +124,11 @@ router.get("/session", (req, res) => {
 
 router.get("/signout", (req, res) => {
   req.session.destroy();
+  console.log(req.sessionID);
+  
   res.send("Session destroyed");
+  
 });
-
-/*
- *Router.get("/", (req, res) => {
- * if(req.session.user){
- *
- * user = await mongoConnect();
- * const a = await users.findOne({"username": user.username})
- * }
- *
- *
- *
- * })
- */
 
 
 async function mongoConnect() {
