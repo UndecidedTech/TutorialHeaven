@@ -13,16 +13,8 @@
         v-model="user.email"
         id="inputEmail"
         type="email"
-        class="form-control d-none"
-        placeholder="Email"
-        required
-        autofocus
-      />
-      <input
-        v-model="user.username"
-        id="inputUsername"
         class="form-control"
-        placeholder="Username"
+        placeholder="Email"
         required
         autofocus
       />
@@ -37,10 +29,6 @@
       <div class="checkbox mb-3">
         <label>
           <input type="checkbox" value="remember-me" /> Remember me
-        </label>
-        <label style="padding-left: 20%">
-          <input @click="selectTrue()" type="checkbox" value="remember-me" />
-          Sign Up
         </label>
       </div>
       <button
@@ -79,20 +67,10 @@ export default {
     };
   },
   methods: {
-    login() {
-      this.$store
-        .dispatch("login", {
-          username: this.username,
-          password: this.password
-        })
-        .then(() => {
-          this.$router.push("/chart");
-        });
-    },
     register() {},
     async loginUser() {
       var data = {
-        username: this.user.username,
+        email: this.user.email,
         password: this.user.password
       };
       const res = await axios.post(
@@ -110,7 +88,6 @@ export default {
     async createUser() {
       var data = {
         email: this.user.email,
-        username: this.user.username,
         password: this.user.password
       };
       if (data.email.includes("@")) {
@@ -132,9 +109,6 @@ export default {
       };
     },
     selectTrue() {
-      const emailDiv = document.getElementById("inputEmail");
-      const buttonDiv = document.getElementById("signupButton");
-      const buttonDiv2 = document.getElementById("signinButton");
       if (this.signUp === true) {
         this.signUp = false;
         emailDiv.classList.add("d-none");
