@@ -8,13 +8,6 @@ const bcrypt = require("bcrypt");
 const session = require("express-session");
 const url = "mongodb://brainrainAdmin:Bra1nRa1n!@brainraindb:27017";
 
-
-const users = [{
-  "_id": "1",
-  "username": "bran",
-  "password": "bran"
-}];
-
 // eslint-disable-next-line new-cap
 const router = express.Router();
 
