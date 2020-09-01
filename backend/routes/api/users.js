@@ -1,14 +1,6 @@
 /* eslint-disable strict */
 const express = require("express");
-const mongodb = require("mongodb");
-const {
-  MongoClient
-} = require("mongodb");
 const bcrypt = require("bcrypt");
-const db_ip = process.env.DB_IP;
-const db_user = process.env.DB_USER;
-const db_pass = process.env.DB_PASS;
-const url = `mongodb://${db_user}:${db_pass}@${db_ip}:27017`;
 
 // eslint-disable-next-line new-cap
 const router = express.Router();
@@ -58,35 +50,6 @@ router.post("/signin", async (req, res) => {
   }
 })
 
-
-
-/* router.post("/signin", async (req, res) => {
-  const user = {
-    "password": req.body.password,
-    "username": req.body.username
-  }
-  try {
-    const users = await mongoConnect();
-    const selectedUser = await users.findOne({
-      "username": user.username
-    })
-    const status = await bcrypt.compare(user.password, selectedUser.password)
-    if (status) {
-      const token = jwt.sign({ username }, jwtKey, {
-        algorithm: "HS256",
-        expiresIn: jwtExpirySeconds
-      })
-      console.log("token: ", token);
-      res.send(selectedUser);
-      console.log(req.session);
-    } else {
-      res.status(500).send("Password was incorrect");
-    }
-  } catch (error) {
-    console.error(error);
-  }
-}); */
-
 router.get("/profile", async (req, res) => {
   console.log(req.session);
   if (!req.session.userId) {
@@ -124,15 +87,5 @@ router.get("/signout", (req, res) => {
   res.send("Session destroyed");
   
 });
-
-
-async function mongoConnect() {
-  const client = await mongodb.MongoClient.connect(url, {
-    "useNewUrlParser": true
-  });
-  return client.db("BrainRain").collection("users");
-}
-
-// Delete Posts
 
 module.exports = router;
