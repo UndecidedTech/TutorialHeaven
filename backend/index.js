@@ -31,7 +31,7 @@ mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true, useFindA
 
 const port = process.env.PORT || 5000;
 
-const users = require("./routes/api/users");
+const users = require("./routes/users");
 
 app.use("/api/users", users);
 
