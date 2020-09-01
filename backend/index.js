@@ -23,7 +23,7 @@ app.use(cookieParser());
 app.use(cors({
     "origin": ["http://localhost:8080"],
     "credentials": true,
-    "methods": ["OPTION", "GET", "POST", "DELETE", "PUT"]
+    "methods": ["OPTIONS", "GET", "POST", "DELETE", "PUT"]
 }));
 
 mongoose.Promise = global.Promise;
