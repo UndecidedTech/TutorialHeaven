@@ -5,8 +5,10 @@ const {
   MongoClient
 } = require("mongodb");
 const bcrypt = require("bcrypt");
-const session = require("express-session");
-const url = "mongodb://brainrainAdmin:Bra1nRa1n!@brainraindb:27017";
+const db_ip = process.env.DB_IP;
+const db_user = process.env.DB_USER;
+const db_pass = process.env.DB_PASS;
+const url = `mongodb://${db_user}:${db_pass}@${db_ip}:27017`;
 
 // eslint-disable-next-line new-cap
 const router = express.Router();
