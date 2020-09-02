@@ -1,7 +1,7 @@
 <template>
 <header>
  <nav class="navbar navbar-expand-lg navbar-light bg-dark">
-  <a class="navbar-brand text-white mb-0 h1">SkillSite</a>
+  <a class="navbar-brand text-white mb-0 h1">TutorialHeaven</a>
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto text-white">
       <li class="nav-item active">

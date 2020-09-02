@@ -1,5 +1,5 @@
 {
-  "name": "brainrain",
+  "name": "tutorialheaven",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,7 +9,7 @@
   "dependencies": {
     "axios": "^0.19.2",
     "bootstrap": "^4.4.1",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.1",
     "node-sass": "^4.13.1",
     "popper.js": "^1.16.1",
     "sass-loader": "^8.0.2",
