@@ -11,10 +11,10 @@ const UsersController = require("../controllers/users");
 const router = express.Router();
 
 router.route("/signup")
-  .post(passportJWT, UsersController.signUp);
+  .post(UsersController.signUp);
 
 router.route("/signin")
-  .post(UsersController.signUp);
+  .post(passport.authenticate("local", {session: false}), UsersController.signIn);
 
 
 
