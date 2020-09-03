@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Router from "vue-router";
-import homepage from './components/homepage.vue'
+import homePage from './components/homePage.vue'
 import loginPage from './components/loginPage'
 import TodoList from './components/TodoList'
 import profile from './components/profile'
@@ -9,7 +9,7 @@ import ganttChart from './components/ganttchart'
 Vue.use(Router);
 
 const routes = [
-  { path:"/", component: homepage},
+  { path:"/", component: homePage},
   { path: "/login", component: loginPage},
   { path: "/timeline", component: TodoList},
   { path: "/profile", component: profile},

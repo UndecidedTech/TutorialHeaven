@@ -9,7 +9,7 @@ const mongoose = require("mongoose");
 const db_ip = process.env.DB_IP;
 const db_user = process.env.DB_USER;
 const db_pass = process.env.DB_PASS;
-const url = `mongodb://${db_user}:${db_pass}@${db_ip}:27017`;
+const url = `mongodb://${db_user}:${db_pass}@${db_ip}:27017/?authSource=admin`;
 
 // Express app instantiation
 const app = express();
@@ -31,7 +31,7 @@ mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true, useFindA
 
 const port = process.env.PORT || 5000;
 
-const users = require("./routes/api/users");
+const users = require("./routes/users");
 
 app.use("/api/users", users);
 
