@@ -39,15 +39,15 @@
             <form>
               <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" id="email" class="form-control" placeholder="example@email.com">
+                <input v-model="user.email" type="email" id="email" class="form-control" placeholder="example@email.com">
               </div>
               <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" class="form-control" id="password" placeholder="password">
+                <input v-model="user.password" type="password" class="form-control" id="password" placeholder="password">
 
               </div>
             </form>
-            <button class="btn btn-success">Sign In</button>
+            <button @click="signIn()" class="btn btn-success">Sign In</button>
           </div>
       </div>
     </div>
@@ -56,6 +56,7 @@
 </div>
 </template>
 <script>
+import axios from "axios";
 export default {
   name: "homePage",
   components: {},
@@ -69,7 +70,12 @@ export default {
   },
   methods: {
     signIn() {
-
+      axios.post("http://localhost:5000/api/users/signin", {
+        data: {
+          email: this.user.email,
+          password: this.user.password
+        }
+      })
     }
     
   }
