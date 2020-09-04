@@ -69,13 +69,16 @@ export default {
     }
   },
   methods: {
-    signIn() {
-      axios.post("http://localhost:5000/api/users/signin", {
-        data: {
+    async signIn() {
+      const res = await axios.post("http://localhost:3000/api/users/signin",
+        {
           email: this.user.email,
           password: this.user.password
         }
-      })
+      )
+      if(res.status === 200) {
+        sessionStorage.setItem("userData", JSON.stringify(res.data));
+      }
     }
     
   }

@@ -38,7 +38,6 @@ passport.use(new LocalStrategy({
         email
     });
     //if not, handle it
-
     if (!user){
         return done(null, false);
     }

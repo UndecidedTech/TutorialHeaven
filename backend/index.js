@@ -21,9 +21,9 @@ app.use(express.json());
 app.use(express.urlencoded());
 app.use(cookieParser());
 app.use(cors({
-    "origin": ["http://localhost:8080"],
+    "origin": ["http://localhost:8081"],
     "credentials": true,
-    "methods": ["OPTIONS", "GET", "POST", "DELETE", "PUT"]
+    "methods": ["OPTIONS", "GET", "POST", "PUT"]
 }));
 
 mongoose.Promise = global.Promise;
@@ -35,5 +35,5 @@ const users = require("./routes/users");
 
 app.use("/api/users", users);
 
-app.listen(port, () => console.log(`server started on ${port}`));
+app.listen(port, () => console.log(`Server started on ${port}`));
 
