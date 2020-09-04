@@ -23,7 +23,7 @@ app.use(cookieParser());
 app.use(cors({
     "origin": ["http://localhost:8080"],
     "credentials": true,
-    "methods": ["OPTION", "GET", "POST", "DELETE", "PUT"]
+    "methods": ["OPTIONS", "GET", "POST", "DELETE", "PUT"]
 }));
 
 mongoose.Promise = global.Promise;
@@ -31,7 +31,7 @@ mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true, useFindA
 
 const port = process.env.PORT || 5000;
 
-const users = require("./routes/api/users");
+const users = require("./routes/users");
 
 app.use("/api/users", users);
 
