@@ -14,10 +14,10 @@
       </li>
     </ul>
     <div class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle text-white"  id="navbarDropdown" role="button" data-toggle="dropdown">
-          <i class="fas fa-user"/>
-        </a>
-        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-user"/>
+        </button>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
           <a class="dropdown-item" @click="goProfile()"><i class="fas fa-user"/> Profile Settings</a>
           <a class="dropdown-item" >My Timelines</a>
           <div class="dropdown-divider"></div>
@@ -52,7 +52,6 @@ export default {
 </script>
 
 <style scoped lang="css" >
-body {margin: 0;}
 .bg-nav {background-color:#24292e;}
 
 </style>

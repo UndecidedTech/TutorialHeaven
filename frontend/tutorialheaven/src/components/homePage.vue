@@ -35,7 +35,7 @@
       <div class="card bg-submit text-white">
         <img class="card-img-top" src="../assets/brain.png" alt="Card image cap">
           <div class="card-body">
-            <h4 class="card-title font-weight-bold">Sign Up </h4>
+            <h4 class="card-title font-weight-bold">Sign In </h4>
             <form>
               <div class="form-group">
                 <label for="email">Email</label>
@@ -47,7 +47,7 @@
 
               </div>
             </form>
-            <button class="btn btn-success">Sign Up for TutorailHeaven</button>
+            <button class="btn btn-success">Sign In</button>
           </div>
       </div>
     </div>
@@ -59,7 +59,18 @@
 export default {
   name: "homePage",
   components: {},
+  data(){
+    return {
+      user: {
+        email: "",
+        password: ""
+      }
+    }
+  },
   methods: {
+    signIn() {
+
+    }
     
   }
 }
