@@ -1,6 +1,6 @@
 <template>
 <header>
- <nav class="navbar navbar-expand-lg navbar-light bg-dark">
+ <nav class="navbar navbar-expand-lg navbar-light bg-nav">
   <a class="navbar-brand text-white mb-0 h1">TutorialHeaven</a>
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto text-white">
@@ -39,7 +39,7 @@ export default {
         this.$router.push({path: 'login'})
       },
       goHome(){
-        this.$router.push({path: 'homepage'})
+        this.$router.push({path: '/'})
       },
       goTimeline(){
         this.$router.push({path: 'timeline'})
@@ -51,7 +51,8 @@ export default {
 }
 </script>
 
-<style lang="css" >
+<style scoped lang="css" >
 body {margin: 0;}
+.bg-nav {background-color:#24292e;}
 
 </style>
