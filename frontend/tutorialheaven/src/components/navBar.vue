@@ -12,6 +12,9 @@
       <li class="nav-item">
         <a @click="goTimeline()" class="nav-link text-white" >Timeline</a>
       </li>
+      <li class="nav-item">
+        <a @click="goSignUp()" class="nav-link text-white" >SignUp</a>
+      </li>
     </ul>
     <div class="nav-item dropdown">
         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -46,6 +49,9 @@ export default {
       },
       goProfile(){
         this.$router.push({path: 'profile'})
+      },
+      goDashboard(){
+        this.$router.push({path: "/dashboard"});
       }
   }
 }
