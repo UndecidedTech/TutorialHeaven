@@ -40,6 +40,7 @@ import axios from "axios";
         data() {
             return {
                 user: {
+
                     password: "",
                     firstname: "",
                     lastname: ""
@@ -72,16 +73,15 @@ import axios from "axios";
 
 <style scoped lang="css">
 .flex-container {
-  height: 600px;
   display: flex;
   justify-content: space-evenly; 
 
+
 }
 .flexbox-item {
-  width: 300px;
+  width: 35%;
   padding: 10px;
   overflow: hidden;
-  width: 50%;
   max-height: 600px;
   align-self: center;
 }
