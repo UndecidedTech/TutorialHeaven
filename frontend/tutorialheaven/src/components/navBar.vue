@@ -12,10 +12,8 @@
       <li class="nav-item">
         <a @click="goTimeline()" class="nav-link text-white" >Timeline</a>
       </li>
-      <li class="nav-item">
-        <a @click="goSignUp()" class="nav-link text-white" >SignUp</a>
-      </li>
     </ul>
+    <button @click="goSignup()" class="signupBtn btn btn-success">Sign Up</button>
     <div class="nav-item dropdown">
         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="fas fa-user"/>
@@ -50,8 +48,8 @@ export default {
       goProfile(){
         this.$router.push({path: 'profile'})
       },
-      goDashboard(){
-        this.$router.push({path: "/dashboard"});
+      goSignup(){
+        this.$router.push({path: "/signup"});
       }
   }
 }
@@ -59,5 +57,8 @@ export default {
 
 <style scoped lang="css" >
 .bg-nav {background-color:#24292e;}
+.signupBtn{
+  margin-right: 10px;
+}
 
 </style>

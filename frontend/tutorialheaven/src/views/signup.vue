@@ -1,10 +1,10 @@
 <template>
-    <div>
+    <div class="appBackground">
       <div class="flex-container">
         <div class="flexbox-item">
           <div class="card bg-submit">
             <div class="card-body">
-              <h4 class="card-title font-weight-bold">Sign In </h4>
+              <h4 class="card-title font-weight-bold">Sign Up </h4>
               <form>
                  <div class="form-group">
                   <label for="fName">First Name</label>
@@ -40,7 +40,6 @@ import axios from "axios";
         data() {
             return {
                 user: {
-                    username: "",
                     password: "",
                     firstname: "",
                     lastname: ""
@@ -49,9 +48,7 @@ import axios from "axios";
         },
         methods: {
           checkUserValue() {
-            if (!this.user.username)
-              return false;
-            else if (!this.user.password)
+            if (!this.user.password)
               return false;
             else if (!this.user.firstname)
               return false
