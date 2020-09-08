@@ -1,4 +1,4 @@
-# Tutorial Heaven
+# TutorialHeaven
 
 ## Project setup
 ```
