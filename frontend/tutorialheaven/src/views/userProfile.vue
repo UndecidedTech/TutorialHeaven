@@ -1,8 +1,7 @@
 <template>
   <body>
-    <div class="container">
-      <div class="row">
-        <div class="col-md-8 order-md-1">
+    <div class="flex-container">
+      <div class="flexbox-item">   
           <h4 class="mb-3" style="text-align: center">Profile Information</h4>
           <form class="needs-validation" novalidate>
             <div class="row">
@@ -21,20 +20,11 @@
                 </div>
               </div>
             </div>
-
-            <div class="mb-3">
-              <label for="username">Username</label>
-              <div class="input-group">
-                <input type="text" class="form-control" id="username" placeholder="Username" required>
-              </div>
-            </div>
-
             <div class="mb-3">
               <label for="email">Email </label>
               <input type="email" class="form-control" id="email" placeholder="you@example.com">
             </div>
           </form>
-        </div>
       </div>
     </div>
   </body>
@@ -43,7 +33,7 @@
 import axios from "axios"
 axios.defaults.withCredentials = true;
 export default {
-  name: "profile",
+  name: "userProfile",
   data: function() {
     return {
       user: {}
@@ -62,16 +52,16 @@ export default {
 }
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss">
-.container {
-  max-width: 960px;
+<style scoped lang="css">
+.flex-container {
+  display: flex;
+  justify-content: space-evenly; 
 }
-
-.border-top { border-top: 1px solid #e5e5e5; }
-.border-bottom { border-bottom: 1px solid #e5e5e5; }
-.border-top-gray { border-top-color: #adb5bd; }
-
-.box-shadow { box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05); }
-
-.lh-condensed { line-height: 1.25; }
+.flexbox-item {
+  width: 35%;
+  padding: 10px;
+  overflow: hidden;
+  max-height: 600px;
+  align-self: center;
+}
 </style>

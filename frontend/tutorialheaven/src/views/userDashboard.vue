@@ -1,15 +1,15 @@
 <template>
     <div class="appBackground">
-            test
+        this is a user dashboard
     </div>
 </template>
 
 <script>
     export default {
-        name: "dashboard"
+        name: "userDashboard"
     }
 </script>
 
-<style lang="scss" scoped>
+<style lang="css" scoped>
 
 </style>

@@ -36,7 +36,7 @@
 <script>
 import axios from "axios";
     export default {
-        name: "signUp",
+        name: "userSignUp",
         data() {
             return {
                 user: {

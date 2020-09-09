@@ -39,7 +39,7 @@
             <form>
               <div class="form-group">
                 <label for="email">Email</label>
-                <input v-model="user.email" type="email" id="email" class="form-control" placeholder="example@email.com">
+                <input v-model="user.email" type="email" id="email" class="form-control" placeholder="you@example.com">
               </div>
               <div class="form-group">
                 <label for="password">Password</label>
@@ -78,6 +78,7 @@ export default {
       )
       if(res.status === 200) {
         sessionStorage.setItem("userData", JSON.stringify(res.data));
+        this.$router.push({path: "userDashboard"});
       }
     }
     

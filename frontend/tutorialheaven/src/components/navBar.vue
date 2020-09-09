@@ -5,22 +5,19 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto text-white">
       <li class="nav-item active">
-        <a @click="goHome()" class="nav-link text-white" >
+        <button @click="goHome()" class="btn nav-link text-white" >
           <i class="fas fa-home"/>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a @click="goTimeline()" class="nav-link text-white" >Timeline</a>
+        </button>
       </li>
     </ul>
-    <button @click="goSignup()" class="signupBtn btn btn-success">Sign Up</button>
-    <div class="nav-item dropdown">
+    <button @click="goSignUp()" class="signupBtn btn btn-success">Sign Up</button>
+    <div id="userProfile" class="nav-item dropdown d-none">
         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="fas fa-user"/>
+           <!-- <i class="fas fa-user"/> -->
+           <img id="userAvatar" class="rounded-circle" src="" width="30" height="25">
         </button>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
           <a class="dropdown-item" @click="goProfile()"><i class="fas fa-user"/> Profile Settings</a>
-          <a class="dropdown-item" >My Timelines</a>
           <div class="dropdown-divider"></div>
           <a @click="signOut()" class="dropdown-item"><i class="fas fa-sign-out-alt"/> Logout</a>
         </div>
@@ -34,23 +31,31 @@
 import axios from "axios"
 export default {
   name: 'navBar',
+  data() {
+    return{
+  }
+  },
   methods: {
-      signOut(){
-        axios.get("http://localhost:5000/api/users/signout")
-        this.$router.push({path: 'login'})
-      },
       goHome(){
         this.$router.push({path: '/'})
       },
-      goTimeline(){
-        this.$router.push({path: 'timeline'})
-      },
       goProfile(){
-        this.$router.push({path: 'profile'})
+        this.$router.push({path: 'userProfile'})
       },
-      goSignup(){
-        this.$router.push({path: "/signup"});
-      }
+      goSignUp(){
+        this.$router.push({path: "userSignUp"});
+      },
+      
+  },
+  mounted: () => {
+    let userData = JSON.parse(sessionStorage.getItem('userData'));
+    document.getElementById('userAvatar').src = userData.avi;
+    document.getElementById('userProfile').classList.remove('d-none');
+  },
+  updated: () => {
+    let userData = JSON.parse(sessionStorage.getItem('userData'));
+    document.getElementById('userAvatar').src = userData.avi;
+    document.getElementById('userProfile').classList.remove('d-none');
   }
 }
 </script>

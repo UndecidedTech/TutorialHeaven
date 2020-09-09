@@ -1,26 +1,24 @@
 import Vue from "vue";
 import Router from "vue-router";
-import homePage from './components/homePage.vue';
-import loginPage from './components/loginPage';
-import TodoList from './components/TodoList';
-import profile from './components/profile';
-import ganttChart from './components/ganttchart';
-import signUp from './views/signup';
-import dashboard from './views/dashboard';
+import homePage from './views/homePage.vue';
+import userProfile from './views/userProfile';
+import userSignUp from './views/userSignUp';
+import userDashboard from './views/userDashboard';
+import notFound from './views/404'
 
 
 Vue.use(Router);
 
 const routes = [
+
   { path:"/", component: homePage},
-  { path: "/login", component: loginPage},
-  { path: "/timeline", component: TodoList},
-  { path: "/profile", component: profile},
-  { path: "/chart", component: ganttChart},
-  { path: "/signup", component: signUp},
-  { path: "/dashboard", component: dashboard}
+  { path: "/userProfile", component: userProfile},
+  { path: "/userSignUp", component: userSignUp},
+  { path: "/userDashboard", component: userDashboard},
+  { path: "*", component: notFound}
 ];
 
 export default new Router({
+    mode: 'history',
     routes
   })
