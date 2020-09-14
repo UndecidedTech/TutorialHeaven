@@ -2,22 +2,22 @@
     <div class="appBackground">
         <div class="flex-container">
             <div class="dashboard-sidebar">
-                <h1>Classes</h1>
-                <hr/>
-                <a href="">&#129488 Class 1</a><br/>
-                <a href="">&#129488 Class 2</a><br/>
-               
-
+                <h1 >Courses</h1>
+                <div v-for="(course, index) in this.courses" :key="index">
+                    <p><i class="fas fa-book"></i>{{ course.name }}</p>
+                </div>
             </div>
             <div class="notification-item">
                 <h1 style="padding-left: 10px; padding-top: 30px;">Notifications</h1>
                 <hr/>
                 <notification class="card align-self-center" style="width: auto;margin: 20px;">
+                  <div v-for="(notif, index) in notifications" :key="index">
                     <div class="card-body">
-                        <a class="card-title ">Class Name</a>
+                        <a class="card-title ">{{ notif.title }}</a>
                         <hr/>
-                        <p class="card-text">notif contnt</p>
+                        <p class="card-text">{{notif.content}}</p>
                     </div> 
+                  </div>
                 </notification>
             </div>
         </div>
@@ -26,7 +26,16 @@
 
 <script>
     export default {
-        name: "userDashboard"
+        name: "userDashboard",
+        data() {
+            return {
+                courses: [],
+                notifications: [{
+                    "title": "Baseline results",
+                    "content": "You are ready to start the javascript lessons!"
+                }]
+            }
+        }
     }
 </script>
 

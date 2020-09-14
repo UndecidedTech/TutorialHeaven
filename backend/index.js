@@ -29,7 +29,7 @@ app.use(cors({
 mongoose.Promise = global.Promise;
 mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false});
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 3000;
 
 const users = require("./routes/users");
 

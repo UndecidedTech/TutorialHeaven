@@ -59,8 +59,8 @@ export default {
   data: function() {
     return {
       signUp: false,
-      user: {
         username: "",
+      user: {
         password: ""
       },
       returnData: ""
