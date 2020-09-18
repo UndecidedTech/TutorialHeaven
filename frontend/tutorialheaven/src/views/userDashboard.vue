@@ -10,7 +10,7 @@
             <div class="notification-item">
                 <h1 style="padding-left: 10px; padding-top: 30px;">Notifications</h1>
                 <hr/>
-                <notification class="card align-self-center" style="width: auto;margin: 20px;">
+                <section class="card align-self-center" style="width: auto;margin: 20px;">
                   <div v-for="(notif, index) in notifications" :key="index">
                     <div class="card-body">
                         <a class="card-title ">{{ notif.title }}</a>
@@ -18,7 +18,7 @@
                         <p class="card-text">{{notif.content}}</p>
                     </div> 
                   </div>
-                </notification>
+                </section>
             </div>
         </div>
     </div>

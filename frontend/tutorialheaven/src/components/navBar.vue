@@ -9,12 +9,12 @@
           <i class="fas fa-home"/>
         </button>
       </li>
-    </ul>
-    <button @click="goSignUp()" class="signupBtn btn btn-success">Sign Up</button>
-    <div v-if="userData" id="userProfile" class="nav-item dropdown">
+    </ul> 
+    <button v-if="!authenticated" @click="goSignUp()" class="signupBtn btn btn-success">Sign Up</button>
+    <div v-if="user" id="userProfile" class="nav-item dropdown">
         <a class="dropdown-toggle text-white" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
            <!-- <i class="fas fa-user"/> -->
-           <img :src="userData.avi" id="userAvatar" class="rounded-circle" width="25" height="25">
+           <img :src="user.avi" id="userAvatar" class="rounded-circle" width="35" height="31">
            <span class="caret"></span>
         </a>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
@@ -30,11 +30,11 @@
 
 <script>
 import axios from "axios"
+import { mapGetters} from 'vuex'
 export default {
   name: 'navBar',
   data() {
     return {
-      userData: JSON.parse(sessionStorage.getItem("userData"))
     }
   },
   methods: {
@@ -47,7 +47,14 @@ export default {
       goSignUp(){
         this.$router.push({path: "userSignUp"});
       }
+  },
+  computed: {
+    ...mapGetters({
+      authenticated: 'auth/authenticated',
+      user: 'auth/user'
+    })
   }
+ 
 }
 </script>
 

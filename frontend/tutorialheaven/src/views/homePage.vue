@@ -43,11 +43,11 @@
               </div>
               <div class="form-group">
                 <label for="password">Password</label>
-                <input v-model="user.password" type="password" class="form-control" id="password" placeholder="password">
+                <input @keyup.enter="submit()" v-model="user.password" type="password" class="form-control" id="password" placeholder="password">
 
               </div>
             </form>
-            <button @click="signIn()" class="btn btn-success">Sign In</button>
+            <button @click="submit()" class="btn btn-success">Sign In</button>
           </div>
       </div>
     </div>
@@ -56,6 +56,7 @@
 </div>
 </template>
 <script>
+import { mapActions } from 'vuex'
 import axios from "axios";
 export default {
   name: "homePage",
@@ -69,17 +70,27 @@ export default {
     }
   },
   methods: {
-    async signIn() {
-      const res = await axios.post("http://localhost:3000/api/users/signin",
-        {
-          email: this.user.email,
-          password: this.user.password
-        }
-      )
-      if(res.status === 200) {
-        sessionStorage.setItem("userData", JSON.stringify(res.data));
-        this.$router.push({path: "userDashboard"});
-      }
+    ...mapActions({
+      signIn: 'auth/signIn'
+    }),
+    // async signIn() {
+    //   const res = await axios.post("http://localhost:3000/api/users/signin",
+    //     {
+    //       email: this.user.email,
+    //       password: this.user.password
+    //     }
+    //   )
+    //   if(res.status === 200) {
+    //     sessionStorage.setItem("userData", JSON.stringify(res.data));
+    //     this.$router.push({path: "userDashboard"});
+    //   }
+    // }
+    submit() {
+      this.signIn(this.user).then(() => {
+        this.$router.push({path: '/userDashboard'})
+      }).catch(() => {
+        alert('Failed to login')
+      })
     }
     
   }
