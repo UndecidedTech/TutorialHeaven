@@ -52,80 +52,80 @@
   </div>
 </template>
 <script>
-import axios from "axios";
-axios.defaults.withCredentials = true;
+import axios from 'axios'
+axios.defaults.withCredentials = true
 export default {
-  name: "loginPage",
-  data: function() {
+  name: 'loginPage',
+  data: function () {
     return {
       signUp: false,
-        username: "",
+      username: '',
       user: {
-        password: ""
+        password: ''
       },
-      returnData: ""
-    };
+      returnData: ''
+    }
   },
   methods: {
-    register() {},
-    async loginUser() {
+    register () {},
+    async loginUser () {
       var data = {
         email: this.user.email,
         password: this.user.password
-      };
+      }
       const res = await axios.post(
-        "http://localhost:5000/api/users/signin",
+        'http://localhost:5000/api/users/signin',
         data,
         {
           withCredentials: true
         }
-      );
+      )
       if (res.status === 200) {
-        sessionStorage.setItem("userData", JSON.stringify(res.data));
-        this.$router.push("/");
+        sessionStorage.setItem('userData', JSON.stringify(res.data))
+        this.$router.push('/')
       }
     },
-    async createUser() {
+    async createUser () {
       var data = {
         email: this.user.email,
         password: this.user.password
-      };
-      if (data.email.includes("@")) {
+      }
+      if (data.email.includes('@')) {
         const res = await axios.post(
-          "http://localhost:5000/api/users/create",
+          'http://localhost:5000/api/users/create',
           data
-        );
-        sessionStorage.setItem("userData", JSON.stringify(res.data));
+        )
+        sessionStorage.setItem('userData', JSON.stringify(res.data))
       } else {
-        console.log("Incorrect Email Format");
+        console.log('Incorrect Email Format')
       }
     },
 
-    getDate() {
-      window.onload = function() {
-        const today = new Date();
-        var a = document.getElementById("date");
-        a.innerText = `Property of BRAN ALEX INCORPORATED ${today.getFullYear()}`;
-      };
+    getDate () {
+      window.onload = function () {
+        const today = new Date()
+        var a = document.getElementById('date')
+        a.innerText = `Property of BRAN ALEX INCORPORATED ${today.getFullYear()}`
+      }
     },
-    selectTrue() {
+    selectTrue () {
       if (this.signUp === true) {
-        this.signUp = false;
-        emailDiv.classList.add("d-none");
-        buttonDiv2.classList.remove("d-none");
-        buttonDiv.classList.add("d-none");
+        this.signUp = false
+        emailDiv.classList.add('d-none')
+        buttonDiv2.classList.remove('d-none')
+        buttonDiv.classList.add('d-none')
       } else {
-        this.signUp = true;
-        emailDiv.classList.remove("d-none");
-        buttonDiv.classList.remove("d-none");
-        buttonDiv2.classList.add("d-none");
+        this.signUp = true
+        emailDiv.classList.remove('d-none')
+        buttonDiv.classList.remove('d-none')
+        buttonDiv2.classList.add('d-none')
       }
     }
   },
-  created: function() {
-    this.getDate();
+  created: function () {
+    this.getDate()
   }
-};
+}
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">

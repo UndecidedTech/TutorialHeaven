@@ -9,7 +9,7 @@
           <i class="fas fa-home"/>
         </button>
       </li>
-    </ul> 
+    </ul>
     <button v-if="!authenticated" @click="goSignUp()" class="signupBtn btn btn-success">Sign Up</button>
     <div v-if="user" id="userProfile" class="nav-item dropdown">
         <a class="dropdown-toggle text-white" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -29,24 +29,24 @@
 </template>
 
 <script>
-import axios from "axios"
-import { mapGetters} from 'vuex'
+// import axios from 'axios'
+import { mapGetters } from 'vuex'
 export default {
   name: 'navBar',
-  data() {
+  data () {
     return {
     }
   },
   methods: {
-      goHome(){
-        this.$router.push({path: '/'})
-      },
-      goProfile(){
-        this.$router.push({path: 'userProfile'})
-      },
-      goSignUp(){
-        this.$router.push({path: "userSignUp"});
-      }
+    goHome () {
+      this.$router.push({ path: '/' })
+    },
+    goProfile () {
+      this.$router.push({ path: 'userProfile' })
+    },
+    goSignUp () {
+      this.$router.push({ path: 'userSignUp' })
+    }
   },
   computed: {
     ...mapGetters({
@@ -54,7 +54,7 @@ export default {
       user: 'auth/user'
     })
   }
- 
+
 }
 </script>
 

@@ -5,7 +5,7 @@
 </template>
 <script>
 export default {
-  name: "notFound"
+  name: 'notFound'
 }
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->

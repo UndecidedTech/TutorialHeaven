@@ -9,9 +9,9 @@
 import navBar from './components/navBar'
 export default {
   name: 'app',
-  components: { 
+  components: {
     navBar
-    }
+  }
 }
 </script>
 

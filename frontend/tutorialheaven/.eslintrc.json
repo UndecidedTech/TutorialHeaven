@@ -1,0 +1,21 @@
+{
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es2021": true,
+    "node": true
+  },
+  "extends": [
+    "plugin:vue/essential",
+    "standard",
+    "@vue/standard"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 2020
+  },
+  "plugins": [
+    "vue"
+  ],
+  "rules": {},
+  "root": true
+}

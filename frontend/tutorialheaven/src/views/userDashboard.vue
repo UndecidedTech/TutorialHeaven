@@ -16,7 +16,7 @@
                         <a class="card-title ">{{ notif.title }}</a>
                         <hr/>
                         <p class="card-text">{{notif.content}}</p>
-                    </div> 
+                    </div>
                   </div>
                 </section>
             </div>
@@ -25,18 +25,18 @@
 </template>
 
 <script>
-    export default {
-        name: "userDashboard",
-        data() {
-            return {
-                courses: [],
-                notifications: [{
-                    "title": "Baseline results",
-                    "content": "You are ready to start the javascript lessons!"
-                }]
-            }
-        }
+export default {
+  name: 'userDashboard',
+  data () {
+    return {
+      courses: [],
+      notifications: [{
+        title: 'Baseline results',
+        content: 'You are ready to start the javascript lessons!'
+      }]
     }
+  }
+}
 </script>
 
 <style scoped lang="css">

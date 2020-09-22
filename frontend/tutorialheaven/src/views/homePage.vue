@@ -57,15 +57,15 @@
 </template>
 <script>
 import { mapActions } from 'vuex'
-import axios from "axios";
+// import axios from 'axios'
 export default {
-  name: "homePage",
+  name: 'homePage',
   components: {},
-  data(){
+  data () {
     return {
       user: {
-        email: "",
-        password: ""
+        email: '',
+        password: ''
       }
     }
   },
@@ -85,14 +85,14 @@ export default {
     //     this.$router.push({path: "userDashboard"});
     //   }
     // }
-    submit() {
+    submit () {
       this.signIn(this.user).then(() => {
-        this.$router.push({path: '/userDashboard'})
+        this.$router.push({ path: '/userDashboard' })
       }).catch(() => {
         alert('Failed to login')
       })
     }
-    
+
   }
 }
 </script>
@@ -104,7 +104,7 @@ export default {
   background-position: center;
   height: 600px;
   display: flex;
-  justify-content: space-evenly; 
+  justify-content: space-evenly;
 
 }
 .flexbox-item {

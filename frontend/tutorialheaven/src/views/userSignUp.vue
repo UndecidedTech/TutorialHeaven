@@ -34,48 +34,40 @@
 </template>
 
 <script>
-import axios from "axios";
-    export default {
-        name: "userSignUp",
-        data() {
-            return {
-                user: {
+import axios from 'axios'
+export default {
+  name: 'userSignUp',
+  data () {
+    return {
+      user: {
 
-                    password: "",
-                    firstname: "",
-                    lastname: ""
-                }
-            }
-        },
-        methods: {
-          checkUserValue() {
-            if (!this.user.password)
-              return false;
-            else if (!this.user.firstname)
-              return false
-            else if (!this.user.lastname)
-              return false;
-            else
-              return true;  
-          },
-          async signUp() {
-            if (this.checkUserValue()){
-              const res = await axios.post("http://localhost:3000/api/users/signup", {...this.user});
-              if (res.status === 200){
-                sessionStorage.setItem("userData", JSON.stringify(res.data));
-                this.$router.push("/dashboard");
-              }
-            }
-          }
-        }
+        password: '',
+        firstname: '',
+        lastname: ''
+      }
     }
+  },
+  methods: {
+    checkUserValue () {
+      if (!this.user.password) { return false } else if (!this.user.firstname) { return false } else if (!this.user.lastname) { return false } else { return true }
+    },
+    async signUp () {
+      if (this.checkUserValue()) {
+        const res = await axios.post('http://localhost:3000/api/users/signup', { ...this.user })
+        if (res.status === 200) {
+          sessionStorage.setItem('userData', JSON.stringify(res.data))
+          this.$router.push('/dashboard')
+        }
+      }
+    }
+  }
+}
 </script>
 
 <style scoped lang="css">
 .flex-container {
   display: flex;
-  justify-content: space-evenly; 
-
+  justify-content: space-evenly;
 
 }
 .flexbox-item {

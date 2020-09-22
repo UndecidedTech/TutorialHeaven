@@ -1,7 +1,7 @@
 <template>
   <body>
     <div class="flex-container">
-      <div class="flexbox-item">   
+      <div class="flexbox-item">
           <h4 class="mb-3" style="text-align: center">Profile Information</h4>
           <form class="needs-validation" novalidate>
             <div class="row">
@@ -30,18 +30,17 @@
   </body>
 </template>
 <script>
-import axios from "axios"
+import axios from 'axios'
 import { mapGetters } from 'vuex'
-axios.defaults.withCredentials = true;
+axios.defaults.withCredentials = true
 export default {
-  name: "userProfile",
-  data(){
+  name: 'userProfile',
+  data () {
     return {
     }
   },
   methods: {
-    
-    
+
   },
   computed: {
     ...mapGetters({
@@ -54,7 +53,7 @@ export default {
 <style scoped lang="css">
 .flex-container {
   display: flex;
-  justify-content: space-evenly; 
+  justify-content: space-evenly;
 }
 .flexbox-item {
   width: 35%;
