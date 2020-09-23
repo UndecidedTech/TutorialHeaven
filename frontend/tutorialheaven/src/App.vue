@@ -20,7 +20,9 @@ export default {
   background-color:#FFFFFF;
   font-family: 'Roboto', sans-serif;
 }
-
+html,body {
+  font-family: 'Roboto', sans-serif;
+}
 /* .container {
   background-color:#FFFFFF;
   font-family: sans-serif;
