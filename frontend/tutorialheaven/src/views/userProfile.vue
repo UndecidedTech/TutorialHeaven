@@ -43,12 +43,12 @@ export default {
   },
   methods: {
     ...mapActions({
-      userUpload: 'auth/onUserUpload'
+      userUpload: 'user/onUserUpload'
     })
   },
   computed: {
     ...mapGetters({
-      user: 'auth/user'
+      user: 'user/user'
     })
   }
 }

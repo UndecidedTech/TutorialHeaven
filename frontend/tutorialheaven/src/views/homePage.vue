@@ -57,7 +57,6 @@
 </template>
 <script>
 import { mapActions } from 'vuex'
-// import axios from 'axios'
 export default {
   name: 'homePage',
   components: {},
@@ -71,20 +70,8 @@ export default {
   },
   methods: {
     ...mapActions({
-      signIn: 'auth/signIn'
+      signIn: 'user/signIn'
     }),
-    // async signIn() {
-    //   const res = await axios.post("http://localhost:3000/api/users/signin",
-    //     {
-    //       email: this.user.email,
-    //       password: this.user.password
-    //     }
-    //   )
-    //   if(res.status === 200) {
-    //     sessionStorage.setItem("userData", JSON.stringify(res.data));
-    //     this.$router.push({path: "userDashboard"});
-    //   }
-    // }
     submit () {
       this.signIn(this.user).then(() => {
         this.$router.push({ path: '/userDashboard' })

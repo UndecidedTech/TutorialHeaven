@@ -22,7 +22,7 @@
           <a class="dropdown-item" @click="goDashboard()"><i class="fas fa-book-open"/> Dashboard</a>
 
           <div class="dropdown-divider"></div>
-          <a @click="signOut()" class="dropdown-item"><i class="fas fa-sign-out-alt"/> Logout</a>
+          <a @click="signOut" class="dropdown-item"><i class="fas fa-sign-out-alt"/> Logout</a>
         </div>
       </div>
    </div>
@@ -32,7 +32,7 @@
 
 <script>
 // import axios from 'axios'
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'navBar',
   data () {
@@ -40,6 +40,9 @@ export default {
     }
   },
   methods: {
+    ...mapActions({
+      signOut: 'user/signOut'
+    }),
     goHome () {
       this.$router.push({ path: '/' })
     },
@@ -55,8 +58,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      authenticated: 'auth/authenticated',
-      user: 'auth/user'
+      authenticated: 'user/authenticated',
+      user: 'user/user'
     })
   }
 

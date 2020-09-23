@@ -1,4 +1,5 @@
 import axios from 'axios'
+import router from '../router'
 
 export default {
   namespaced: true,
@@ -25,6 +26,12 @@ export default {
     },
     SET_USER_AVI (state, avi) {
       state.user.avi = avi
+    },
+    REM_USER (state) {
+      state.user = null
+    },
+    REM_TOKEN (state) {
+      state.token = null
     }
   },
 
@@ -45,6 +52,11 @@ export default {
       if (res.status === 200) {
         commit('SET_USER_AVI', res.data.imageUrl)
       }
+    },
+    signOut ({ commit }) {
+      commit('REM_USER')
+      commit('REM_TOKEN')
+      router.push({ name: 'homePage' })
     }
   }
 }
