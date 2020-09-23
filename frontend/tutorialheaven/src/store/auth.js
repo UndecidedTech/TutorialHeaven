@@ -22,6 +22,9 @@ export default {
     },
     SET_USER (state, user) {
       state.user = user
+    },
+    SET_USER_AVI (state, avi) {
+      state.user.avi = avi
     }
   },
 
@@ -33,6 +36,14 @@ export default {
         delete response.data.token
         commit('SET_USER', response.data)
         return 'Success'
+      }
+    },
+    async onUserUpload ({ commit }, event) {
+      const fd = new FormData()
+      fd.append('image', event.target.files[0], event.target.files[0].name)
+      const res = await axios.post('/api/images/image-upload', fd)
+      if (res.status === 200) {
+        commit('SET_USER_AVI', res.data.imageUrl)
       }
     }
   }

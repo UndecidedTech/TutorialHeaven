@@ -4,7 +4,7 @@
       <div class="flexbox-item">
           <h4 class="mb-3" style="text-align: center">Profile Information</h4>
           <img :src="[[user.avi]]" alt="" class="img-thumbnail w-25 h-25">
-          <input id="avatar" name="avatar" type="file" required class="pl-3">
+          <input id="avatar" name="avatar" type="file" required class="pl-3" @change="userUpload">
           <form class="needs-validation" novalidate>
             <div class="row">
               <div class="col-md-6 mb-3">
@@ -33,7 +33,7 @@
 </template>
 <script>
 import axios from 'axios'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 axios.defaults.withCredentials = true
 export default {
   name: 'userProfile',
@@ -42,7 +42,9 @@ export default {
     }
   },
   methods: {
-
+    ...mapActions({
+      userUpload: 'auth/onUserUpload'
+    })
   },
   computed: {
     ...mapGetters({
