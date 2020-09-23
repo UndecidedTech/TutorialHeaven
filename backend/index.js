@@ -1,3 +1,6 @@
+/* eslint-disable no-undef */
+/* eslint-disable camelcase */
+/* eslint-disable no-process-env */
 // eslint-disable-next-line strict
 require("dotenv").config();
 const express = require("express");
