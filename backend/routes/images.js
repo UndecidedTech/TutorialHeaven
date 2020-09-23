@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const upload = require("../services/image-upload");
+const upload = require("../services/uploadImage");
 const User = require("../models/user");
 const JWT = require("jsonwebtoken");
 
