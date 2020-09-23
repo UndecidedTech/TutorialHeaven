@@ -36,5 +36,9 @@ const users = require("./routes/users");
 
 app.use("/api/users", users);
 
+const images = require("./routes/images");
+
+app.use("/api/images", images);
+
 app.listen(port, () => console.log(`Server started on ${port}`));
 
