@@ -40,5 +40,6 @@ const images = require("./routes/images");
 
 app.use("/api/images", images);
 
+app.use(express.static("public"));
 app.listen(port, () => console.log(`Server started on ${port}`));
 
