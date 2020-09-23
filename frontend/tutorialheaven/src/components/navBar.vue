@@ -19,6 +19,8 @@
         </a>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
           <a class="dropdown-item" @click="goProfile()"><i class="fas fa-user"/> Profile Settings</a>
+          <a class="dropdown-item" @click="goDashboard()"><i class="fas fa-book-open"/> Dashboard</a>
+
           <div class="dropdown-divider"></div>
           <a @click="signOut()" class="dropdown-item"><i class="fas fa-sign-out-alt"/> Logout</a>
         </div>
@@ -46,6 +48,9 @@ export default {
     },
     goSignUp () {
       this.$router.push({ path: 'userSignUp' })
+    },
+    goDashboard () {
+      this.$router.push({ path: 'userDashboard' })
     }
   },
   computed: {

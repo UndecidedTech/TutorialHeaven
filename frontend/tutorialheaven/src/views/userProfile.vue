@@ -3,6 +3,8 @@
     <div class="flex-container">
       <div class="flexbox-item">
           <h4 class="mb-3" style="text-align: center">Profile Information</h4>
+          <img :src="[[user.avi]]" alt="" class="img-thumbnail w-25 h-25">
+          <input id="avatar" name="avatar" type="file" required class="pl-3">
           <form class="needs-validation" novalidate>
             <div class="row">
               <div class="col-md-6 mb-3">
@@ -61,6 +63,12 @@ export default {
   overflow: hidden;
   max-height: 600px;
   align-self: center;
+}
+.avatar {
+  vertical-align: middle;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
 }
 
 </style>
