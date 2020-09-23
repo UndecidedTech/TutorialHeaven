@@ -56,7 +56,7 @@ export default {
         const res = await axios.post('http://localhost:3000/api/users/signup', { ...this.user })
         if (res.status === 200) {
           sessionStorage.setItem('userData', JSON.stringify(res.data))
-          this.$router.push('/dashboard')
+          this.$router.push('userDashboard')
         }
       }
     }
