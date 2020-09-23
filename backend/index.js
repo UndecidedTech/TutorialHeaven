@@ -17,8 +17,6 @@ const url = `mongodb://${db_user}:${db_pass}@${db_ip}:27017/Dev?authSource=admin
 // Express app instantiation
 const app = express();
 
-const whitelist = ["http://localhost:8080", "http://localhost:5000"];
-
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded());
@@ -27,10 +25,10 @@ app.use(cors({
     "origin": ["http://localhost:8081", "http://localhost:8080"],
     "credentials": true,
     "methods": ["OPTIONS", "GET", "POST", "PUT"]
-}));
+  }));
 
 mongoose.Promise = global.Promise;
-mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false});
+mongoose.connect(url, {"useNewUrlParser": true, "useUnifiedTopology": true, "useFindAndModify": false});
 
 const port = process.env.PORT || 3000;
 
