@@ -46,7 +46,9 @@ module.exports = {
         console.log("is anything fucking happening")
         // generate token
         const token = signToken(req.user);
+        req.user.token = token
         res.cookie("token", token).send(req.user); 
+        req.user.token = token
     },
     secret: async (req, res, next) => {
         console.log("Can I use this for auth?");

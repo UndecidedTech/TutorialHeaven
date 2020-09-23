@@ -24,7 +24,7 @@
 </template>
 <script>
 export default {
-  name: "ToolBar"
+  name: 'ToolBar'
 }
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -49,12 +49,10 @@ export default {
     content:attr(data-placeholder)
 }
 
-
 /*
-    Font Sizes 
+    Font Sizes
     fs represents the font-size attribute; therefore,
-    fs-five would be the equivalent to font-size: 5;	
+    fs-five would be the equivalent to font-size: 5;
 */
-
 
 </style>

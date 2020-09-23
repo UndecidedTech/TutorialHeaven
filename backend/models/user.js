@@ -23,7 +23,7 @@ const userSchema = new Schema({
     },
     avi: {
         type: String,
-        default: "https://tenmen2.s3.amazonaws.com/1595450217274"
+        default: "https://tutorialheaven.s3.us-east-2.amazonaws.com/defaultAvatar.png"
     }
 });
 

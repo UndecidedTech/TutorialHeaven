@@ -9,15 +9,16 @@
 import navBar from './components/navBar'
 export default {
   name: 'app',
-  components: { 
+  components: {
     navBar
-    }
+  }
 }
 </script>
 
 <style>
 .appBackground {
   background-color:#FFFFFF;
+  font-family: 'Roboto', sans-serif;
 }
 
 /* .container {
