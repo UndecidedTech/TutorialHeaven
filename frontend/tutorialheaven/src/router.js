@@ -11,9 +11,9 @@ Vue.use(Router)
 const routes = [
 
   { path: '/', component: homePage, name: 'homePage' },
-  { path: '/userProfile', component: userProfile },
-  { path: '/userSignUp', component: userSignUp },
-  { path: '/userDashboard', component: userDashboard },
+  { path: '/userProfile', component: userProfile, name: 'userProfile' },
+  { path: '/userSignUp', component: userSignUp, name: 'userSignUp' },
+  { path: '/userDashboard', component: userDashboard, name: 'userDashboard' },
   { path: '*', component: notFound }
 ]
 

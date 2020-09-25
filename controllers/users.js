@@ -39,8 +39,8 @@ module.exports = {
         delete createdUser.password
         
         const token = signToken(createdUser);
+        createdUser.token = token
         res.cookie("token", token).send(createdUser);
-
     },
     signIn: async (req, res, next) => {
         console.log("is anything fucking happening")
@@ -48,7 +48,6 @@ module.exports = {
         const token = signToken(req.user);
         req.user.token = token
         res.cookie("token", token).send(req.user); 
-        req.user.token = token
     },
     secret: async (req, res, next) => {
         console.log("Can I use this for auth?");

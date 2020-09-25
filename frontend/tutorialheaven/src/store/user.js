@@ -53,6 +53,15 @@ export default {
         commit('SET_USER_AVI', res.data.imageUrl)
       }
     },
+    async signUp ({ commit }, user) {
+      const res = await axios.post('http://localhost:3000/api/users/signup', user)
+      if (res.status === 200) {
+        commit('SET_TOKEN', res.data.token)
+        delete res.data.token
+        commit('SET_USER', res.data)
+        router.push({ name: 'userDashboard' })
+      }
+    },
     signOut ({ commit }) {
       commit('REM_USER')
       commit('REM_TOKEN')

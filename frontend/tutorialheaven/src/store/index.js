@@ -6,7 +6,7 @@ import user from './user'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-  plugins: [createPersistedState({ storage: window.localStorage })],
+  plugins: [createPersistedState({ storage: window.sessionStorage })],
   state: {
   },
   mutations: {

@@ -25,7 +25,7 @@
                     placeholder="password">
                 </div>
               </form>
-              <button @click="signUp()" class="btn btn-success">Sign Up</button>
+              <button @click="checkUserValue()" class="btn btn-success">Sign Up</button>
             </div>
           </div>
         </div>
@@ -34,31 +34,25 @@
 </template>
 
 <script>
-import axios from 'axios'
+import { mapActions } from 'vuex'
 export default {
   name: 'userSignUp',
   data () {
     return {
       user: {
-
-        password: '',
-        firstname: '',
-        lastname: ''
+        password: null,
+        firstname: null,
+        lastname: null,
+        email: null
       }
     }
   },
   methods: {
+    ...mapActions({
+      signUp: 'user/signUp'
+    }),
     checkUserValue () {
-      if (!this.user.password) { return false } else if (!this.user.firstname) { return false } else if (!this.user.lastname) { return false } else { return true }
-    },
-    async signUp () {
-      if (this.checkUserValue()) {
-        const res = await axios.post('http://localhost:3000/api/users/signup', { ...this.user })
-        if (res.status === 200) {
-          sessionStorage.setItem('userData', JSON.stringify(res.data))
-          this.$router.push('userDashboard')
-        }
-      }
+      if (!this.user.password) { return alert('Fill Required fields') } else if (!this.user.firstname) { return alert('Fill Required fields') } else if (!this.user.lastname) { return alert('Fill Required fields') } else { this.signUp(this.user) }
     }
   }
 }
