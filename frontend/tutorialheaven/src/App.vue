@@ -18,7 +18,6 @@ export default {
 <style>
 .appBackground {
   background-color:#FFFFFF;
-  font-family: 'Roboto', sans-serif;
 }
 html,body {
   font-family: 'Roboto', sans-serif;

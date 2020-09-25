@@ -27,6 +27,9 @@
               <input type="email" class="font-weight-bold form-control" id="email" :value="[[user.email]]">
             </div>
           </form>
+          <button class="btn btn-success">Update Profile</button>
+          <span class="p-3"></span>
+          <button class="btn btn-danger">Update Password</button>
       </div>
     </div>
   </body>
