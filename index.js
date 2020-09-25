@@ -40,6 +40,10 @@ const images = require("./routes/images");
 
 app.use("/api/images", images);
 
+const courses = require("./routes/courses");
+
+app.use("/api/courses", courses);
+
 app.use(express.static("public"));
 app.listen(port, () => console.log(`Server started on ${port}`));
 

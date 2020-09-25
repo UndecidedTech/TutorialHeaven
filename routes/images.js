@@ -9,7 +9,7 @@ const JWT = require("jsonwebtoken");
 const singleUpload = upload.single('image');
 
 
-router.post('/image-upload', function(req, res) {
+router.post('/image-upload', (req, res) => {
   let userId = JWT.decode(req.cookies.token).sub;
 
   console.log(userId, "uploadfunc")
