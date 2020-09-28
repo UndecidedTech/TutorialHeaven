@@ -25,16 +25,30 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   name: 'userDashboard',
   data () {
     return {
+      user: JSON.parse(localStorage.getItem('userData')),
       courses: [],
       notifications: [{
         title: 'Baseline results',
         content: 'You are ready to start the javascript lessons!'
       }]
     }
+  },
+  methods: {
+    async getCourses () {
+      const res = await axios.get(`/api/users/profile/${this.user._id}`)
+
+      if (res.status === 200) {
+        this.user = res.data
+      }
+    }
+  },
+  created () {
+    this.getCourses()
   }
 }
 </script>

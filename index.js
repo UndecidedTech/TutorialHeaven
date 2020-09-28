@@ -27,8 +27,9 @@ app.use(cors({
     "methods": ["OPTIONS", "GET", "POST", "PUT"]
   }));
 
-mongoose.Promise = global.Promise;
 mongoose.connect(url, {"useNewUrlParser": true, "useUnifiedTopology": true, "useFindAndModify": false});
+mongoose.Promise = global.Promise;
+mongoose.set("useCreateIndex", true);
 
 const port = process.env.PORT || 3000;
 
