@@ -28,6 +28,10 @@ export default {
       if (res.status === 200) {
         commit('SET_COURSES', res.data.courses)
       }
+    },
+    async createCourse ({ commit }, courseData) {
+      const res = await axios.post('/api/courses/createCourse', courseData)
+      console.log(res.data)
     }
   }
 }

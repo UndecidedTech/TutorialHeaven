@@ -2,10 +2,11 @@
     <div class="appBackground">
         <div class="flex-container">
             <div class="dashboard-sidebar">
-                <div class="pb-4">
+                <div class="">
                   <h1 class="d-inline pr-5">Courses</h1>
-                  <button class="btn btn-sm btn-primary">Create a Course</button>
+                  <button type="button" class="btn btn-sm btn-primary mb-3" data-toggle="modal" data-target="#createCourseModal">Create a Course</button>
                 </div>
+                <hr>
                 <div v-for="(course, index) in this.courses" :key="index">
                     <a :href="[[ course.name ]]" class="classLink">
                     <i v-if="course.role === 'instructor' " class="fas fa-graduation-cap pr-2"></i>
@@ -26,6 +27,34 @@
                 </section>
             </div>
         </div>
+      <div class="modal fade" id="createCourseModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Create Course</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <label for="courseName">Course Name</label>
+              <input v-model="newCourse.course_name" id="courseName" type="text" class="form-control">
+              <label for="subject">Subject</label>
+              <select v-model="newCourse.subject" class="custom-select" id="subject">
+              <option selected>Choose...</option>
+              <option value="Greek History">Greek History</option>
+              <option value="Roman History">Roman History</option>
+              <option value="Japanese History">Japanese History</option>
+              </select>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+        </div>
+        </div>
+
     </div>
 </template>
 
@@ -35,6 +64,11 @@ export default {
   name: 'userDashboard',
   data () {
     return {
+      newCourse: {
+        course_name: null,
+        subject: null,
+        subscription: null
+      },
       notifications: [{
         title: 'Baseline results',
         content: 'You are ready to start the javascript lessons!'
@@ -43,7 +77,8 @@ export default {
   },
   methods: {
     ...mapActions({
-      getCourses: 'courses/getCourses'
+      getCourses: 'courses/getCourses',
+      createCourse: 'courses/createCourse'
     })
   },
   computed: {
