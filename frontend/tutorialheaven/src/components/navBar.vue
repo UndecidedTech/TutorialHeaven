@@ -1,7 +1,7 @@
 <template>
 <header>
  <nav class="navbar navbar-expand-lg navbar-dark bg-nav">
-  <a @click="goHome()" class="navbar-brand btn text-white mb-0 h1">TutorialHeaven</a>
+  <a @click="goHome()" class="navbar-brand btn p-0 text-white mb-0 h1">TutorialHeaven</a>
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto text-white">
       <li class="nav-item active">

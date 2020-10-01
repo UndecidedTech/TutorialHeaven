@@ -3,8 +3,8 @@
     <div class="flex-container">
       <div class="flexbox-item">
           <h4 class="mb-3" style="text-align: center">Profile Information</h4>
-          <img :src="[[user.avi]]" alt="" class="img-thumbnail w-25 h-25">
-          <div id="avatarDiv" class="custom-file">
+          <img :src="[[user.avi]]" alt="" class="img-thumbnail w-25 h-25 mb-3">
+          <div id="avatarDiv" class="custom-file ml-4">
             <input id="avatar" name="avatar" type="file" required class="custom-file-input" @change="userUpload">
             <label for="avatar" class="custom-file-label"></label>
           </div>
@@ -86,6 +86,6 @@ export default {
   align-self: center;
 }
 #avatarDiv {
-  width: 70%;
+  width: 65%;
 }
 </style>

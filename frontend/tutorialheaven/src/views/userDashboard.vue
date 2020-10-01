@@ -30,14 +30,11 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import axios from 'axios'
+import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'userDashboard',
   data () {
     return {
-      courses: [{
-      }],
       notifications: [{
         title: 'Baseline results',
         content: 'You are ready to start the javascript lessons!'
@@ -45,22 +42,18 @@ export default {
     }
   },
   methods: {
-    async getCourses (courses) {
-      const res = await axios.get(`/api/users/profile/${this.user._id}`)
-
-      if (res.status === 200) {
-        this.courses = res.data.courses
-        console.log(res.data.courses)
-      }
-    }
+    ...mapActions({
+      getCourses: 'courses/getCourses'
+    })
   },
   computed: {
     ...mapGetters({
-      user: 'user/user'
+      user: 'user/user',
+      courses: 'courses/courses'
     })
   },
   created () {
-    this.getCourses()
+    this.getCourses(this.user._id)
   }
 }
 </script>
