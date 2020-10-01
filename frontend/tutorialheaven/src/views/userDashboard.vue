@@ -7,7 +7,9 @@
                   <button class="btn btn-sm btn-primary">Create a Course</button>
                 </div>
                 <div v-for="(course, index) in this.courses" :key="index">
-                    <a :href="[[ course.name ]]" class="classLink"><i class="fas fa-book pr-2"></i>{{ course.name }}</a>
+                    <a :href="[[ course.name ]]" class="classLink">
+                    <i v-if="course.role === 'instructor' " class="fas fa-graduation-cap pr-2"></i>
+                    <i v-else class="fas fa-book pr-2"></i>{{ course.name }}</a>
                 </div>
             </div>
             <div class="notification-item">
@@ -28,14 +30,13 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import axios from 'axios'
 export default {
   name: 'userDashboard',
   data () {
     return {
-      user: JSON.parse(localStorage.getItem('userData')),
       courses: [{
-        name: 'Greek History'
       }],
       notifications: [{
         title: 'Baseline results',
@@ -44,13 +45,19 @@ export default {
     }
   },
   methods: {
-    async getCourses () {
+    async getCourses (courses) {
       const res = await axios.get(`/api/users/profile/${this.user._id}`)
 
       if (res.status === 200) {
-        this.user = res.data
+        this.courses = res.data.courses
+        console.log(res.data.courses)
       }
     }
+  },
+  computed: {
+    ...mapGetters({
+      user: 'user/user'
+    })
   },
   created () {
     this.getCourses()
