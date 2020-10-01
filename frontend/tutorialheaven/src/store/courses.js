@@ -18,6 +18,9 @@ export default {
   mutations: {
     SET_COURSES (state, courses) {
       state.courses = courses
+    },
+    PUSH_COURSES (state, courses) {
+      state.courses.push(courses)
     }
   },
 
@@ -31,7 +34,9 @@ export default {
     },
     async createCourse ({ commit }, courseData) {
       const res = await axios.post('/api/courses/createCourse', courseData)
-      console.log(res.data)
+      if (res.status === 200) {
+        commit('PUSH_COURSES', res.data)
+      }
     }
   }
 }
