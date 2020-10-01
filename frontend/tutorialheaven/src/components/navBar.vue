@@ -1,11 +1,11 @@
 <template>
 <header>
  <nav class="navbar navbar-expand-lg navbar-dark bg-nav">
-  <a class="navbar-brand text-white mb-0 h1">TutorialHeaven</a>
+  <a @click="goHome()" class="navbar-brand btn text-white mb-0 h1">TutorialHeaven</a>
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto text-white">
       <li class="nav-item active">
-        <button @click="goHome()" class="btn nav-link text-white" >
+        <button @click="goDashboard()"  class="btn nav-link text-white" >
           <i class="fas fa-home"/>
         </button>
       </li>
@@ -19,7 +19,6 @@
         </a>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
           <a class="dropdown-item" @click="goProfile()"><i class="fas fa-user"/> Profile Settings</a>
-          <a class="dropdown-item" @click="goDashboard()"><i class="fas fa-book-open"/> Dashboard</a>
 
           <div class="dropdown-divider"></div>
           <a @click="signOut" class="dropdown-item"><i class="fas fa-sign-out-alt"/> Logout</a>

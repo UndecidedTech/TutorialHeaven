@@ -2,9 +2,12 @@
     <div class="appBackground">
         <div class="flex-container">
             <div class="dashboard-sidebar">
-                <h1 >Courses</h1>
+                <div class="pb-4">
+                  <h1 class="d-inline pr-5">Courses</h1>
+                  <button class="btn btn-sm btn-primary">Create a Course</button>
+                </div>
                 <div v-for="(course, index) in this.courses" :key="index">
-                    <p><i class="fas fa-book"></i>{{ course.name }}</p>
+                    <a :href="[[ course.name ]]" class="classLink"><i class="fas fa-book pr-2"></i>{{ course.name }}</a>
                 </div>
             </div>
             <div class="notification-item">
@@ -25,13 +28,15 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from 'axios'
 export default {
   name: 'userDashboard',
   data () {
     return {
       user: JSON.parse(localStorage.getItem('userData')),
-      courses: [],
+      courses: [{
+        name: 'Greek History'
+      }],
       notifications: [{
         title: 'Baseline results',
         content: 'You are ready to start the javascript lessons!'
@@ -63,13 +68,18 @@ export default {
 }
 .dashboard-sidebar {
     align-self: stretch;
-    width: 25%;
-    padding: 30px;
+    width: 20%;
+    padding: 20px;
     border-right: 3px solid rgba(136, 133, 133, 0.534);
 }
 .notification-item {
     flex-grow: 1;
     align-self: stretch;
 }
+.classLink {
+  color: black;
+  text-decoration: none;
+  background-color: transparent;
+  }
 
 </style>

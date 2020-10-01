@@ -11,8 +11,8 @@ const singleUpload = upload.single('image');
 
 router.post('/image-upload', (req, res) => {
   let userId = JWT.decode(req.cookies.token).sub;
-
   console.log(userId, "uploadfunc")
+
   singleUpload(req, res, async function(err) {
     if (err) {
       return res.status(422).send({errors: [{title: 'Image Upload Error', detail: err.message}]});

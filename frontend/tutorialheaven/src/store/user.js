@@ -1,6 +1,8 @@
 import axios from 'axios'
 import router from '../router'
 
+axios.defaults.withCredentials = true
+
 export default {
   namespaced: true,
   state: {
