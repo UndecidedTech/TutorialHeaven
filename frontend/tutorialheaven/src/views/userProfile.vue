@@ -65,8 +65,8 @@ export default {
       userUpload: 'user/onUserUpload',
       userUpdate: 'user/userUpdate'
     }),
-    updateUserDetails (fieldName, updatedValue) {
-      this.$store.dispatch('user/updateField', { this.user._id,  fieldName, updatedValue })
+    updateUserDetails (userId, fieldName, updatedValue) {
+      this.$store.dispatch('user/updateField', { userId, fieldName, updatedValue })
     }
 
   },
