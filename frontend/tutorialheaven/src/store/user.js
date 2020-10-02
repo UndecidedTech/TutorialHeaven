@@ -39,7 +39,7 @@ export default {
 
   actions: {
     async signIn ({ commit }, credentials) {
-      const response = await axios.post('http://localhost:3000/api/users/signin', credentials)
+      const response = await axios.post('/api/users/signin', credentials)
       if (response.status === 200) {
         commit('SET_TOKEN', { token: response.data.token })
         delete response.data.token
@@ -56,7 +56,7 @@ export default {
       }
     },
     async signUp ({ commit }, user) {
-      const res = await axios.post('http://localhost:3000/api/users/signup', user)
+      const res = await axios.post('/api/users/signup', user)
       if (res.status === 200) {
         commit('SET_TOKEN', res.data.token)
         delete res.data.token
