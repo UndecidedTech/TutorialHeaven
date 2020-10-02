@@ -63,7 +63,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'userDashboard',
@@ -81,20 +80,12 @@ export default {
     }
   },
   methods: {
-    async getCourses () {
-      console.log(this.user)
-      const res = await axios.get(`/api/users/profile/${this.user._id}`)
-
-      if (res.status === 200) {
-        this.courses = res.data.courses
-      }
-    }
-  },
-  computed: {
     ...mapActions({
       getCourses: 'courses/getCourses',
       createCourse: 'courses/createCourse'
-    }),
+    })
+  },
+  computed: {
     ...mapGetters({
       user: 'user/user',
       courses: 'courses/courses'
