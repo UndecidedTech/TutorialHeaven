@@ -9,12 +9,12 @@
                 <hr>
                 <div v-for="(course, index) in this.courses" :key="index">
                     <div v-if="course.role ==='instructor'">
-                      <a :href="[[ course.course_name ]]" class="classLink">
-                      <i class="fas fa-graduation-cap pr-2"></i>{{ course.course_name }}</a>
+                      <a :href="[[ course.name ]]" class="classLink">
+                      <i class="fas fa-graduation-cap pr-2"></i>{{ course.name }}</a>
                     </div>
                     <div v-else>
-                      <a :href="[[ course.course_name ]]" class="classLink">
-                      <i class="fas fa-book pr-2"></i>{{ course.course_name }}</a>
+                      <a :href="[[ course.name ]]" class="classLink">
+                      <i class="fas fa-book pr-2"></i>{{ course.name }}</a>
                     </div>
                 </div>
             </div>
@@ -43,7 +43,7 @@
             </div>
             <div class="modal-body">
               <label for="courseName">Course Name</label>
-              <input v-model="newCourse.course_name" id="courseName" type="text" class="form-control">
+              <input v-model="newCourse.name" id="courseName" type="text" class="form-control">
               <label for="subject">Subject</label>
               <select v-model="newCourse.subject" class="custom-select" id="subject">
               <option selected>Choose...</option>
@@ -69,7 +69,7 @@ export default {
   data () {
     return {
       newCourse: {
-        course_name: null,
+        name: null,
         subject: null,
         subscription: true
       },

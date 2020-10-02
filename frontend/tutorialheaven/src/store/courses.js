@@ -35,7 +35,7 @@ export default {
     async createCourse ({ commit }, courseData) {
       const res = await axios.post('/api/courses/createCourse', courseData)
       if (res.status === 200) {
-        commit('PUSH_COURSES', res.data)
+        commit('SET_COURSES', res.data.courses)
       }
     }
   }
