@@ -68,6 +68,20 @@ export default {
       commit('REM_USER')
       commit('REM_TOKEN')
       router.push({ name: 'homePage' })
+    },
+    async updateField ({ commit }, { userId, fieldName, updatedValue }) {
+      const res = await axios.post('/api/users/profile/', {
+        params: {
+          userId
+        },
+        data: {
+          field: fieldName,
+          value: updatedValue
+        }
+      })
+      if (res.status === 200) {
+        commit('SET_USER', res.data)
+      }
     }
   }
 }

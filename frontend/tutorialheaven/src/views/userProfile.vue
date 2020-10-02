@@ -12,7 +12,7 @@
             <div class="row">
               <div class="col-md-6 mb-3">
                 <label for="firstName">First name</label>
-                <input type="text" class="font-weight-bold form-control" id="firstName" placeholder="" :value="[[user.firstname]]" required>
+                <input type="text" class="font-weight-bold form-control" id="firstName" placeholder="" :value="[[user.firstname]]" @change="updateUserDetails(user._id, 'firstname', $event.target.value)" required>
                 <div class="invalid-feedback">
                   Valid first name is required.
                 </div>
@@ -62,8 +62,13 @@ export default {
   },
   methods: {
     ...mapActions({
-      userUpload: 'user/onUserUpload'
-    })
+      userUpload: 'user/onUserUpload',
+      userUpdate: 'user/userUpdate'
+    }),
+    updateUserDetails (fieldName, updatedValue) {
+      this.$store.dispatch('user/updateField', { this.user._id,  fieldName, updatedValue })
+    }
+
   },
   computed: {
     ...mapGetters({
