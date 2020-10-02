@@ -4,7 +4,7 @@ const Course = require("../models/course");
 const JWT = require("jsonwebtoken");
 
 
-router.post("", async (req, res) => {
+router.post("/createCourse", async (req, res) => {
     let userId = JWT.decode(req.cookies.token).sub
     let courseData = {
         "course_name": req.body.course_name,

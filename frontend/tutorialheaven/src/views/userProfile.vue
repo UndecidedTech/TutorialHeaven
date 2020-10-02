@@ -3,8 +3,11 @@
     <div class="flex-container">
       <div class="flexbox-item">
           <h4 class="mb-3" style="text-align: center">Profile Information</h4>
-          <img :src="[[user.avi]]" alt="" class="img-thumbnail w-25 h-25">
-          <input id="avatar" name="avatar" type="file" required class="pl-3" @change="userUpload">
+          <img :src="[[user.avi]]" alt="" class="img-thumbnail w-25 h-25 mb-3">
+          <div id="avatarDiv" class="custom-file ml-4">
+            <input id="avatar" name="avatar" type="file" required class="custom-file-input" @change="userUpload">
+            <label for="avatar" class="custom-file-label"></label>
+          </div>
           <form class="needs-validation" novalidate>
             <div class="row">
               <div class="col-md-6 mb-3">
@@ -50,9 +53,7 @@
   </body>
 </template>
 <script>
-import axios from 'axios'
 import { mapGetters, mapActions } from 'vuex'
-axios.defaults.withCredentials = true
 export default {
   name: 'userProfile',
   data () {
@@ -84,11 +85,7 @@ export default {
   max-height: 600px;
   align-self: center;
 }
-.avatar {
-  vertical-align: middle;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
+#avatarDiv {
+  width: 65%;
 }
-
 </style>
