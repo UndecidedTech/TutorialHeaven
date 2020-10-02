@@ -24,6 +24,10 @@ const userSchema = new Schema({
     avi: {
         type: String,
         default: "https://tutorialheaven.s3.us-east-2.amazonaws.com/defaultAvatar.png"
+    },
+    courses: {
+        type: mongoose.SchemaTypes.Mixed,
+        default: []
     }
 });
 

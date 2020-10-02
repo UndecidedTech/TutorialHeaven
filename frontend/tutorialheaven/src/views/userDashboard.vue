@@ -4,7 +4,7 @@
             <div class="dashboard-sidebar">
                 <h1 >Courses</h1>
                 <div v-for="(course, index) in this.courses" :key="index">
-                    <p><i class="fas fa-book"></i>{{ course.name }}</p>
+                    <p><i class="fas fa-book"></i> {{ course.name }}</p>
                 </div>
             </div>
             <div class="notification-item">
@@ -25,13 +25,14 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from 'axios'
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'userDashboard',
   data () {
     return {
-      user: JSON.parse(localStorage.getItem('userData')),
-      courses: [],
+      courses: [{ name: 'Greek History' }],
       notifications: [{
         title: 'Baseline results',
         content: 'You are ready to start the javascript lessons!'
@@ -40,15 +41,21 @@ export default {
   },
   methods: {
     async getCourses () {
+      console.log(this.user)
       const res = await axios.get(`/api/users/profile/${this.user._id}`)
 
       if (res.status === 200) {
-        this.user = res.data
+        this.courses = res.data.courses
       }
     }
   },
   created () {
-    this.getCourses()
+    // this.getCourses()
+  },
+  computed: {
+    ...mapGetters({
+      user: 'user/user'
+    })
   }
 }
 </script>

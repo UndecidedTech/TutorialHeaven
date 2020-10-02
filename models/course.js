@@ -14,7 +14,7 @@ const courseSchema = new Schema({
         type: Array,
         default: []
     },
-    course_name: {
+    name: {
         type: String,
         required: true
     },
@@ -24,7 +24,7 @@ const courseSchema = new Schema({
     },
     sections: {
         type: Array,
-        default: [],
+        default: []
     },
     subscription: {
         type: Boolean,

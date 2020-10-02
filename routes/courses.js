@@ -16,6 +16,8 @@ router.post("", async (req, res) => {
 
     let courseObject = await new Course(courseData).save();
 
+    console.log(courseObject);
+
     res.send(courseObject);
 })
 
