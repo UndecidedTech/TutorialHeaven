@@ -34,12 +34,12 @@ router.get("/profile/:userId", async (req, res) => {
 
 router.post("/profile/", async (req, res) => {
   let tokenId = JWT.decode(req.cookies.token).sub
-  let userId = req.query.userId
-
+  let userId = req.body.userId;
+  console.log(tokenId, userId)
   if (tokenId === userId){
     let update = generateUpdate(req.body.field, req.body.value);
 
-    let selectedUser = await User.findByIdAndUpdate(userId, update).select("-password").lean();
+    let selectedUser = await User.findByIdAndUpdate(userId, update, {new: true}).select("-password").lean();
       if(selectedUser)
         res.status(200).send(selectedUser);
       else

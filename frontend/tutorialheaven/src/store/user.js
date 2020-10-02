@@ -69,15 +69,12 @@ export default {
       commit('REM_TOKEN')
       router.push({ name: 'homePage' })
     },
-    async updateField ({ commit }, { userId, fieldName, updatedValue }) {
+    async updateField ({ commit }, update) {
+      console.log('vuex store action triggered', update)
       const res = await axios.post('/api/users/profile/', {
-        params: {
-          userId
-        },
-        data: {
-          field: fieldName,
-          value: updatedValue
-        }
+        userId: update.userId,
+        field: update.fieldName,
+        value: update.updatedValue
       })
       if (res.status === 200) {
         commit('SET_USER', res.data)

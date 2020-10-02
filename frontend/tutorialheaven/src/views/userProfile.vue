@@ -19,7 +19,7 @@
               </div>
               <div class="col-md-6 mb-3">
                 <label for="lastName">Last name</label>
-                <input type="text" class="font-weight-bold form-control" id="lastName" placeholder="" :value="[[user.lastname]]" required>
+                <input type="text" class="font-weight-bold form-control" id="lastName" placeholder="" :value="[[user.lastname]]" @change="updateUserDetails(user._id, 'lastname', $event.target.value)" required>
                 <div class="invalid-feedback">
                   Valid last name is required.
                 </div>
@@ -27,7 +27,7 @@
             </div>
             <div class="mb-3">
               <label for="email">Email </label>
-              <input type="email" class="font-weight-bold form-control" id="email" :value="[[user.email]]">
+              <input type="email" class="font-weight-bold form-control" id="email" :value="[[user.email]]" @change="updateUserDetails(user._id, 'email', $event.target.value)">
             </div>
           </form>
           <button class="btn btn-success">Update Profile</button>
@@ -62,8 +62,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      userUpload: 'user/onUserUpload',
-      userUpdate: 'user/userUpdate'
+      userUpload: 'user/onUserUpload'
     }),
     updateUserDetails (userId, fieldName, updatedValue) {
       this.$store.dispatch('user/updateField', { userId, fieldName, updatedValue })
