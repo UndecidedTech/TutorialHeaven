@@ -121,6 +121,7 @@ router.post("/reset/:token", async (req, res) => {
 
 
       // login user and send back user details
+      // res.send(selectedUser)
     }
   } else {
     res.status(404).send("Password reset token is invalid or has expired");
