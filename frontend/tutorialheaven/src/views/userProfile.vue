@@ -35,21 +35,6 @@
           <button class="btn btn-danger" data-toggle="modal" data-target="#changePassword">Update Password</button>
       </div>
     </div>
-  <div class="modal fade" id="changePassword" tabindex="-1" role="dialog" aria-labelledby="exampleModal3Label" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" >Change Password</h5>
-      </div>
-      <div class="modal-body">
-        <input type="password" name="changePassword" id="changePassword">
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-success">Change Password</button>
-      </div>
-    </div>
-  </div>
-</div>
   </body>
 </template>
 <script>

@@ -28,6 +28,12 @@ const userSchema = new Schema({
     courses: {
         type: mongoose.SchemaTypes.Mixed,
         default: []
+    },
+    resetPasswordToken: {
+        type: String
+    },
+    resetPasswordExpires: {
+        type: Date
     }
 });
 
