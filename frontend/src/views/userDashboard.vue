@@ -11,6 +11,7 @@
                     <div v-if="course.role ==='instructor'">
                       <a :href="[[ course.name ]]" class="classLink">
                       <i class="fas fa-graduation-cap pr-2"></i>{{ course.name }}</a>
+                      <button @click="editCourse(course._id)" type="button" class="btn btn-sm">+</button>
                     </div>
                     <div v-else>
                       <a :href="[[ course.name ]]" class="classLink">
@@ -43,13 +44,13 @@
             </div>
             <div class="modal-body">
               <label for="courseName">Course Name</label>
-              <input v-model="newCourse.name" id="courseName" type="text" class="form-control">
+              <input v-model="newCourse.name" id="courseName" type="text" class="form-control" required>
               <label for="subject">Subject</label>
-              <select v-model="newCourse.subject" class="custom-select" id="subject">
-              <option selected>Choose...</option>
+              <select v-model="newCourse.subject" class="custom-select" id="subject" required>
               <option value="Greek History">Greek History</option>
               <option value="Roman History">Roman History</option>
               <option value="Japanese History">Japanese History</option>
+              <option value="Other">Other</option>
               </select>
             </div>
             <div class="modal-footer">
@@ -83,7 +84,10 @@ export default {
     ...mapActions({
       getCourses: 'courses/getCourses',
       createCourse: 'courses/createCourse'
-    })
+    }),
+    editCourse (id) {
+      this.$router.push({ path: '/editCourse/' + id })
+    }
   },
   computed: {
     ...mapGetters({

@@ -43,16 +43,16 @@ export default {
       signOut: 'user/signOut'
     }),
     goHome () {
-      this.$router.push({ path: '/' })
+      this.$router.push({ name: 'homePage' })
     },
     goProfile () {
-      this.$router.push({ path: 'userProfile' })
+      this.$router.push({ name: 'userProfile' })
     },
     goSignUp () {
-      this.$router.push({ path: 'userSignUp' })
+      this.$router.push({ name: 'userSignUp' })
     },
     goDashboard () {
-      this.$router.push({ path: 'userDashboard' })
+      this.$router.push({ name: 'userDashboard' })
     }
   },
   computed: {

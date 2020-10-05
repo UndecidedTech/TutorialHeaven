@@ -26,16 +26,19 @@ export default {
 
   actions: {
     async getCourses ({ commit }, userID) {
-      console.log('userID: ' + userID)
       const res = await axios.get(`/api/users/profile/${userID}`)
       if (res.status === 200) {
         commit('SET_COURSES', res.data.courses)
       }
     },
     async createCourse ({ commit }, courseData) {
-      const res = await axios.post('/api/courses/createCourse', courseData)
-      if (res.status === 200) {
-        commit('SET_COURSES', res.data.courses)
+      if (courseData.name && courseData.subject) {
+        const res = await axios.post('/api/courses/createCourse', courseData)
+        if (res.status === 200) {
+          commit('SET_COURSES', res.data.courses)
+        }
+      } else {
+        alert('Please fill required forms')
       }
     }
   }

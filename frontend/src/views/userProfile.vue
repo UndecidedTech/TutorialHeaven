@@ -5,8 +5,8 @@
           <h4 class="mb-3" style="text-align: center">Profile Information</h4>
           <img :src="[[user.avi]]" alt="" class="img-thumbnail w-25 h-25 mb-3">
           <div id="avatarDiv" class="custom-file ml-4">
+            <label for="avatar"  class="custom-file-label"></label>
             <input id="avatar" name="avatar" type="file" required class="custom-file-input" @change="userUpload">
-            <label for="avatar" class="custom-file-label"></label>
           </div>
           <form class="needs-validation" novalidate>
             <div class="row">
