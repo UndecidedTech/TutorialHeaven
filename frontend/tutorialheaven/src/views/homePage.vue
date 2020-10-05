@@ -86,8 +86,8 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="css">
 .flex-container {
-  /* background: url(../assets/simple-codelines.svg),#2b3137; */
-  background:black;
+  background: url(../assets/simple-codelines.svg),#2b3137;
+  /* background:black; */
   background-repeat: repeat;
   background-position: center;
   height: 600px;

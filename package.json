@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon index.js",
     "start": "node index.js",
-    "build": "cd frontend/tutorialheaven/ && npm run build && cd ../../"
+    "build": "cd frontend/tutorialheaven/ && npm run build"
   },
   "author": "",
   "license": "ISC",
