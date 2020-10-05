@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon index.js",
-    "postinstall": "npm run build",
     "start": "node index.js",
     "heroku-postbuild": "cd frontend && ./build.sh"
   },
