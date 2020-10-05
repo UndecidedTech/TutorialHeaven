@@ -1,0 +1,8 @@
+{
+    "root": "public",
+    "clean_urls": true,
+    "routes": {
+      "/**": "index.html"
+    }
+  }
+  
