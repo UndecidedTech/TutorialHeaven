@@ -5,6 +5,7 @@ import userProfile from './views/userProfile'
 import userSignUp from './views/userSignUp'
 import userDashboard from './views/userDashboard'
 import notFound from './views/404'
+import editCourse from './views/editCourse'
 
 Vue.use(Router)
 
@@ -14,6 +15,7 @@ const routes = [
   { path: '/userProfile', component: userProfile, name: 'userProfile' },
   { path: '/userSignUp', component: userSignUp, name: 'userSignUp' },
   { path: '/userDashboard', component: userDashboard, name: 'userDashboard' },
+  { path: '/editCourse/:id', component: editCourse, name: 'editCourse' },
   { path: '*', component: notFound }
 ]
 
