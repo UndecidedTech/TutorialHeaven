@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon index.js",
     "start": "node index.js",
-    "build": "cd frontend/tutorialheaven/ && npm run build"
+    "heroku-postbuild": "cd frontend && ./build.sh"
   },
   "author": "",
   "license": "ISC",
