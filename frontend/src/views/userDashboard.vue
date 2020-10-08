@@ -6,12 +6,12 @@
                   <h1 class="d-inline pr-5">Courses</h1>
                   <button type="button" class="btn btn-sm btn-primary mb-3" data-toggle="modal" data-target="#createCourseModal">Create a Course</button>
                 </div>
-                <hr>
+                <hr/>
                 <div v-for="(course, index) in this.courses" :key="index">
                     <div v-if="course.role ==='instructor'">
                       <a :href="[[ course.name ]]" class="classLink">
                       <i class="fas fa-graduation-cap pr-2"></i>{{ course.name }}</a>
-                      <button @click="editCourse(course._id)" type="button" class="btn btn-sm">+</button>
+                      <button @click="editCourse(course.name, course._id)" type="button" class="btn btn-sm">+</button>
                     </div>
                     <div v-else>
                       <a :href="[[ course.name ]]" class="classLink">
@@ -19,6 +19,7 @@
                     </div>
                 </div>
             </div>
+            <p>.</p>
             <div class="notification-item">
                 <h1 style="padding-left: 10px; padding-top: 30px;">Notifications</h1>
                 <hr/>
@@ -82,17 +83,17 @@ export default {
   },
   methods: {
     ...mapActions({
-      getCourses: 'courses/getCourses',
-      createCourse: 'courses/createCourse'
+      getCourses: 'user/getCourses',
+      createCourse: 'user/createCourse'
     }),
-    editCourse (id) {
-      this.$router.push({ path: '/editCourse/' + id })
+    editCourse (courseName, id) {
+      this.$router.push({ name: 'editCourse', params: { courseName: courseName, courseID: id } })
     }
   },
   computed: {
     ...mapGetters({
       user: 'user/user',
-      courses: 'courses/courses'
+      courses: 'user/userCourses'
     })
   },
   created () {
@@ -104,7 +105,7 @@ export default {
 
 <style scoped lang="css">
 .flex-container {
-    min-height: 94vh;
+    min-height: 93.7vh;
     display: flex;
     justify-content: space-around;
     align-items: flex-start;

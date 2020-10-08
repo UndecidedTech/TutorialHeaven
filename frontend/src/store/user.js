@@ -7,7 +7,8 @@ export default {
   namespaced: true,
   state: {
     token: null,
-    user: null
+    user: null,
+    courses: []
   },
 
   getters: {
@@ -16,6 +17,9 @@ export default {
     },
     user (state) {
       return state.user
+    },
+    userCourses (state) {
+      return state.courses
     }
   },
 
@@ -34,6 +38,12 @@ export default {
     },
     REM_TOKEN (state) {
       state.token = null
+    },
+    REM_COURSES (state) {
+      state.courses = []
+    },
+    SET_COURSES (state, courses) {
+      state.courses = courses
     }
   },
 
@@ -78,6 +88,23 @@ export default {
       })
       if (res.status === 200) {
         commit('SET_USER', res.data)
+      }
+    },
+    async getCourses ({ commit }, userID) {
+      const res = await axios.get(`/api/users/profile/${userID}`)
+      if (res.status === 200) {
+        commit('SET_COURSES', res.data.courses)
+      }
+    },
+    async createCourse ({ state, dispatch }, courseData) {
+      if (courseData.name && courseData.subject) {
+        const res = await axios.post('/api/courses/createCourse', courseData)
+        console.log(courseData)
+        if (res.status === 200) {
+          dispatch('getCourses', state.user._id)
+        }
+      } else {
+        alert('Please fill required forms')
       }
     }
   }

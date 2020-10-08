@@ -6,39 +6,42 @@ axios.defaults.withCredentials = true
 export default {
   namespaced: true,
   state: {
-    courses: []
+    course: {}
   },
 
   getters: {
-    courses (state) {
-      return state.courses
+    course (state) {
+      return state.course
     }
   },
 
   mutations: {
-    SET_COURSES (state, courses) {
-      state.courses = courses
-    },
-    PUSH_COURSES (state, courses) {
-      state.courses.push(courses)
+    SET_COURSE (state, course) {
+      state.course = course
     }
   },
 
   actions: {
-    async getCourses ({ commit }, userID) {
-      const res = await axios.get(`/api/users/profile/${userID}`)
+    findCourse ({ state }, urlParams) {
+      const value = state.courses.find(elem => elem._id === urlParams.courseID)
+      console.log(value)
+    },
+    async createSection ({ commit }, data) {
+      const res = await axios.post('/api/courses/createSection', data)
+      commit('SET_COURSE', res.data)
+    },
+    async getCourse ({ commit }, courseID) {
+      console.log(courseID)
+      const res = await axios.get(`/api/courses/getCourse/${courseID}`)
       if (res.status === 200) {
-        commit('SET_COURSES', res.data.courses)
+        commit('SET_COURSE', res.data)
       }
     },
-    async createCourse ({ commit }, courseData) {
-      if (courseData.name && courseData.subject) {
-        const res = await axios.post('/api/courses/createCourse', courseData)
-        if (res.status === 200) {
-          commit('SET_COURSES', res.data.courses)
-        }
-      } else {
-        alert('Please fill required forms')
+    async updateSection ({ _ }, section) {
+      console.log(section)
+      const res = await axios.post('/api/courses/updateSection', section)
+      if (res.status === 200) {
+        console.log(res.body)
       }
     }
   }

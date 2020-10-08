@@ -4,6 +4,25 @@ const Course = require("../models/course");
 const JWT = require("jsonwebtoken");
 const User = require("../models/user");
 
+router.get("/getCourse/:courseID", async (req, res) => {
+    let courseID = req.params.courseID;
+    let userId = JWT.decode(req.cookies.token).sub
+
+    console.log(courseID, userId)
+
+    let selectedCourse = await Course.findById(courseID).lean();
+    
+    if (!selectedCourse){
+        return res.status(404).send("Resource not found/doesn't exist")
+    }
+    
+    if (selectedCourse.instructors.includes(userId) || selectedCourse.students.includes(userId)){
+        res.send(selectedCourse)
+    } else {
+        res.status(404).send("User does not have access to this resource")
+    }
+
+});
 
 router.post("/createCourse", async (req, res) => {
     let userId = JWT.decode(req.cookies.token).sub
@@ -29,6 +48,51 @@ router.post("/createCourse", async (req, res) => {
 
     res.send(userUpdate.toObject());
 });
+
+router.post("/createSection", async (req, res) => {
+  console.log(req.body)
+  let courseID = req.body.courseID
+  let newSection = {
+    name: req.body.name,
+    creator: true
+  }
+  let sectionCreate = await Course.findOneAndUpdate({"_id": courseID}, {$push: {"sections": newSection }}, {new: true})
+  res.send(sectionCreate.toObject())
+})
+
+router.post("/updateCourse", async (req, res) => {
+    let courseID = req.body.courseID;
+    let userId = JWT.decode(req.cookies.token).sub
+    let update = generateUpdate(req.body.field, req.body.value);
+
+    let selectedCourse = await Course.findById(courseID).lean();
+
+    // content
+    if (selectedCourse.instructors.includes(userId)){
+        let courseUpdate = await Course.findOneAndUpdate(courseID, update, {new: true})
+        res.send(courseUpdate.toObject());
+    } else {
+        res.status(404).send("User does not have access to this resource")
+    }
+})
+
+router.post("/updateSection", async (req, res) => {
+    let courseID = req.body.courseID;
+    let sectionID = req.body.sectionID;
+    let userId = JWT.decode(req.cookies.token).sub;
+    
+    let selectedCourse = await Course.findById(courseID).lean();
+
+    if (selectedCourse.instructors.includes(userId)){
+        let update = { $set: {} }
+        update[`sections.$.${req.body.field}`] = req.body.value;
+        let courseUpdate = await Course.update({ "_id": courseID, "section._id": sectionID }, update, { new: true })
+        res.send(courseUpdate);
+        console.log(courseUpdate)
+    }
+    
+
+})
 
 //useful helper function for generating MongoDB updates
 function generateUpdate(field, value) {

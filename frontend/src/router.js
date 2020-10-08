@@ -15,7 +15,7 @@ const routes = [
   { path: '/userProfile', component: userProfile, name: 'userProfile' },
   { path: '/userSignUp', component: userSignUp, name: 'userSignUp' },
   { path: '/userDashboard', component: userDashboard, name: 'userDashboard' },
-  { path: '/editCourse/:id', component: editCourse, name: 'editCourse' },
+  { path: '/editCourse/:courseName/:courseID', component: editCourse, name: 'editCourse', params: true },
   { path: '*', component: notFound }
 ]
 
