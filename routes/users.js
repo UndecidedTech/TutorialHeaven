@@ -54,15 +54,19 @@ router.post("/profile", async (req, res) => {
 })
 
 router.post("/forgot", async (req, res) => {
+  console.log("forgotPassword triggered")
+
   const token =  await crypto.randomBytes(20).toString("hex");
 
-  let selectedUser = await User.findOne({ email: req.body.email })
+  console.log(req.body.email);
+  let selectedUser = await User.findOne({ email: req.body.email }).select("-password -resetPasswordToken -resetPasswordExpires");
 
+  console.log(selectedUser);
   if (selectedUser){
-    selectedUser.resetPasswordToken = token;
-    selectedUser.resetPasswordExpires = Date.now() + 3600000; // 1 hour
-
-    await selectedUser.save()
+    await User.findByIdAndUpdate(selectedUser._id, {$set: {
+      "resetPasswordToken": token,
+      "resetPasswordExpires": Date.now() + 3600000 // 1 hour
+    }})
 
     const smtpTransport = nodemailer.createTransport({
       service: "Gmail",
@@ -97,29 +101,32 @@ router.post("/forgot", async (req, res) => {
 })
 
 router.get('/reset/:token', async (req, res) => {
+  console.log(req.params.token)
   let selectedUser = await User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: {$gt: Date.now() }})
 
-  if (!selectedUser){
+  if (selectedUser){
+    res.send("Token exists");
+  } else {
     res.status(404).send("Password reset token is invalid or has expired.");
   }
-  res.send("Token exists");
 })
 
 router.post("/reset/:token", async (req, res) => {
   let selectedUser = await User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() }})
   if (selectedUser){
     if (req.body.password) {
+      console.log("is this allowed: ", selectedUser.toObject()._id)
       const salt = await bcrypt.genSalt(10);
       const passwordHash = await bcrypt.hash(req.body.password, salt);
-      selectedUser.password = passwordHash;
-      selectedUser.resetPasswordToken = undefined;
-      selectedUser.resetPasswordExpires = undefined;
-
-      await selectedUser.save()
-
+      let userUpdate = await User.findByIdAndUpdate(selectedUser.toObject._id, {$set: {
+        password: passwordHash,
+        resetPasswordToken: undefined,
+        resetPasswordExpires: undefined
+      }}, {new: true}).select("-password")
+      
       // send confirmation email to user that password has been reset
 
-
+      res.send(selectedUser.toObject())
       // login user and send back user details
       // res.send(selectedUser)
     }
@@ -128,6 +135,8 @@ router.post("/reset/:token", async (req, res) => {
   }
   
 })
+
+//     "password" : "$2a$10$ObwB1J8OCYvspMe7lA89xuPk29eUvRo/ATRB1saL0zvOglENHt1ze",
 
 // useful helper function
 function generateUpdate(field, value) {

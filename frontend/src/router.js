@@ -6,6 +6,7 @@ import userSignUp from './views/userSignUp'
 import userDashboard from './views/userDashboard'
 import notFound from './views/404'
 import editCourse from './views/editCourse'
+import userReset from './views/userPasswordReset'
 
 Vue.use(Router)
 
@@ -16,7 +17,8 @@ const routes = [
   { path: '/userSignUp', component: userSignUp, name: 'userSignUp' },
   { path: '/userDashboard', component: userDashboard, name: 'userDashboard' },
   { path: '/editCourse/:courseName/:courseID', component: editCourse, name: 'editCourse', params: true },
-  { path: '*', component: notFound }
+  { path: '*', component: notFound },
+  { path: '/reset/:token', component: userReset, name: 'userReset', params: true }
 ]
 
 export default new Router({
