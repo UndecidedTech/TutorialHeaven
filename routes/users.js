@@ -54,15 +54,19 @@ router.post("/profile", async (req, res) => {
 })
 
 router.post("/forgot", async (req, res) => {
+  console.log("forgotPassword triggered")
+
   const token =  await crypto.randomBytes(20).toString("hex");
 
-  let selectedUser = await User.findOne({ email: req.body.email })
+  console.log(req.body.email);
+  let selectedUser = await User.findOne({ email: req.body.email }).select("-password -resetPasswordToken -resetPasswordExpires");
 
+  console.log(selectedUser);
   if (selectedUser){
-    selectedUser.resetPasswordToken = token;
-    selectedUser.resetPasswordExpires = Date.now() + 3600000; // 1 hour
-
-    await selectedUser.save()
+    await User.findByIdAndUpdate(selectedUser._id, {$set: {
+      "resetPasswordToken": token,
+      "resetPasswordExpires": Date.now() + 3600000 // 1 hour
+    }})
 
     const smtpTransport = nodemailer.createTransport({
       service: "Gmail",
@@ -72,13 +76,22 @@ router.post("/forgot", async (req, res) => {
       }
     });
 
+    let port = req.headers.host.slice(-4);
+    let URL = req.headers.host;
+    
+    console.log("port: ", typeof port, port);
+
+    if (port === "3000") {
+      URL = req.headers.host.substr(0,10).concat("8080")
+    }
+
     const mailOptions = {
       to: selectedUser.email,
       from: "tutorialheaveninfo@gmail.com",
       subject: "Password Reset",
       text: `You are receiving this because you (or someone else) has requested the rest of the password for this account.\n
       Please click on the following link or paste it into the browser to complete the process:\n
-      http://${req.headers.host}/reset/${token} \n\n
+      http://${URL}/reset/${token} \n\n
       if you did not request this, please ignore this email and your password will remain unchanged`
     };
 
@@ -97,29 +110,59 @@ router.post("/forgot", async (req, res) => {
 })
 
 router.get('/reset/:token', async (req, res) => {
+  console.log(req.params.token)
   let selectedUser = await User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: {$gt: Date.now() }})
 
-  if (!selectedUser){
+  if (selectedUser){
+    res.send("Token exists");
+  } else {
     res.status(404).send("Password reset token is invalid or has expired.");
   }
-  res.send("Token exists");
 })
 
 router.post("/reset/:token", async (req, res) => {
   let selectedUser = await User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() }})
   if (selectedUser){
     if (req.body.password) {
+      let userId = await selectedUser.toObject()._id
       const salt = await bcrypt.genSalt(10);
       const passwordHash = await bcrypt.hash(req.body.password, salt);
-      selectedUser.password = passwordHash;
-      selectedUser.resetPasswordToken = undefined;
-      selectedUser.resetPasswordExpires = undefined;
-
-      await selectedUser.save()
+      let updatedUser = await User.findByIdAndUpdate(userId, {
+        password: passwordHash,
+        resetPasswordToken: undefined,
+        resetPasswordExpires: undefined
+      }, {new: true})
+      
 
       // send confirmation email to user that password has been reset
 
+      if (updatedUser){
+        const smtpTransport = nodemailer.createTransport({
+          service: "Gmail",
+          auth: {
+            user: "tutorialheaveninfo@gmail.com",
+            pass: process.env.GMAILPW
+          }
+        });
 
+        const mailOptions = {
+          to: selectedUser.email,
+          from: "tutorialheaveninfo@gmail.com",
+          subject: "Password Reset Successful",
+          text: `You are receiving this because you (or someone else) has reset the password for this account.\n
+          If you did not request this, please contact TutorialHeaven for help.`
+        };
+
+        smtpTransport.sendMail(mailOptions, (err) => {
+            if (err){
+              res.status(404).send("Email failed to send")
+            }
+          })
+      }
+      
+
+
+      res.send("Password has been reset")
       // login user and send back user details
       // res.send(selectedUser)
     }
@@ -128,6 +171,8 @@ router.post("/reset/:token", async (req, res) => {
   }
   
 })
+
+//     "password" : "$2a$10$ObwB1J8OCYvspMe7lA89xuPk29eUvRo/ATRB1saL0zvOglENHt1ze",
 
 // useful helper function
 function generateUpdate(field, value) {
