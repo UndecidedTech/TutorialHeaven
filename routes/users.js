@@ -76,13 +76,22 @@ router.post("/forgot", async (req, res) => {
       }
     });
 
+    let port = req.headers.host.slice(-4);
+    let URL = req.headers.host;
+    
+    console.log("port: ", typeof port, port);
+
+    if (port === "3000") {
+      URL = req.headers.host.substr(0,10).concat("8080")
+    }
+
     const mailOptions = {
       to: selectedUser.email,
       from: "tutorialheaveninfo@gmail.com",
       subject: "Password Reset",
       text: `You are receiving this because you (or someone else) has requested the rest of the password for this account.\n
       Please click on the following link or paste it into the browser to complete the process:\n
-      http://${req.headers.host}/reset/${token} \n\n
+      http://${URL}/reset/${token} \n\n
       if you did not request this, please ignore this email and your password will remain unchanged`
     };
 
@@ -116,17 +125,21 @@ router.post("/reset/:token", async (req, res) => {
   if (selectedUser){
     if (req.body.password) {
       console.log("is this allowed: ", selectedUser.toObject()._id)
+
+      let userId = await selectedUser.toObject()._id
+
+      console.log(userId);
       const salt = await bcrypt.genSalt(10);
       const passwordHash = await bcrypt.hash(req.body.password, salt);
-      let userUpdate = await User.findByIdAndUpdate(selectedUser.toObject._id, {$set: {
+      let userUpdate = await User.findByIdAndUpdate(userId, {
         password: passwordHash,
         resetPasswordToken: undefined,
         resetPasswordExpires: undefined
-      }}, {new: true}).select("-password")
+      }, {new: true}).select("-password")
       
       // send confirmation email to user that password has been reset
 
-      res.send(selectedUser.toObject())
+      res.send("Password has been reset")
       // login user and send back user details
       // res.send(selectedUser)
     }
