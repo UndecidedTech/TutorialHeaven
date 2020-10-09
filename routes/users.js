@@ -124,20 +124,43 @@ router.post("/reset/:token", async (req, res) => {
   let selectedUser = await User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() }})
   if (selectedUser){
     if (req.body.password) {
-      console.log("is this allowed: ", selectedUser.toObject()._id)
-
       let userId = await selectedUser.toObject()._id
-
-      console.log(userId);
       const salt = await bcrypt.genSalt(10);
       const passwordHash = await bcrypt.hash(req.body.password, salt);
-      let userUpdate = await User.findByIdAndUpdate(userId, {
+      let updatedUser = await User.findByIdAndUpdate(userId, {
         password: passwordHash,
         resetPasswordToken: undefined,
         resetPasswordExpires: undefined
-      }, {new: true}).select("-password")
+      }, {new: true})
       
+
       // send confirmation email to user that password has been reset
+
+      if (updatedUser){
+        const smtpTransport = nodemailer.createTransport({
+          service: "Gmail",
+          auth: {
+            user: "tutorialheaveninfo@gmail.com",
+            pass: process.env.GMAILPW
+          }
+        });
+
+        const mailOptions = {
+          to: selectedUser.email,
+          from: "tutorialheaveninfo@gmail.com",
+          subject: "Password Reset Successful",
+          text: `You are receiving this because you (or someone else) has reset the password for this account.\n
+          If you did not request this, please contact TutorialHeaven for help.`
+        };
+
+        smtpTransport.sendMail(mailOptions, (err) => {
+            if (err){
+              res.status(404).send("Email failed to send")
+            }
+          })
+      }
+      
+
 
       res.send("Password has been reset")
       // login user and send back user details

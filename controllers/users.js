@@ -43,7 +43,6 @@ module.exports = {
         res.cookie("token", token).send(createdUser);
     },
     signIn: async (req, res, next) => {
-        console.log("is anything fucking happening")
         // generate token
         const token = signToken(req.user);
         req.user.token = token
