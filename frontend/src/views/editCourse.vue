@@ -14,31 +14,33 @@
     {{updatedSection.name}} {{updatedSection.content}}
     <button class="btn btn-success" @click="updateSection(updatedSection)">Update</button>
   </div>
-  <div class="modal fade" id="createSectionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Create Section</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <label for="courseName">Section Name</label>
-              <input v-model="newSection.name" id="sectionName" type="text" class="form-control" required>
-            </div>
-            <div class="modal-footer">
-              <button type="button" @click="createSection(newSection)" data-dismiss="modal" class="btn btn-primary">Create</button>
-            </div>
-          </div>
-        </div>
-        </div>
 
+  <div class="modal fade" id="createSectionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Create Section</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <label for="courseName">Section Name</label>
+          <input v-model="newSection.name" id="sectionName" type="text" class="form-control" required>
+        </div>
+        <div class="modal-footer">
+          <button type="button" @click="createSection(newSection)" data-dismiss="modal" class="btn btn-primary">Create</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 </template>
+
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import $ from 'jquery'
+
 export default {
   name: 'editCourse',
   data () {
@@ -80,6 +82,9 @@ export default {
       user: 'user/user',
       course: 'courses/course'
     })
+  },
+  created () {
+    this.getCourse(this.$route.params.courseID)
   }
 }
 </script>
