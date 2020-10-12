@@ -60,15 +60,15 @@ router.post("/createSection", async (req, res) => {
   res.send(sectionCreate.toObject())
 })
 
-router.post("/updateCourse", async (req, res) => {
+router.put("/updateCourse", async (req, res) => {
     let courseID = req.body.courseID;
-    let userId = JWT.decode(req.cookies.token).sub
+    let userID = JWT.decode(req.cookies.token).sub
     let update = generateUpdate(req.body.field, req.body.value);
 
     let selectedCourse = await Course.findById(courseID).lean();
 
     // content
-    if (selectedCourse.instructors.includes(userId)){
+    if (selectedCourse.instructors.includes(userID)){
         let courseUpdate = await Course.findOneAndUpdate(courseID, update, {new: true})
         res.send(courseUpdate.toObject());
     } else {
@@ -76,7 +76,7 @@ router.post("/updateCourse", async (req, res) => {
     }
 })
 
-router.post("/updateSection", async (req, res) => {
+router.put("/updateSection", async (req, res) => {
     let courseID = req.body.courseID;
     let sectionID = req.body.sectionID;
     let userId = JWT.decode(req.cookies.token).sub;
@@ -86,12 +86,10 @@ router.post("/updateSection", async (req, res) => {
     if (selectedCourse.instructors.includes(userId)){
         let update = { $set: {} }
         update[`sections.$.${req.body.field}`] = req.body.value;
-        let courseUpdate = await Course.update({ "_id": courseID, "section._id": sectionID }, update, { new: true })
+        let courseUpdate = await Course.findOneAndUpdate({ "_id": courseID, "sections._id": sectionID }, update, { new: true })
         res.send(courseUpdate);
         console.log(courseUpdate)
     }
-    
-
 })
 
 //useful helper function for generating MongoDB updates
