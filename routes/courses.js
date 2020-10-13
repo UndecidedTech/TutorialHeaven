@@ -79,17 +79,53 @@ router.put("/updateCourse", async (req, res) => {
 router.put("/updateSection", async (req, res) => {
     let courseID = req.body.courseID;
     let sectionID = req.body.sectionID;
-    let userId = JWT.decode(req.cookies.token).sub;
+    let userID = JWT.decode(req.cookies.token).sub;
     
     let selectedCourse = await Course.findById(courseID).lean();
 
-    if (selectedCourse.instructors.includes(userId)){
+    if (selectedCourse.instructors.includes(userID)){
         let update = { $set: {} }
-        update[`sections.$.${req.body.field}`] = req.body.value;
+        update.$set[`sections.$.${req.body.field}`] = req.body.value;
         let courseUpdate = await Course.findOneAndUpdate({ "_id": courseID, "sections._id": sectionID }, update, { new: true })
         res.send(courseUpdate);
         console.log(courseUpdate)
     }
+})
+
+
+router.post("/createSectionContent", async (req, res) => {
+    let courseID = req.body.courseID;
+    let sectionID = req.body.sectionID;
+    let userID = JWT.decode(req.cookies.token).sub;
+    let type = req.body.type;
+    
+    let selectedCourse = await Course.findById(courseID).lean();
+    if (selectedCourse.instructors.includes(userID)) {
+        let update = {$push: {}}
+        update.$push["sections.$.content"] = { type };
+        let sectionUpdate = await Course.findOneAndUpdate({"_id": courseID, "sections._id": sectionID }, update, { new: true })
+        console.log(sectionUpdate);
+        res.send(sectionUpdate);
+    }
+})
+
+router.put("/updateSectionContent", async (req, res) => {
+    let courseID = req.body.courseID;
+    let sectionID = req.body.sectionID;
+    let userID = JWT.decode(req.cookies.token).sub;
+    let contentID = req.body.contentID;
+    let value = req.body.value;
+
+    console.log(req.body);
+    let selectedCourse = await Course.findById(courseID).lean();
+    if (selectedCourse.instructors.includes(userID)) {
+        let update = {$set: {}}
+        update.$set["sections.$.content.$[content].value"] = value;
+        let sectionUpdate = await Course.findOneAndUpdate({"_id": courseID, "sections._id": sectionID }, update, { new: true, arrayFilters: [{ 'content._id' : contentID }] })
+        console.log(sectionUpdate);
+        res.send(sectionUpdate);
+    }
+
 })
 
 //useful helper function for generating MongoDB updates
