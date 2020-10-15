@@ -11,15 +11,15 @@
     </div>
   </div>
   <div class="editor">
-  <draggable v-model="course.sections[sectionIndex].content" group="content" @start="drag=true" @end="drag=false">
+  <draggable v-model="course.sections[sectionIndex].content" group="content" @start="drag=true" @end="drag=false" @update="updateSection({courseID: course._id, sectionID: course.sections[sectionIndex]._id, field: 'content', value: course.sections[sectionIndex].content})">
   <div class="form-group" v-for="(content, index) in course.sections[sectionIndex].content" :key="index">
     <div class="editor-item" v-if="content.type === 'text'">
       <label for="exampleFormControlTextarea1">Text Content</label>
-      <textarea class="form-control" style="width: 100%" v-model="content.value" id="exampleFormControlTextarea1" rows="3" @change="updateSection({sectionID: section._id, field: 'text', value: $event.target.value, contentID: content._id})"></textarea>
+      <textarea class="form-control" style="width: 100%" v-model="content.value" id="exampleFormControlTextarea1" rows="3" @change="updateSectionContent({sectionID: section._id, field: 'text', value: $event.target.value, contentID: content._id})"></textarea>
     </div>
     <div class="editor-item" v-else-if="content.type === 'image'">
-      <input type="text" v-model="content.value" @change="updateSection({sectionID: section._id, field: 'text', value: $event.target.value, contentID: content._id})>
-      <img :src="[[content.value ]]" alt="" class="img-thumbnail w-25 h-25 mb-3">
+      <input type="text" v-model="content.value" @change="updateSectionContent({sectionID: section._id, field: 'text', value: $event.target.value, contentID: content._id})">
+      <img v-bind:src="content.value" alt="test" class="img-thumbnail w-25 h-25 mb-3">
     </div>
     <div class="editor-item" v-else-if="content.type === 'video'"></div>
     <div class="editor-item" v-else-if="content.type === 'file'"></div>
@@ -47,8 +47,9 @@ export default {
   },
   methods: {
     ...mapActions({
-      updateSection: 'courses/updateSection',
-      addContent: 'courses/createSectionContent'
+      updateSectionContent: 'courses/updateSectionContent',
+      addContent: 'courses/createSectionContent',
+      updateSection: 'courses/updateSection'
     })
   },
   computed: {

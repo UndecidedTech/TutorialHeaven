@@ -48,7 +48,13 @@ export default {
         commit('SET_COURSE', res.data)
       }
     },
-    async updateSection ({ commit, state }, update) {
+    async updateSection ({ commit }, data) {
+      const res = await axios.put('/api/courses/updateSection', data)
+      if (res.status === 200) {
+        commit('SET_COURSE', res.data)
+      }
+    },
+    async updateSectionContent ({ commit, state }, update) {
       console.log('HERE', JSON.stringify(update))
       update.courseID = state.course._id
       console.log(update)
