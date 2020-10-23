@@ -10,7 +10,9 @@ const User = require("../models/user")
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcryptjs");
-
+const { check, validationResult } = require('express-validator');
+const mongoose = require('mongoose');
+const { ObjectID } = require("mongodb");
 
 
 // eslint-disable-next-line new-cap
@@ -36,7 +38,16 @@ router.get("/profile/:userId", async (req, res) => {
       res.status(404).send("User not found");
   });
 
-router.post("/profile", async (req, res) => {
+router.post("/profile", [
+  check("userId", "User ID should not be empty/Must be ObjectID").not().isEmpty().customSanitizer(value => {
+    return ObjectID.isValid(value)
+  })
+], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
   let tokenId = JWT.decode(req.cookies.token).sub
   let userId = req.body.userId;
   console.log(tokenId, userId)
