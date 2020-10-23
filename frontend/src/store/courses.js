@@ -14,7 +14,6 @@ export default {
       return state.course
     }
   },
-
   mutations: {
     SET_COURSE (state, course) {
       state.course = course
@@ -37,11 +36,41 @@ export default {
         commit('SET_COURSE', res.data)
       }
     },
-    async updateSection ({ _ }, section) {
-      console.log(section)
-      const res = await axios.post('/api/courses/updateSection', section)
+    async updateCourse ({ commit }, data) {
+      console.log(data)
+      const res = await axios.put('/api/courses/updateCourse', {
+        courseID: data.courseID,
+        field: data.field,
+        value: data.value
+      })
       if (res.status === 200) {
-        console.log(res.body)
+        console.log(res.data)
+        commit('SET_COURSE', res.data)
+      }
+    },
+    async updateSection ({ commit }, data) {
+      const res = await axios.put('/api/courses/updateSection', data)
+      if (res.status === 200) {
+        commit('SET_COURSE', res.data)
+      }
+    },
+    async updateSectionContent ({ commit, state }, update) {
+      console.log('HERE', JSON.stringify(update))
+      update.courseID = state.course._id
+      console.log(update)
+      const res = await axios.put('/api/courses/updateSectionContent', update)
+      if (res.status === 200) {
+        console.log(res.data)
+        commit('SET_COURSE', res.data)
+      }
+    },
+    async createSectionContent ({ commit, state }, newContent) {
+      newContent.courseID = state.course._id
+      console.log(newContent)
+      const res = await axios.post('/api/courses/createSectionContent', newContent)
+      if (res.status === 200) {
+        console.log(res.data)
+        commit('SET_COURSE', res.data)
       }
     }
   }

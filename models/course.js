@@ -1,6 +1,16 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+const sectionContentSchema = new Schema({
+    type: {
+        type: String,
+        required: true
+    },
+    value: {
+        type: String,
+        default: ""
+    }
+})
 
 const sectionSchema = new Schema({
   created_by: {
@@ -11,9 +21,7 @@ const sectionSchema = new Schema({
       type: String,
       required: true
   },
-  content: {
-    type: mongoose.SchemaTypes.Mixed,
-  }
+  content: [sectionContentSchema]
 })
 
 const courseSchema = new Schema({

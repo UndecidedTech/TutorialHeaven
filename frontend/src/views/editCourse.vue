@@ -2,44 +2,60 @@
 <div class="flex-container appBackground">
   <div class="editor-sidebar">
     <h1 class="d-inline">Sections</h1>
-    <button class="btn btn-danger float-right" data-toggle="modal" data-target="#createSectionModal">+</button>
+    <button class="btn btn-sm btn-primary float-right m-2" data-toggle="modal" data-target="#createSectionModal">+</button>
     <hr/>
-    <div v-for="(section, index) in this.course.sections" :key="index" class="list-group" id="list-tab" role="tablist">
-      <a class="list-group-item list-group-item-action" id="sectionItem" @click="active($event, section._id, index)" :name="[[ section._id ]]" role="tab">{{ section.name }}</a>
+    <draggable v-model="course.sections" group="sections" @start="drag=true" @end="drag=false" @update="updateCourse({courseID: course._id, field: 'sections', value: course.sections  })">
+    <div v-for="(section, index) in this.course.sections" :key="section._id" class="list-group" id="list-tab" role="tablist">
+      <a class="list-group-item list-group-item-action" id="sectionItem" @click="active(section._id, index)" :name="[[ section._id ]]" role="tab">{{ section.name }}</a>
     </div>
+    </draggable>
   </div>
   <div class="editor-item">
-    <input type="text" name="sectionName" :placeholder="activeSection.name" @change="updatedSection.sectionID = activeSection._id, updatedSection.name = $event.target.value">
-    <input type="text" name="sectionContent" :placeholder="activeSection.content" @change="updatedSection.content = $event.target.value">
-    {{updatedSection.name}} {{updatedSection.content}}
-    <button class="btn btn-success" @click="updateSection(updatedSection)">Update</button>
+      <!-- <div class="form-group">
+        <label for="sectionName">Section Name</label><br/>
+        <input type="text" id="sectionName" name="sectionName" v-model="sectionContent.name" @click="updateSection({sectionID: activeSection, field: 'name', value: $event.target.value})">
+      </div>
+      <br/>
+      <input type="text" id="sectionContent" name="sectionContent" @change="updateSection({sectionID: activeSection, field: 'content', value: $event.target.value})">
+      <button class="btn btn-success" @click="this.updateSection(updatedSection)">Update</button>
+      <div class="form-group w-3">
+        <label for="exampleFormControlTextarea1">Section Content</label>
+        <textarea class="form-control" style="width: 50%" v-model="sectionContent.content" id="exampleFormControlTextarea1" rows="3" @change="updateSection({sectionID: activeSection, field: 'content', value: $event.target.value})"></textarea>
+    </div> -->
+    <editCourseContent v-bind:section="course.sections[sectionIndex]" v-bind:sectionIndex="sectionIndex"></editCourseContent>
   </div>
   <div class="modal fade" id="createSectionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Create Section</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <label for="courseName">Section Name</label>
-              <input v-model="newSection.name" id="sectionName" type="text" class="form-control" required>
-            </div>
-            <div class="modal-footer">
-              <button type="button" @click="createSection(newSection)" data-dismiss="modal" class="btn btn-primary">Create</button>
-            </div>
-          </div>
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Create Section</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
+        <div class="modal-body">
+          <label for="courseName">Section Name</label>
+          <input v-model="newSection.name" id="sectionName" type="text" class="form-control" required>
         </div>
-
+        <div class="modal-footer">
+          <button type="button" @click="createSection(newSection)" data-dismiss="modal" class="btn btn-primary">Create</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 </template>
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import $ from 'jquery'
+import draggable from 'vuedraggable'
+import editCourseContent from '../components/editCourseContent'
+
 export default {
+  components: {
+    draggable,
+    editCourseContent
+  },
   name: 'editCourse',
   data () {
     return {
@@ -47,31 +63,32 @@ export default {
         name: '',
         courseID: this.$route.params.courseID
       },
-      activeSection: {},
-      updatedSection: {
-        courseID: this.$route.params.courseID,
-        sectionID: '',
-        name: null,
-        content: 'This is content'
-      }
+      activeSection: 0,
+      sectionIndex: 0
     }
   },
   methods: {
     ...mapActions({
       getCourse: 'courses/getCourse',
       createSection: 'courses/createSection',
-      updateSection: 'courses/updateSection'
+      updateSection: 'courses/updateSection',
+      updateCourse: 'courses/updateCourse'
     }),
-    active (event, sectionID, sectionIndex) {
-      if ($(event.target).is('.active')) {
-        $(event.target).removeClass('active')
+    active (sectionID, index) {
+      if ($(`a[name='${sectionID}']`).is('.active')) {
+        $(`a[name='${sectionID}']`).removeClass('active')
         this.activeSection = ''
+        this.sectionContent = {
+          name: '',
+          content: ''
+        }
       } else {
+        console.log(sectionID)
         $('#list-tab a').removeClass('active')
-        $(event.target).addClass('active')
-        console.log('This is the section index', sectionIndex)
-        this.activeSection = this.course.sections[sectionIndex]
-        console.log(this.activeSection)
+        $(`a[name='${sectionID}']`).addClass('active')
+        this.sectionContent = this.course.sections.find(elem => elem._id === sectionID)
+        this.sectionIndex = index
+        this.activeSection = sectionID
       }
     }
   },
@@ -80,6 +97,12 @@ export default {
       user: 'user/user',
       course: 'courses/course'
     })
+  },
+  created () {
+    this.getCourse(this.$route.params.courseID)
+  },
+  mounted () {
+    this.active(this.course.sections[0]._id, 0)
   }
 }
 </script>
@@ -90,7 +113,6 @@ export default {
     display: flex;
     justify-content: space-around;
     align-items: flex-start;
-    border: 2px solid #5e0d0d;
 }
 .editor-sidebar {
     align-self: stretch;

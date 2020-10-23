@@ -7,12 +7,14 @@ import userDashboard from './views/userDashboard'
 import notFound from './views/404'
 import editCourse from './views/editCourse'
 import userReset from './views/userPasswordReset'
+import editCourseContent from './components/editCourseContent'
 
 Vue.use(Router)
 
 const routes = [
 
   { path: '/', component: homePage, name: 'homePage' },
+  { path: '/test', component: editCourseContent, name: 'editCourseContent' },
   { path: '/userProfile', component: userProfile, name: 'userProfile' },
   { path: '/userSignUp', component: userSignUp, name: 'userSignUp' },
   { path: '/userDashboard', component: userDashboard, name: 'userDashboard' },
