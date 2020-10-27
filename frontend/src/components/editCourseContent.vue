@@ -15,7 +15,9 @@
   <div class="form-group" v-for="(content, index) in course.sections[sectionIndex].content" :key="index">
     <div class="editor-item" v-if="content.type === 'text'">
       <label for="exampleFormControlTextarea1">Text Content</label>
-      <textarea class="form-control" style="width: 100%" v-model="content.value" id="exampleFormControlTextarea1" rows="3" @change="updateSectionContent({sectionID: section._id, field: 'text', value: $event.target.value, contentID: content._id})"></textarea>
+      <button class=" btn btn-sm btn-primary float-right" @click="updateSectionContent({sectionID: section._id, field: 'text', value: content.value , contentID: content._id})"> Save </button>
+      <vue-editor v-model="content.value"></vue-editor>
+      <!-- <textarea class="form-control" style="width: 100%" v-model="content.value" id="exampleFormControlTextarea1" rows="3" @change="updateSectionContent({sectionID: section._id, field: 'text', value: $event.target.value, contentID: content._id})"></textarea> -->
     </div>
     <div class="editor-item" v-else-if="content.type === 'image'">
       <input type="text" v-model="content.value" @change="updateSectionContent({sectionID: section._id, value: $event.target.value, contentID: content._id})">
@@ -23,7 +25,7 @@
     </div>
     <div class="editor-item" v-else-if="content.type === 'video'">
       <input type="text" v-model="content.value" @change="updateSectionContent({sectionID: section._id, value: $event.target.value, contentID: content._id})">
-      <iframe width="560" height="315" v-bind:src="content.value" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      <iframe width="560" height="315" v-bind:src="content.value" frameborder="0" allowfullscreen></iframe>
     </div>
     <div class="editor-item" v-else-if="content.type === 'file'"></div>
   </div>
@@ -32,13 +34,14 @@
 </div>
 </template>
 <script>
+import { VueEditor, Quill } from 'vue2-editor'
 import { mapActions, mapGetters } from 'vuex'
 import draggable from 'vuedraggable'
-
 export default {
   name: 'editCourseContent',
   components: {
-    draggable
+    draggable,
+    VueEditor
   },
   props: {
     section: Object,
