@@ -30,7 +30,7 @@ router.get("/profile/:userId", async (req, res) => {
       return user.toObject();
     });
 
-    let returnValue = {...selectedUser._doc};
+    let returnValue = { ...selectedUser._doc };
     delete returnValue.password;
     if (selectedUser)
       res.status(200).send(returnValue);

@@ -1,8 +1,26 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const sectionContentSchema = new Schema({
+const questionSchema = new Schema({
     type: {
+        enum: ["multiple-choice", "open-ended", "matching"],
+        type: String,
+        required: true
+    },
+    answer: {
+        type: String,
+        default: "",
+        required: false
+    },
+    question: {
+        type: String,
+        default: "",
+        required: false
+    }
+})
+const contentSchema = new Schema({
+    type: {
+        enum: ["text", "video", "assessment", "file"],
         type: String,
         required: true
     },
@@ -10,6 +28,24 @@ const sectionContentSchema = new Schema({
         type: String,
         default: ""
     }
+})
+
+const moduleSchema = new Schema({
+  title: {
+      type: String,
+      required: true
+  },
+  description: {
+      type: String,
+      required: false,
+      default: ""
+  },
+  type: {
+    enum: ["content", "assessment"],
+    type: String,
+    required: true
+  },
+  content: [questionSchema || contentSchema]
 })
 
 const sectionSchema = new Schema({
@@ -21,7 +57,7 @@ const sectionSchema = new Schema({
       type: String,
       required: true
   },
-  content: [sectionContentSchema]
+  modules: [moduleSchema]
 })
 
 const courseSchema = new Schema({
@@ -51,7 +87,6 @@ const courseSchema = new Schema({
         required: true
     }
 })
-
 
 
 const Course = mongoose.model("courses", courseSchema);
