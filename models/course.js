@@ -1,22 +1,26 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+const answerSchema = new Schema({
+    value: {
+        type: String,
+        required: false
+    }
+})
+
 const questionSchema = new Schema({
     type: {
         enum: ["multiple-choice", "open-ended", "matching"],
         type: String,
         required: true
     },
-    answer: {
-        type: String,
-        default: "",
-        required: false
-    },
+    answer: answerSchema,
     question: {
         type: String,
         default: "",
         required: false
-    }
+    },
+    incorrectAnswers: [answerSchema]
 })
 const contentSchema = new Schema({
     type: {
