@@ -6,8 +6,7 @@
       <a class="dropdown-item" name="text" @click="addContent({type: $event.target.name, sectionID: section._id})"> Add Text</a>
       <a class="dropdown-item" name="image" @click="addContent({type: $event.target.name, sectionID: section._id})"> Add Image</a>
       <a class="dropdown-item" name="video" @click="addContent({type: $event.target.name, sectionID: section._id})"> Add Video</a>
-      <a class="dropdown-item" name="file" @click="addContent({type: $event.target.name, sectionID: section._id})"> Add File</a>
-
+      <a class="dropdown-item" name="assessment" @click="addContent({type: $event.target.name, sectionID: section._id})"> Add Assessment</a>
     </div>
   </div>
   <div class="editor">
@@ -34,7 +33,7 @@
 </div>
 </template>
 <script>
-import { VueEditor, Quill } from 'vue2-editor'
+import { VueEditor } from 'vue2-editor'
 import { mapActions, mapGetters } from 'vuex'
 import draggable from 'vuedraggable'
 export default {
