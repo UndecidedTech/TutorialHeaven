@@ -59,5 +59,6 @@ const router = require("./routes/users");
 
 app.use("/api/courses", courses);
 
-app.use(express.static("public"));
+app.use(express.static("./public"));
 app.listen(port, () => console.log(`Server started on ${port}`));
+
