@@ -35,7 +35,7 @@ const contentSchema = new Schema({
 })
 
 const moduleSchema = new Schema({
-  title: {
+  name: {
       type: String,
       required: true
   },

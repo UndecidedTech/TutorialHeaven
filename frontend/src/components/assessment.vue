@@ -27,7 +27,7 @@
       </div>
       <input v-model="question.answer" type="text" name="answer" class="form-control">
       <button @click="addIncorrectAnswer(index)">Add Incorrect Answer</button>
-      <div v-for="(incorrectAnswer, index) in multipleChoiceAssessment.incorrectAnswers" :key="index">
+      <div v-for="(incorrectAnswer, index) in question.incorrectAnswers" :key="index">
       <div class="input-group-prepend">
         <span class="input-group-text">Wrong Answer</span>
       </div>

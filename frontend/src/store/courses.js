@@ -1,26 +1,36 @@
 import axios from 'axios'
-// import router from '../router'
 
 axios.defaults.withCredentials = true
 
 export default {
   namespaced: true,
   state: {
-    course: {}
+    course: {},
+    selectedModule: null
   },
 
   getters: {
     course (state) {
       return state.course
+    },
+    selectedModule (state) {
+      return state.selectedModule
     }
   },
   mutations: {
     SET_COURSE (state, course) {
       state.course = course
+    },
+    SET_SELECTEDMODULE (state, value) {
+      state.selectedModule = value
     }
   },
 
   actions: {
+    signOut ({ commit }) {
+      commit('SET_SELECTEDMODULE', false)
+      commit('SET_COURSE', {})
+    },
     findCourse ({ state }, urlParams) {
       const value = state.courses.find(elem => elem._id === urlParams.courseID)
       console.log(value)
@@ -72,6 +82,13 @@ export default {
         console.log(res.data)
         commit('SET_COURSE', res.data)
       }
+    },
+    async addModule ({ _ }, data) {
+      console.log(data)
+      // const res = await axios.post('/api/courses/addModule', data)
+      // if (res.state === 200) {
+      //   console.log(res.data)
+      // }
     }
   }
 }

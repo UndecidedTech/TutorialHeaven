@@ -19,7 +19,6 @@
                     </div>
                 </div>
             </div>
-            <!-- <assessment></assessment> -->
             <div class="notification-item">
                 <h1 style="padding-left: 10px; padding-top: 30px;">Notifications</h1>
                 <hr/>
@@ -68,6 +67,8 @@
 import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'userDashboard',
+  components: {
+  },
   data () {
     return {
       newCourse: {

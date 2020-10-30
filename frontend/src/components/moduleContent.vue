@@ -1,5 +1,6 @@
 <template>
 <div class="appBackground">
+  <button class="btn btn-primary" @click="selectModule(false)">Return</button>
   <div class="dropdown show pt-2 pr-2 pl-4 float-right">
     <a class="btn btn-info dropdown-toggle" role="button" id="addContent" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add Content</a>
     <div class="dropdown-menu" aria-labelledby="addContent">
@@ -10,8 +11,8 @@
     </div>
   </div>
   <div class="editor">
-  <draggable v-model="course.sections[sectionIndex].content" group="content" @start="drag=true" @end="drag=false" @update="updateSection({courseID: course._id, sectionID: course.sections[sectionIndex]._id, field: 'content', value: course.sections[sectionIndex].content})">
-  <div class="form-group" v-for="(content, index) in course.sections[sectionIndex].content" :key="index">
+  <draggable v-model="course.sections[sectionIndex].modules[moduleIndex].content" group="content" @start="drag=true" @end="drag=false" @update="updateSection({courseID: course._id, sectionID: course.sections[sectionIndex]._id, field: 'content', value: course.sections[sectionIndex].content})">
+  <div class="form-group" v-for="(content, index) in section.modules[moduleIndex].content" :key="index">
     <div class="editor-item" v-if="content.type === 'text'">
       <label for="exampleFormControlTextarea1">Text Content</label>
       <button class=" btn btn-sm btn-primary float-right" @click="updateSectionContent({sectionID: section._id, field: 'text', value: content.value , contentID: content._id})"> Save </button>
@@ -34,23 +35,27 @@
 </template>
 <script>
 import { VueEditor } from 'vue2-editor'
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 import draggable from 'vuedraggable'
 export default {
-  name: 'editCourseContent',
+  name: 'moduleContent',
   components: {
     draggable,
     VueEditor
   },
   props: {
     section: Object,
-    sectionIndex: Number
+    sectionIndex: Number,
+    moduleIndex: Number
   },
   data () {
     return {
     }
   },
   methods: {
+    ...mapMutations({
+      selectModule: 'courses/SET_SELECTEDMODULE'
+    }),
     ...mapActions({
       updateSectionContent: 'courses/updateSectionContent',
       addContent: 'courses/createSectionContent',

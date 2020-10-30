@@ -22,7 +22,8 @@
         <label for="exampleFormControlTextarea1">Section Content</label>
         <textarea class="form-control" style="width: 50%" v-model="sectionContent.content" id="exampleFormControlTextarea1" rows="3" @change="updateSection({sectionID: activeSection, field: 'content', value: $event.target.value})"></textarea>
     </div> -->
-    <editCourseContent v-bind:section="course.sections[sectionIndex]" v-bind:sectionIndex="sectionIndex"></editCourseContent>
+    <!-- <modules v-bind:section="course.sections[sectionIndex]" v-bind:sectionIndex="sectionIndex"></modules> -->
+    <component v-bind:section="course.sections[sectionIndex]" v-bind:sectionIndex="sectionIndex" v-bind:moduleIndex="moduleIndex" :is="dynamicComponent"/>
   </div>
   <div class="modal fade" id="createSectionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -49,12 +50,14 @@
 import { mapActions, mapGetters } from 'vuex'
 import $ from 'jquery'
 import draggable from 'vuedraggable'
-import editCourseContent from '../components/editCourseContent'
+import modules from '../components/modules'
+import moduleContent from '../components/moduleContent'
 
 export default {
   components: {
     draggable,
-    editCourseContent
+    modules,
+    moduleContent
   },
   name: 'editCourse',
   data () {
@@ -64,7 +67,8 @@ export default {
         courseID: this.$route.params.courseID
       },
       activeSection: 0,
-      sectionIndex: 0
+      sectionIndex: 0,
+      moduleIndex: 0
     }
   },
   methods: {
@@ -95,8 +99,17 @@ export default {
   computed: {
     ...mapGetters({
       user: 'user/user',
-      course: 'courses/course'
-    })
+      course: 'courses/course',
+      selectedModule: 'courses/selectedModule'
+    }),
+    dynamicComponent () {
+      console.log(this.selectedModule)
+      if (this.selectedModule) {
+        return 'moduleContent'
+      } else {
+        return 'modules'
+      }
+    }
   },
   created () {
     this.getCourse(this.$route.params.courseID)

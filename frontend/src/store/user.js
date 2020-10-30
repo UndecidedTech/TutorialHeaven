@@ -74,11 +74,6 @@ export default {
         router.push({ name: 'userDashboard' })
       }
     },
-    signOut ({ commit }) {
-      commit('REM_USER')
-      commit('REM_TOKEN')
-      router.push({ name: 'homePage' })
-    },
     async updateField ({ commit }, update) {
       console.log('vuex store action triggered', update)
       const res = await axios.post('/api/users/profile/', {

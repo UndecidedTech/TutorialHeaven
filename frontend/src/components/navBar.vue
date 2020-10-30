@@ -21,7 +21,7 @@
           <a class="dropdown-item" @click="goProfile()"><i class="fas fa-user"/> Profile Settings</a>
 
           <div class="dropdown-divider"></div>
-          <a @click="signOut" class="dropdown-item"><i class="fas fa-sign-out-alt"/> Logout</a>
+          <a @click="logOut()" class="dropdown-item"><i class="fas fa-sign-out-alt"/> Logout</a>
         </div>
       </div>
    </div>
@@ -40,7 +40,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      signOut: 'user/signOut'
+      signOut: 'signOut'
     }),
     goHome () {
       this.$router.push({ name: 'homePage' })
@@ -53,6 +53,9 @@ export default {
     },
     goDashboard () {
       this.$router.push({ name: 'userDashboard' })
+    },
+    logOut () {
+      this.signOut()
     }
   },
   computed: {
