@@ -9,12 +9,12 @@
                 <hr/>
                 <div v-for="(course, index) in this.courses" :key="index">
                     <div v-if="course.role ==='instructor'">
-                      <a :href="[[ course.name ]]" class="classLink">
+                      <a class="classLink">
                       <i class="fas fa-graduation-cap pr-2"></i>{{ course.name }}</a>
-                      <button @click="editCourse(course.name, course._id)" type="button" class="btn btn-sm">+</button>
+                      <button @click="editCourse(course.name, course._id)" type="button" class="btn btn-sm editCourseButton">+</button>
                     </div>
                     <div v-else>
-                      <a :href="[[ course.name ]]" class="classLink">
+                      <a :href="[[ course.name ]]" class="classLink" @click="viewCourse(course.name, course._id)">
                       <i class="fas fa-book pr-2"></i>{{ course.name }}</a>
                     </div>
                 </div>
@@ -88,7 +88,10 @@ export default {
       createCourse: 'user/createCourse'
     }),
     editCourse (courseName, id) {
-      this.$router.push({ name: 'editCourse', params: { courseName: courseName, courseID: id } })
+      this.$router.push({ name: 'course', params: { courseName: courseName, courseID: id } })
+    },
+    viewCourse (courseName, id) {
+      this.$router.push({ name: 'course', params: { courseName: courseName, courseID: id } })
     }
   },
   computed: {
@@ -126,6 +129,10 @@ export default {
   color: black;
   text-decoration: none;
   background-color: transparent;
+  }
+  .editCourseButton:hover {
+    background-color: #007bff;
+    color: white;
   }
 
 </style>

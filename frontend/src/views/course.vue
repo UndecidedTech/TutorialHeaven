@@ -4,7 +4,7 @@
     <h1 class="d-inline">Sections</h1>
     <button class="btn btn-sm btn-primary float-right m-2" data-toggle="modal" data-target="#createSectionModal">+</button>
     <hr/>
-    <draggable v-model="course.sections" group="sections" @start="drag=true" @end="drag=false" @update="updateCourse({courseID: course._id, field: 'sections', value: course.sections  })">
+    <draggable v-if="course.instructors.includes(user._id)" v-model="course.sections" group="sections" @start="drag=true" @end="drag=false" @update="updateCourse({courseID: course._id, field: 'sections', value: course.sections  })">
     <div v-for="(section, index) in this.course.sections" :key="section._id" class="list-group" id="list-tab" role="tablist">
       <a class="list-group-item list-group-item-action" id="sectionItem" @click="active(section._id, index)" :name="[[ section._id ]]" role="tab">{{ section.name }}</a>
     </div>
@@ -23,9 +23,9 @@
         <textarea class="form-control" style="width: 50%" v-model="sectionContent.content" id="exampleFormControlTextarea1" rows="3" @change="updateSection({sectionID: activeSection, field: 'content', value: $event.target.value})"></textarea>
     </div> -->
     <!-- <modules v-bind:section="course.sections[sectionIndex]" v-bind:sectionIndex="sectionIndex"></modules> -->
-    <component v-bind:section="course.sections[sectionIndex]" v-bind:sectionIndex="sectionIndex" v-bind:moduleIndex="moduleIndex" :is="dynamicComponent"/>
+    <component v-bind:section="course.sections[sectionIndex]" v-bind:sectionIndex="sectionIndex" v-bind:moduleIndex="this.selectedModule.index" :is="dynamicComponent"/>
   </div>
-  <div class="modal fade" id="createSectionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div v-if="course.instructors.includes(user._id)" class="modal fade" id="createSectionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -52,14 +52,16 @@ import $ from 'jquery'
 import draggable from 'vuedraggable'
 import modules from '../components/modules'
 import moduleContent from '../components/moduleContent'
+import assessment from '../components/assessment'
 
 export default {
   components: {
     draggable,
     modules,
-    moduleContent
+    moduleContent,
+    assessment
   },
-  name: 'editCourse',
+  name: 'course',
   data () {
     return {
       newSection: {
@@ -67,8 +69,7 @@ export default {
         courseID: this.$route.params.courseID
       },
       activeSection: 0,
-      sectionIndex: 0,
-      moduleIndex: 0
+      sectionIndex: 0
     }
   },
   methods: {
@@ -104,8 +105,10 @@ export default {
     }),
     dynamicComponent () {
       console.log(this.selectedModule)
-      if (this.selectedModule) {
+      if (this.selectedModule.type === 'content') {
         return 'moduleContent'
+      } else if (this.selectedModule.type === 'assessment') {
+        return 'assessment'
       } else {
         return 'modules'
       }

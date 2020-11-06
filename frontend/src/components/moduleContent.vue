@@ -1,18 +1,18 @@
 <template>
 <div class="appBackground">
-  <button class="btn btn-primary" @click="selectModule(false)">Return</button>
+  <div v-if="course.instructors.includes(user._id)">
+  <button class="btn btn-primary" @click="selectModule('')">Return</button>
   <div class="dropdown show pt-2 pr-2 pl-4 float-right">
     <a class="btn btn-info dropdown-toggle" role="button" id="addContent" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add Content</a>
     <div class="dropdown-menu" aria-labelledby="addContent">
-      <a class="dropdown-item" name="text" @click="addContent({type: $event.target.name, sectionID: section._id})"> Add Text</a>
-      <a class="dropdown-item" name="image" @click="addContent({type: $event.target.name, sectionID: section._id})"> Add Image</a>
-      <a class="dropdown-item" name="video" @click="addContent({type: $event.target.name, sectionID: section._id})"> Add Video</a>
-      <a class="dropdown-item" name="assessment" @click="addContent({type: $event.target.name, sectionID: section._id})"> Add Assessment</a>
+      <a class="dropdown-item" name="text" @click="addContent({type: $event.target.name, sectionID: section._id, moduelID: course.sections[sectionIndex].modules[moduleIndex]._id})"> Add Text</a>
+      <a class="dropdown-item" name="image" @click="addContent({type: $event.target.name, sectionID: section._id, moduelID: course.sections[sectionIndex].modules[moduleIndex]._id})"> Add Image</a>
+      <a class="dropdown-item" name="video" @click="addContent({type: $event.target.name, sectionID: section._id, moduelID: course.sections[sectionIndex].modules[moduleIndex]._id})"> Add Video</a>
     </div>
   </div>
   <div class="editor">
-  <draggable v-model="course.sections[sectionIndex].modules[moduleIndex].content" group="content" @start="drag=true" @end="drag=false" @update="updateSection({courseID: course._id, sectionID: course.sections[sectionIndex]._id, field: 'content', value: course.sections[sectionIndex].content})">
-  <div class="form-group" v-for="(content, index) in section.modules[moduleIndex].content" :key="index">
+  <draggable v-model="course.sections[sectionIndex].modules[this.selectedModule.index].content" group="content" @start="drag=true" @end="drag=false" @update="updateSection({courseID: course._id, sectionID: course.sections[sectionIndex]._id, field: 'content', value: course.sections[sectionIndex].content})">
+  <div class="form-group" v-for="(content, index) in section.modules[this.selectedModule.index].content" :key="index">
     <div class="editor-item" v-if="content.type === 'text'">
       <label for="exampleFormControlTextarea1">Text Content</label>
       <button class=" btn btn-sm btn-primary float-right" @click="updateSectionContent({sectionID: section._id, field: 'text', value: content.value , contentID: content._id})"> Save </button>
@@ -32,11 +32,33 @@
   </draggable>
   </div>
 </div>
+<div v-else>
+<button class="btn btn-primary" @click="selectModule(false)">Return</button>
+<div class="editor">
+<div class="form-group" v-for="(content, index) in section.modules[moduleIndex].content" :key="index">
+    <div class="editor-item" v-if="content.type === 'text'">
+      <label for="exampleFormControlTextarea1">Text Content</label>
+      <vue-editor v-model="content.value"></vue-editor>
+    </div>
+    <div class="editor-item" v-else-if="content.type === 'image'">
+      <input type="text" v-model="content.value">
+      <img v-bind:src="content.value" alt="test" class="img-thumbnail w-25 h-25 mb-3">
+    </div>
+    <div class="editor-item" v-else-if="content.type === 'video'">
+      <input type="text" v-model="content.value">
+      <iframe width="560" height="315" v-bind:src="content.value" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="editor-item" v-else-if="content.type === 'file'"></div>
+  </div>
+</div>
+</div>
+</div>
 </template>
 <script>
 import { VueEditor } from 'vue2-editor'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 import draggable from 'vuedraggable'
+
 export default {
   name: 'moduleContent',
   components: {
@@ -58,13 +80,15 @@ export default {
     }),
     ...mapActions({
       updateSectionContent: 'courses/updateSectionContent',
-      addContent: 'courses/createSectionContent',
+      addContent: 'courses/createModuleContent',
       updateSection: 'courses/updateSection'
     })
   },
   computed: {
     ...mapGetters({
-      course: 'courses/course'
+      course: 'courses/course',
+      user: 'user/user',
+      selectedModule: 'courses/selectedModule'
     })
   }
 }

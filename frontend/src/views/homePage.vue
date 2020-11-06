@@ -1,5 +1,5 @@
 <template>
-<div class="appBackground">
+<div>
   <div class="flex-container">
     <div class="flexbox-item flexbox-item-1">
   <div id="myCarousel" class="col carousel slide" data-ride="carousel">
@@ -121,13 +121,12 @@ export default {
   /* background:black; */
   background-repeat: repeat;
   background-position: center;
-  height: 600px;
+  min-height: 93.7vh;
   display: flex;
   justify-content: space-evenly;
 }
 .flexbox-item {
   width: 300px;
-  padding: 10px;
 }
 .flexbox-item-1 {
   overflow: hidden;
@@ -136,6 +135,8 @@ export default {
   align-self: flex-start;
 }
 .flexbox-item-2 {
+  align-self: flex-start;
+  width: 300px;
   max-height: 600px;
 }
 .bg-submit {

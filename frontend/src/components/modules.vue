@@ -8,7 +8,7 @@
         <div class="card-body">
             <p class=""><b>{{ section.name }}</b>: {{ section.description }}</p>
             <hr/>
-            <p v-for="(module, index) in section.modules" :key="index" @click="enterModule(index)" class="card-title border border-dark rounded pl-2 pt-3 pb-3"><i v-if="module.type === 'content'" class="pl-2 fa fa-book"/> <i v-else class="pl-2 far fa-file-alt"/> <b>{{ module.name }}</b></p>
+            <p v-for="(module, index) in section.modules" :key="index" @click="enterModule(index, module.type)" class="card-title border border-dark rounded pl-2 pt-3 pb-3"><i v-if="module.type === 'content'" class="pl-2 fa fa-book"/> <i v-else class="pl-2 far fa-file-alt"/> <b>{{ module.name }}</b></p>
         </div>
     </section>
 </div>
@@ -26,9 +26,13 @@
           <input id="moduleName" v-model="name" type="text" class="form-control" required>
           <label for="moduleDescription">Module Description</label>
           <input id="moduleDescription" v-model="description" type="text" class="form-control" required>
+          <select v-model="type">
+            <option value="assessment">Assessment</option>
+            <option value="content">Content</option>
+          </select>
         </div>
         <div class="modal-footer">
-          <button type="button" @click="addModule({name, description, courseID: course._id, sectionID: section._id})" data-dismiss="modal" class="btn btn-primary">Create</button>
+          <button type="button" @click="addModule({name, description, type, courseID: course._id, sectionID: section._id})" data-dismiss="modal" class="btn btn-primary">Create</button>
         </div>
       </div>
     </div>
@@ -42,24 +46,26 @@ export default {
   data () {
     return {
       name: '',
-      description: ''
+      description: '',
+      type: ''
     }
   },
   props: {
     section: Object,
-    sectionIndex: Number,
-    moduleIndex: Number
+    sectionIndex: Number
   },
   methods: {
     ...mapMutations({
       selectModule: 'courses/SET_SELECTEDMODULE'
     }),
     ...mapActions({
-      addModule: 'courses/addModule'
+      addModule: 'courses/createModule'
     }),
-    enterModule (index) {
-      this.selectModule(true)
-      this.moduleIndex = index
+    enterModule (index, type) {
+      this.selectModule({
+        type: type,
+        index: index
+      })
     }
   },
   computed: {

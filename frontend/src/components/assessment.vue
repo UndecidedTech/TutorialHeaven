@@ -1,6 +1,7 @@
 <template>
 <div>
-  <div id="student" v-if="true">
+  <button class="btn btn-primary" @click="selectModule('')">Return</button>
+  <div id="student" v-if="!course.instructors.includes(user._id)">
     <div v-for="(question, index) in multipleChoiceAssessment" :key="index">
       <span>{{ question.question }}</span>
       <div class="custom-control custom-radio">
@@ -15,7 +16,7 @@
       </div>
     </div>
   </div>
-  <div id="instructor" v-if="true">
+  <div id="instructor" v-else>
     <button class="btn btn-primary" @click="addQuestion">Add Question</button>
     <div v-for="(question, index) in multipleChoiceAssessment"  :key="index">
       <div class="input-group-prepend">
@@ -54,6 +55,8 @@
 </div>
 </template>
 <script>
+import { mapMutations, mapGetters } from 'vuex'
+
 export default {
   name: 'assessment',
   data () {
@@ -62,6 +65,9 @@ export default {
     }
   },
   methods: {
+    ...mapMutations({
+      selectModule: 'courses/SET_SELECTEDMODULE'
+    }),
     addQuestion () {
       this.multipleChoiceAssessment.push({
         question: '',
@@ -74,6 +80,10 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      course: 'courses/course',
+      user: 'user/user'
+    })
   }
 }
 </script>

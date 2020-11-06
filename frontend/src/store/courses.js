@@ -6,7 +6,10 @@ export default {
   namespaced: true,
   state: {
     course: {},
-    selectedModule: null
+    selectedModule: {
+      type: '',
+      index: 0
+    }
   },
 
   getters: {
@@ -20,6 +23,7 @@ export default {
   mutations: {
     SET_COURSE (state, course) {
       state.course = course
+      console.log('Course Set')
     },
     SET_SELECTEDMODULE (state, value) {
       state.selectedModule = value
@@ -74,21 +78,21 @@ export default {
         commit('SET_COURSE', res.data)
       }
     },
-    async createSectionContent ({ commit, state }, newContent) {
+    async createModuleContent ({ commit, state }, newContent) {
       newContent.courseID = state.course._id
       console.log(newContent)
-      const res = await axios.post('/api/courses/createSectionContent', newContent)
+      const res = await axios.post('/api/courses/createModuleContent', newContent)
+      console.log(res.data)
       if (res.status === 200) {
         console.log(res.data)
         commit('SET_COURSE', res.data)
       }
     },
-    async addModule ({ _ }, data) {
-      console.log(data)
-      // const res = await axios.post('/api/courses/addModule', data)
-      // if (res.state === 200) {
-      //   console.log(res.data)
-      // }
+    async createModule ({ commit }, data) {
+      const res = await axios.post('/api/courses/createModule', data)
+      if (res.status === 200) {
+        commit('SET_COURSE', res.data)
+      }
     }
   }
 }

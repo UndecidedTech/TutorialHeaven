@@ -5,7 +5,7 @@ import userProfile from './views/userProfile'
 import userSignUp from './views/userSignUp'
 import userDashboard from './views/userDashboard'
 import notFound from './views/404'
-import editCourse from './views/editCourse'
+import course from './views/course'
 import userReset from './views/userPasswordReset'
 import moduleContent from './components/moduleContent'
 
@@ -18,7 +18,7 @@ const routes = [
   { path: '/userProfile', component: userProfile, name: 'userProfile' },
   { path: '/userSignUp', component: userSignUp, name: 'userSignUp' },
   { path: '/userDashboard', component: userDashboard, name: 'userDashboard' },
-  { path: '/editCourse/:courseName/:courseID', component: editCourse, name: 'editCourse', params: true },
+  { path: '/course/:courseName/:courseID', component: course, name: 'course', params: true },
   { path: '*', component: notFound },
   { path: '/reset/:token', component: userReset, name: 'userReset', params: true }
 ]
