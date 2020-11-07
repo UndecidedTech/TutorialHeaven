@@ -1,24 +1,15 @@
 <template>
 <div class="appBackground">
   <div v-if="course.instructors.includes(user._id)">
-  <button class="btn btn-primary" @click="selectModule('')">Return</button>
-  <div class="dropdown show pt-2 pr-2 pl-4 float-right">
-    <a class="btn btn-info dropdown-toggle" role="button" id="addContent" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add Content</a>
-    <div class="dropdown-menu" aria-labelledby="addContent">
-      <a class="dropdown-item" name="text" @click="addContent({type: $event.target.name, sectionID: section._id, moduelID: course.sections[sectionIndex].modules[moduleIndex]._id})"> Add Text</a>
-      <a class="dropdown-item" name="image" @click="addContent({type: $event.target.name, sectionID: section._id, moduelID: course.sections[sectionIndex].modules[moduleIndex]._id})"> Add Image</a>
-      <a class="dropdown-item" name="video" @click="addContent({type: $event.target.name, sectionID: section._id, moduelID: course.sections[sectionIndex].modules[moduleIndex]._id})"> Add Video</a>
-    </div>
-  </div>
+  <button class="btn btn-primary" @click="selectModule({type: '', index: 0})">Return</button>
   <div class="editor">
-  <draggable v-model="course.sections[sectionIndex].modules[this.selectedModule.index].content" group="content" @start="drag=true" @end="drag=false" @update="updateSection({courseID: course._id, sectionID: course.sections[sectionIndex]._id, field: 'content', value: course.sections[sectionIndex].content})">
-  <div class="form-group" v-for="(content, index) in section.modules[this.selectedModule.index].content" :key="index">
-    <div class="editor-item" v-if="content.type === 'text'">
+  <draggable v-model="course.sections[sectionIndex].modules[moduleIndex].content" group="content" @start="drag=true" @end="drag=false" @update="updateSection({courseID: course._id, sectionID: course.sections[sectionIndex]._id, field: 'content', value: course.sections[sectionIndex].content})"> -->
+  <div class="form-group" v-for="(content, index) in section.modules[moduleIndex].content" :key="index">
+    <div class="editor-item">
       <label for="exampleFormControlTextarea1">Text Content</label>
-      <button class=" btn btn-sm btn-primary float-right" @click="updateSectionContent({sectionID: section._id, field: 'text', value: content.value , contentID: content._id})"> Save </button>
+      <button class=" btn btn-sm btn-primary float-right" @click="updateModuleContent({sectionID: section._id, moduleID:section.modules[moduleIndex]._id, field: 'text', value: content.value , contentID: content._id})"> Save </button>
       <vue-editor v-model="content.value"></vue-editor>
-      <!-- <textarea class="form-control" style="width: 100%" v-model="content.value" id="exampleFormControlTextarea1" rows="3" @change="updateSectionContent({sectionID: section._id, field: 'text', value: $event.target.value, contentID: content._id})"></textarea> -->
-    </div>
+    <!-- </div>
     <div class="editor-item" v-else-if="content.type === 'image'">
       <input type="text" v-model="content.value" @change="updateSectionContent({sectionID: section._id, value: $event.target.value, contentID: content._id})">
       <img v-bind:src="content.value" alt="test" class="img-thumbnail w-25 h-25 mb-3">
@@ -27,18 +18,20 @@
       <input type="text" v-model="content.value" @change="updateSectionContent({sectionID: section._id, value: $event.target.value, contentID: content._id})">
       <iframe width="560" height="315" v-bind:src="content.value" frameborder="0" allowfullscreen></iframe>
     </div>
-    <div class="editor-item" v-else-if="content.type === 'file'"></div>
+    <div class="editor-item" v-else-if="content.type === 'file'"></div> -->
+  </div>
   </div>
   </draggable>
   </div>
 </div>
 <div v-else>
-<button class="btn btn-primary" @click="selectModule(false)">Return</button>
+<button class="btn btn-primary" @click="selectModule({type: '', index: 0})">Return</button>
 <div class="editor">
 <div class="form-group" v-for="(content, index) in section.modules[moduleIndex].content" :key="index">
     <div class="editor-item" v-if="content.type === 'text'">
       <label for="exampleFormControlTextarea1">Text Content</label>
-      <vue-editor v-model="content.value"></vue-editor>
+      <!-- <vue-editor v-model="content.value" :editor-toolbar="customToolbar"></vue-editor> -->
+      <div v-html="content.value"></div>
     </div>
     <div class="editor-item" v-else-if="content.type === 'image'">
       <input type="text" v-model="content.value">
@@ -79,7 +72,7 @@ export default {
       selectModule: 'courses/SET_SELECTEDMODULE'
     }),
     ...mapActions({
-      updateSectionContent: 'courses/updateSectionContent',
+      updateModuleContent: 'courses/updateModuleContent',
       addContent: 'courses/createModuleContent',
       updateSection: 'courses/updateSection'
     })

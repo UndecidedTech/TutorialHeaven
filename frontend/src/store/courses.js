@@ -68,13 +68,21 @@ export default {
         commit('SET_COURSE', res.data)
       }
     },
-    async updateSectionContent ({ commit, state }, update) {
+    async updateModuleContent ({ commit, state }, update) {
       console.log('HERE', JSON.stringify(update))
       update.courseID = state.course._id
       console.log(update)
-      const res = await axios.put('/api/courses/updateSectionContent', update)
+      const res = await axios.put('/api/courses/updateModuleContent', update)
       if (res.status === 200) {
         console.log(res.data)
+        commit('SET_COURSE', res.data)
+      }
+    },
+    async deleteModuleContent ({ commit, state }, data) {
+      data.courseID = state.course._id
+      const res = await axios.post('/api/courses/deleteModuleContent', data)
+      console.log(res.data)
+      if (res.status === 200) {
         commit('SET_COURSE', res.data)
       }
     },
@@ -85,6 +93,18 @@ export default {
       console.log(res.data)
       if (res.status === 200) {
         console.log(res.data)
+        commit('SET_COURSE', res.data)
+      }
+    },
+    async deleteModule ({ commit }, data) {
+      const res = await axios.post('/api/courses/deleteModule', data)
+      if (res.status === 200) {
+        commit('SET_COURSE', res.data)
+      }
+    },
+    async deleteSection ({ commit }, data) {
+      const res = await axios.post('/api/courses/deleteSection', data)
+      if (res.status === 200) {
         commit('SET_COURSE', res.data)
       }
     },

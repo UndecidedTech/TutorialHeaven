@@ -93,6 +93,21 @@ router.put("/updateSection", async (req, res) => {
     }
 })
 
+router.post("/deleteSection", async (req, res) => {
+    let courseID = req.body.courseID;
+    let sectionID = req.body.sectionID;
+
+    let userID = JWT.decode(req.cookies.token).sub;
+
+    let selectedCourse = await Course.findById(courseID).lean();
+    if (selectedCourse.instructors.includes(userID)) {
+        let update = {$pull: {}}
+        update.$pull["sections"] = { "_id": sectionID };
+        let sectionUpdate = await Course.findOneAndUpdate({"_id": courseID }, update, { new: true })
+        res.send(sectionUpdate)
+    }
+})
+
 router.post("/createModule", async (req, res) => {
     let courseID = req.body.courseID;
     let sectionID = req.body.sectionID;
@@ -132,7 +147,21 @@ router.put("/updateModule", async (req, res) => {
     }
 })
 
+router.post("/deleteModule", async (req, res) => {
+    let courseID = req.body.courseID;
+    let sectionID = req.body.sectionID;
+    let moduleID = req.body.moduleID;
 
+    let userID = JWT.decode(req.cookies.token).sub;
+
+    let selectedCourse = await Course.findById(courseID).lean();
+    if (selectedCourse.instructors.includes(userID)) {
+        let update = {$pull: {}}
+        update.$pull["sections.$.modules"] = { "_id": moduleID };
+        let moduleUpdate = await Course.findOneAndUpdate({"_id": courseID, "sections._id": sectionID}, update, { new: true })
+        res.send(moduleUpdate)
+    }
+})
 
 router.post("/createModuleContent", async (req, res) => {
     let courseID = req.body.courseID;
@@ -151,23 +180,42 @@ router.post("/createModuleContent", async (req, res) => {
     }
 })
 
-router.put("/updateSectionContent", async (req, res) => {
+router.put("/updateModuleContent", async (req, res) => {
     let courseID = req.body.courseID;
     let sectionID = req.body.sectionID;
-    let userID = JWT.decode(req.cookies.token).sub;
     let contentID = req.body.contentID;
+    let moduleID = req.body.moduleID;
+    let userID = JWT.decode(req.cookies.token).sub;
+    
     let value = req.body.value;
 
     console.log(req.body);
     let selectedCourse = await Course.findById(courseID).lean();
     if (selectedCourse.instructors.includes(userID)) {
         let update = {$set: {}}
-        update.$set["sections.$.content.$[content].value"] = value;
-        let sectionUpdate = await Course.findOneAndUpdate({"_id": courseID, "sections._id": sectionID }, update, { new: true, arrayFilters: [{ 'content._id' : contentID }] })
+        update.$set["sections.$.modules.$[module].content.$[content].value"] = value;
+        let sectionUpdate = await Course.findOneAndUpdate({"_id": courseID, "sections._id": sectionID }, update, { new: true, arrayFilters: [{ 'module._id': moduleID }, { 'content._id' : contentID }] })
         console.log(sectionUpdate);
         res.send(sectionUpdate);
     }
 
+})
+
+router.post("/deleteModuleContent", async (req, res) => {
+    let courseID = req.body.courseID;
+    let sectionID = req.body.sectionID;
+    let contentID = req.body.contentID;
+    let moduleID = req.body.moduleID;
+
+    let userID = JWT.decode(req.cookies.token).sub;
+
+    let selectedCourse = await Course.findById(courseID).lean();
+    if (selectedCourse.instructors.includes(userID)) {
+        let update = {$pull: {}}
+        update.$pull[`sections.$.modules.$[module].content`] = { "_id": contentID };
+        let moduleUpdate = await Course.findOneAndUpdate({"_id": courseID, "sections._id": sectionID}, update, { new: true, arrayFilters: [{ 'module._id': moduleID }] })
+        res.send(moduleUpdate)
+    }
 })
 
 //useful helper function for generating MongoDB updates

@@ -1,6 +1,6 @@
 <template>
 <div>
-  <button class="btn btn-primary" @click="selectModule('')">Return</button>
+  <button class="btn btn-primary" @click="selectModule({type: '', index: 0})">Return</button>
   <div id="student" v-if="!course.instructors.includes(user._id)">
     <div v-for="(question, index) in multipleChoiceAssessment" :key="index">
       <span>{{ question.question }}</span>

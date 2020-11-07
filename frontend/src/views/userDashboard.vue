@@ -14,7 +14,7 @@
                       <button @click="editCourse(course.name, course._id)" type="button" class="btn btn-sm editCourseButton">+</button>
                     </div>
                     <div v-else>
-                      <a :href="[[ course.name ]]" class="classLink" @click="viewCourse(course.name, course._id)">
+                      <a class="classLink" @click="viewCourse(course.name, course._id)">
                       <i class="fas fa-book pr-2"></i>{{ course.name }}</a>
                     </div>
                 </div>

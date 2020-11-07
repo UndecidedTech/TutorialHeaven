@@ -2,13 +2,18 @@
 <div class="flex-container appBackground">
   <div class="editor-sidebar">
     <h1 class="d-inline">Sections</h1>
-    <button class="btn btn-sm btn-primary float-right m-2" data-toggle="modal" data-target="#createSectionModal">+</button>
+    <button v-if="course.instructors.includes(user._id)" class="btn btn-sm btn-primary float-right m-2" data-toggle="modal" data-target="#createSectionModal">+</button>
     <hr/>
     <draggable v-if="course.instructors.includes(user._id)" v-model="course.sections" group="sections" @start="drag=true" @end="drag=false" @update="updateCourse({courseID: course._id, field: 'sections', value: course.sections  })">
     <div v-for="(section, index) in this.course.sections" :key="section._id" class="list-group" id="list-tab" role="tablist">
-      <a class="list-group-item list-group-item-action" id="sectionItem" @click="active(section._id, index)" :name="[[ section._id ]]" role="tab">{{ section.name }}</a>
+      <div> <a class="list-group-item list-group-item-action" id="sectionItem" @click="active(section._id, index)" :name="[[ section._id ]]" role="tab">{{ section.name }}</a> <button class="btn btn-sm btn-danger" @click="deleteSection({courseID: course._id, sectionID: section._id})">Remove </button></div>
     </div>
     </draggable>
+    <div v-else>
+      <div v-for="(section, index) in this.course.sections" :key="section._id" class="list-group" id="list-tab" role="tablist">
+      <div> <a class="list-group-item list-group-item-action" id="sectionItem" @click="active(section._id, index)" :name="[[ section._id ]]" role="tab">{{ section.name }}</a> <button class="btn btn-sm btn-danger" @click="deleteSection({courseID: course._id, sectionID: section._id})">Remove </button></div>
+    </div>
+    </div>
   </div>
   <div class="editor-item">
       <!-- <div class="form-group">
@@ -77,7 +82,8 @@ export default {
       getCourse: 'courses/getCourse',
       createSection: 'courses/createSection',
       updateSection: 'courses/updateSection',
-      updateCourse: 'courses/updateCourse'
+      updateCourse: 'courses/updateCourse',
+      deleteSection: 'courses/deleteSection'
     }),
     active (sectionID, index) {
       if ($(`a[name='${sectionID}']`).is('.active')) {

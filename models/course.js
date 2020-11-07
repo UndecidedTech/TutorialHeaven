@@ -8,30 +8,29 @@ const answerSchema = new Schema({
     }
 })
 
-const questionSchema = new Schema({
-    type: {
-        enum: ["multiple-choice", "open-ended", "matching"],
-        type: String,
-        required: true
-    },
-    answer: answerSchema,
-    question: {
-        type: String,
-        default: "",
-        required: false
-    },
-    incorrectAnswers: [answerSchema]
-})
 const contentSchema = new Schema({
     type: {
-        enum: ["text", "video", "assessment", "file"],
+        enum: ["text", "multiple-choice", "open-ended", "matching"],
         type: String,
         required: true
     },
     value: {
         type: String,
         default: ""
-    }
+    },
+    question: {
+        type: String,
+        default: "",
+        required: false
+    },
+    answer: {
+        type: answerSchema,
+        required: false
+    },
+    incorrectAnswers: {
+        type: [answerSchema],
+        required: false
+    } 
 })
 
 const moduleSchema = new Schema({
@@ -49,7 +48,7 @@ const moduleSchema = new Schema({
     type: String,
     required: true
   },
-  content: [questionSchema || contentSchema]
+  content: [contentSchema]
 })
 
 const sectionSchema = new Schema({
