@@ -8,7 +8,7 @@
         <div class="card-body">
             <p class=""><b>{{ section.name }}</b>: {{ section.description }}</p>
             <hr/>
-            <p v-for="(module, index) in section.modules" :key="index" class="card-title border border-dark rounded pl-2 pt-3 pb-3"><i v-if="module.type === 'content'" class="pl-2 fa fa-book"/> <i v-else class="pl-2 far fa-file-alt"/> <b @click="enterModule(index, module.type)">{{ module.name }}</b><button class="btn btn-sm btn-danger float-right mr-3" @click="deleteModule({courseID: course._id, sectionID: section._id, moduleID: module._id})">Remove</button></p>
+            <p v-for="(module, index) in section.modules" :key="index" class="card-title border border-dark rounded pl-2 pt-3 pb-3"><i v-if="module.type === 'content'" class="pl-2 fa fa-book"/> <i v-else class="pl-2 far fa-file-alt"/> <b @click="enterModule(index, module.type)">{{ module.name }}</b><button v-if="course.instructors.includes(user._id)" class="btn btn-sm btn-danger float-right mr-3" @click="deleteModule({courseID: course._id, sectionID: section._id, moduleID: module._id})">Remove</button></p>
         </div>
     </section>
 </div>

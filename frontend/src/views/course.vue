@@ -6,7 +6,7 @@
     <hr/>
     <draggable v-if="course.instructors.includes(user._id)" v-model="course.sections" group="sections" @start="drag=true" @end="drag=false" @update="updateCourse({courseID: course._id, field: 'sections', value: course.sections  })">
     <div v-for="(section, index) in this.course.sections" :key="section._id" class="list-group" id="list-tab" role="tablist">
-      <div> <a class="list-group-item list-group-item-action" id="sectionItem" @click="active(section._id, index)" :name="[[ section._id ]]" role="tab">{{ section.name }}</a> <button class="btn btn-sm btn-danger" @click="deleteSection({courseID: course._id, sectionID: section._id})">Remove </button></div>
+      <div> <a class="list-group-item list-group-item-action" id="sectionItem" @click="active(section._id, index)" :name="[[ section._id ]]" role="tab">{{ section.name }}</a> <button v-if="course.instructors.includes(user._id)" class="btn btn-sm btn-danger" @click="deleteSection({courseID: course._id, sectionID: section._id})">Remove</button></div>
     </div>
     </draggable>
     <div v-else>
