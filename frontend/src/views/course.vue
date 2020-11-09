@@ -11,7 +11,7 @@
     </draggable>
     <div v-else>
       <div v-for="(section, index) in this.course.sections" :key="section._id" class="list-group" id="list-tab" role="tablist">
-      <div> <a class="list-group-item list-group-item-action" id="sectionItem" @click="active(section._id, index)" :name="[[ section._id ]]" role="tab">{{ section.name }}</a> <button class="btn btn-sm btn-danger" @click="deleteSection({courseID: course._id, sectionID: section._id})">Remove </button></div>
+      <div> <a class="list-group-item list-group-item-action" id="sectionItem" @click="active(section._id, index)" :name="[[ section._id ]]" role="tab">{{ section.name }}</a> </div>
     </div>
     </div>
   </div>

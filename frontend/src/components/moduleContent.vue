@@ -19,11 +19,11 @@
       <vue-editor v-model="content.value"></vue-editor>
     </div>
     <div class="editor-item" v-else-if="content.type === 'image'">
-      <input type="text" v-model="content.value" @change="updateSectionContent({sectionID: section._id, value: $event.target.value, contentID: content._id})">
+      <input type="text" v-model="content.value" @change="updateModuleContent({sectionID: section._id, value: $event.target.value, contentID: content._id})">
       <img v-bind:src="content.value" alt="test" class="img-thumbnail w-25 h-25 mb-3">
     </div>
     <div class="editor-item" v-else-if="content.type === 'video'">
-      <input type="text" v-model="content.value" @change="updateSectionContent({sectionID: section._id, value: $event.target.value, contentID: content._id})">
+      <input type="text" v-model="content.value" @change="updateModuleContent({sectionID: section._id, value: $event.target.value, contentID: content._id})">
       <iframe width="560" height="315" v-bind:src="content.value" frameborder="0" allowfullscreen></iframe>
     </div>
     <div class="editor-item" v-else-if="content.type === 'file'"></div>
