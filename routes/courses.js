@@ -153,7 +153,7 @@ router.post("/deleteModule", async (req, res) => {
     let moduleID = req.body.moduleID;
 
     let userID = JWT.decode(req.cookies.token).sub;
-
+    
     let selectedCourse = await Course.findById(courseID).lean();
     if (selectedCourse.instructors.includes(userID)) {
         let update = {$pull: {}}
@@ -171,11 +171,12 @@ router.post("/createModuleContent", async (req, res) => {
     let userID = JWT.decode(req.cookies.token).sub;
 
     let selectedCourse = await Course.findById(courseID).lean();
+
+    console.log('selected' + JSON.stringify(selectedCourse))
     if (selectedCourse.instructors.includes(userID)) {
         let update = {$push: {}}
         update.$push["sections.$.modules.$[module].content"] = { type };
         let moduleUpdate = await Course.findOneAndUpdate({"_id": courseID, "sections._id": sectionID }, update, { new: true, arrayFilters: [{ 'module.id': moduleID}] })
-        console.log(moduleUpdate);
         res.send(moduleUpdate);
     }
 })
