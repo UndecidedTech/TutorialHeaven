@@ -7,6 +7,7 @@ const passportJWT = passport.authenticate("jwt", {session: false});
 const JWT = require("jsonwebtoken");
 const UsersController = require("../controllers/users");
 const User = require("../models/user")
+const Course = require("../models/course");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcryptjs");
@@ -171,8 +172,6 @@ router.post("/reset/:token", async (req, res) => {
           })
       }
       
-
-
       res.send("Password has been reset")
       // login user and send back user details
       // res.send(selectedUser)
@@ -180,6 +179,10 @@ router.post("/reset/:token", async (req, res) => {
   } else {
     res.status(404).send("Password reset token is invalid or has expired");
   }
+  
+})
+
+router.post("/startAssessment", async (req, res) => {
   
 })
 

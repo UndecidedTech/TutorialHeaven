@@ -1,13 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const answerSchema = new Schema({
-    value: {
-        type: String,
-        required: false
-    }
-})
-
 const contentSchema = new Schema({
     type: {
         enum: ["text", "multiple-choice", "open-ended", "matching"],
@@ -24,11 +17,12 @@ const contentSchema = new Schema({
         required: false
     },
     answer: {
-        type: answerSchema,
+        type: String,
+        default: "",
         required: false
     },
-    incorrectAnswers: {
-        type: [answerSchema],
+    choices: {
+        type: Array,
         required: false
     } 
 })

@@ -28,7 +28,7 @@
         <textarea class="form-control" style="width: 50%" v-model="sectionContent.content" id="exampleFormControlTextarea1" rows="3" @change="updateSection({sectionID: activeSection, field: 'content', value: $event.target.value})"></textarea>
     </div> -->
     <!-- <modules v-bind:section="course.sections[sectionIndex]" v-bind:sectionIndex="sectionIndex"></modules> -->
-    <component v-bind:section="course.sections[sectionIndex]" v-bind:sectionIndex="sectionIndex" v-bind:moduleIndex="this.selectedModule.index" :is="dynamicComponent"/>
+    <component v-bind:section="course.sections[sectionIndex]" v-bind:sectionIndex="sectionIndex" v-bind:module="course.sections[sectionIndex].modules[this.selectedModule.index]" v-bind:moduleIndex="this.selectedModule.index" :is="dynamicComponent"/>
   </div>
   <div v-if="course.instructors.includes(user._id)" class="modal fade" id="createSectionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">

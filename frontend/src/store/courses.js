@@ -113,6 +113,24 @@ export default {
       if (res.status === 200) {
         commit('SET_COURSE', res.data)
       }
+    },
+    async createAssessmentContent ({ commit, state }, data) {
+      data.courseID = state.course._id
+      console.log(data)
+      const res = await axios.post('/api/courses/createAssessmentContent', data)
+      if (res.status === 200) {
+        console.log(res.data)
+        commit('SET_COURSE', res.data)
+      }
+    },
+    async updateAssessmentContent ({ commit, state }, data) {
+      data.courseID = state.course._id
+      console.log(data)
+      const res = await axios.put('/api/courses/updateAssessmentContent', data)
+      if (res.status === 200) {
+        console.log(res.data)
+        commit('SET_COURSE', res.data)
+      }
     }
   }
 }
