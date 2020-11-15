@@ -183,10 +183,27 @@ router.post("/reset/:token", async (req, res) => {
 })
 
 router.post("/startAssessment", async (req, res) => {
-  
-})
+  let courseID = req.body.courseID;
+  let sectionID = req.body.sectionID;
+  // let contentID = req.body.contentID;
+  let moduleID = req.body.moduleID;
 
-//     "password" : "$2a$10$ObwB1J8OCYvspMe7lA89xuPk29eUvRo/ATRB1saL0zvOglENHt1ze",
+  let userID = JWT.decode(req.cookies.token).sub;
+  console.log(userID);
+  
+  let selectedCourse = await Course.findOne({ "_id": courseID, "students":  _})
+  console.log("TestingAssessment: ", selectedCourse);
+  res.send(selectedCourse);
+  // if (selectedCourse.students.includes(userID)) {
+    // let selectedAssessment = await Course.findOne({"_id": courseID, })    
+    // let assessmentDoc = {
+    //   "_id": selectedAssessment._id
+    // }
+    // let update = {$set: {}}
+      // update.$set[]
+  // }
+
+})
 
 // useful helper function
 function generateUpdate(field, value) {

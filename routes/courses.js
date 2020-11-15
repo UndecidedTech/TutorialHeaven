@@ -172,7 +172,8 @@ router.post("/createModuleContent", async (req, res) => {
 
     let selectedCourse = await Course.findById(courseID).lean();
 
-    console.log('selected' + JSON.stringify(selectedCourse))
+    console.log(req.body)
+    console.log(selectedCourse)
     if (selectedCourse.instructors.includes(userID)) {
         let update = {$push: {}}
         update.$push["sections.$.modules.$[module].content"] = { type };
@@ -269,7 +270,7 @@ router.post("/deleteModuleContent", async (req, res) => {
     let selectedCourse = await Course.findById(courseID).lean();
     if (selectedCourse.instructors.includes(userID)) {
         let update = {$pull: {}}
-        update.$pull[`sections.$.modules.$[module].content`] = { "_id": contentID };
+        update.$pull["sections.$.modules.$[module].content"] = { "_id": contentID };
         let moduleUpdate = await Course.findOneAndUpdate({"_id": courseID, "sections._id": sectionID}, update, { new: true, arrayFilters: [{ 'module._id': moduleID }] })
         res.send(moduleUpdate)
     }

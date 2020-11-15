@@ -2,6 +2,51 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const Schema = mongoose.Schema;
 
+const responseSchema = new Schema({
+    answer: {
+        type: String,
+        default: ""
+    }
+})
+
+const resultSchema = new Schema({
+    score: {
+        type: Number,
+        default: undefined,
+        required: false
+    },
+    responses: {
+        type: [responseSchema],
+        default: [],
+        required: false
+    }
+})
+
+const courseSchema = new Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    subject: {
+        type: Array,
+        required: true
+    },
+    role: {
+        enum: ["student", "instructor"],
+        type: String,
+        required: true
+    },
+    creator: {
+        type: Boolean,
+        required: true
+    },
+    results: {
+        type: [resultSchema],
+        default: [],
+        required: false
+    }
+})
+
 const userSchema = new Schema({
     email: {
         type: String,
@@ -26,7 +71,7 @@ const userSchema = new Schema({
         default: "https://tutorialheaven.s3.us-east-2.amazonaws.com/defaultAvatar.png"
     },
     courses: {
-        type: mongoose.SchemaTypes.Mixed,
+        type: [courseSchema],
         default: []
     },
     resetPasswordToken: {

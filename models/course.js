@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const contentSchema = new Schema({
     type: {
-        enum: ["text", "multiple-choice", "open-ended", "matching"],
+        enum: ["text", "multiple-choice", "open-ended", "matching", "trueFalse"],
         type: String,
         required: true
     },
@@ -67,7 +67,7 @@ const courseSchema = new Schema({
         required: true
     },
     students: {
-        type: Array,
+        type: [Schema.Types.ObjectId],
         default: []
     },
     name: {

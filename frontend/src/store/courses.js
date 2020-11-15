@@ -131,6 +131,15 @@ export default {
         console.log(res.data)
         commit('SET_COURSE', res.data)
       }
+    },
+    async deleteAssessmentContent ({ commit, state }, data) {
+      data.courseID = state.course._id
+      console.log(data)
+      const res = await axios.post('/api/courses/deleteAssessmentContent', data)
+      if (res.status === 200) {
+        console.log(res.data)
+        commit('SET_COURSE', res.data)
+      }
     }
   }
 }

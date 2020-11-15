@@ -5,9 +5,9 @@
   <div class="dropdown show pt-2 pr-2 pl-4 float-right">
     <a class="btn btn-info dropdown-toggle" role="button" id="addContent" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add Content</a>
     <div class="dropdown-menu" aria-labelledby="addContent">
-      <a class="dropdown-item" name="text" @click="addContent({type: $event.target.name, sectionID: section._id, moduelID: course.sections[sectionIndex].modules[moduleIndex]._id})"> Add Text</a>
-      <a class="dropdown-item" name="image" @click="addContent({type: $event.target.name, sectionID: section._id, moduelID: course.sections[sectionIndex].modules[moduleIndex]._id})"> Add Image</a>
-      <a class="dropdown-item" name="video" @click="addContent({type: $event.target.name, sectionID: section._id, moduelID: course.sections[sectionIndex].modules[moduleIndex]._id})"> Add Video</a>
+      <a class="dropdown-item" name="text" @click="addContent({type: $event.target.name, sectionID: section._id, moduleID: course.sections[sectionIndex].modules[moduleIndex]._id})"> Add Text</a>
+      <a class="dropdown-item" name="image" @click="addContent({type: $event.target.name, sectionID: section._id, moduleID: course.sections[sectionIndex].modules[moduleIndex]._id})"> Add Image</a>
+      <a class="dropdown-item" name="video" @click="addContent({type: $event.target.name, sectionID: section._id, moduleID: course.sections[sectionIndex].modules[moduleIndex]._id})"> Add Video</a>
     </div>
     </div>
   <div class="editor">
