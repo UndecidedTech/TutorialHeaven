@@ -64,14 +64,15 @@ router.post("/createSection", async (req, res) => {
 router.put("/updateCourse", async (req, res) => {
     let courseID = req.body.courseID;
     let userID = JWT.decode(req.cookies.token).sub
-    let update = generateUpdate(req.body.field, req.body.value);
-
+    // let update = generateUpdate(req.body.field, req.body.value);
     let selectedCourse = await Course.findById(courseID).lean();
-
+    console.log(req.body)
     // content
     if (selectedCourse.instructors.includes(userID)){
-        let courseUpdate = await Course.findOneAndUpdate(courseID, update, {new: true})
-        res.send(courseUpdate.toObject());
+      let update = { $set: {}}
+      update.$set[`${req.body.field}`] = req.body.value
+      let courseUpdate = await Course.findOneAndUpdate({"_id": courseID}, update, {new: true})
+      res.send(courseUpdate);
     } else {
         res.status(404).send("User does not have access to this resource")
     }
@@ -135,13 +136,13 @@ router.put("/updateModule", async (req, res) => {
     let field = req.body.field;
     let value = req.body.value;
     let userID = JWT.decode(req.cookies.token).sub;
-     
+    console.log(req.body)
     let selectedCourse = await Course.findById(courseID).lean();
 
     if (selectedCourse.instructors.includes(userID)){
-        let update = { $set: {} }
-        update.$set[`sections.$.modules.$[module].${field}}`] = value;
-        let moduleUpdate = await Course.findOneAndUpdate({ "_id": courseID, "sections._id": sectionID }, update, { new: true, arrayFilters: [{ 'module.id': moduleID}] })
+        let update = { $set: {}}
+        update.$set[`sections.$.modules.$[module].${field}`] = value;
+        let moduleUpdate = await Course.findOneAndUpdate({ "_id": courseID, "sections._id": sectionID }, update, { new: true, arrayFilters: [{ 'module._id': moduleID}] })
         res.send(moduleUpdate)
         console.log(moduleUpdate)
     }
