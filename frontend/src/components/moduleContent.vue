@@ -11,7 +11,7 @@
     </div>
     </div>
   <div class="editor">
-  <draggable v-model="course.sections[sectionIndex].modules[moduleIndex].content" group="content" @start="drag=true" @end="drag=false" @update="updateSection({courseID: course._id, sectionID: course.sections[sectionIndex]._id, field: 'content', value: course.sections[sectionIndex].content})">
+  <draggable v-model="course.sections[sectionIndex].modules[moduleIndex].content" group="content" @start="drag=true" @end="drag=false" @update="updateModule({courseID: course._id, sectionID: section._id, moduleID: section.modules[moduleIndex]._id, field: 'content', value: section.modules[moduleIndex].content})">
   <div class="form-group" v-for="(content, index) in section.modules[moduleIndex].content" :key="index">
     <div class="editor-item" v-if="content.type === 'text'">
       <label for="exampleFormControlTextarea1">Text Content</label>
@@ -39,16 +39,12 @@
 <div class="editor">
 <div class="form-group" v-for="(content, index) in section.modules[moduleIndex].content" :key="index">
     <div class="editor-item" v-if="content.type === 'text'">
-      <label for="exampleFormControlTextarea1">Text Content</label>
-      <!-- <vue-editor v-model="content.value" :editor-toolbar="customToolbar"></vue-editor> -->
       <div v-html="content.value"></div>
     </div>
     <div class="editor-item" v-else-if="content.type === 'image'">
-      <input type="text" v-model="content.value">
       <img v-bind:src="content.value" alt="test" class="img-thumbnail w-25 h-25 mb-3">
     </div>
     <div class="editor-item" v-else-if="content.type === 'video'">
-      <input type="text" v-model="content.value">
       <iframe width="560" height="315" v-bind:src="content.value" frameborder="0" allowfullscreen></iframe>
     </div>
     <div class="editor-item" v-else-if="content.type === 'file'"></div>
@@ -84,7 +80,7 @@ export default {
     ...mapActions({
       updateModuleContent: 'courses/updateModuleContent',
       addContent: 'courses/createModuleContent',
-      updateSection: 'courses/updateSection',
+      updateModule: 'courses/updateModule',
       deleteModuleContent: 'courses/deleteModuleContent'
     })
   },
@@ -106,6 +102,7 @@ export default {
 }
 .editor-item {
   border: 1px solid gray;
+  margin: 10px;
 }
 .editor textarea {
   flex-basis: 50%;

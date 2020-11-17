@@ -8,7 +8,18 @@
         <div class="card-body">
             <p class=""><b>{{ section.name }}</b>: {{ section.description }}</p>
             <hr/>
-            <p v-for="(module, index) in section.modules" :key="index" class="card-title border border-dark rounded pl-2 pt-3 pb-3"><i v-if="module.type === 'content'" class="pl-2 fa fa-book"/> <i v-else class="pl-2 far fa-file-alt"/> <b @click="enterModule(index, module.type)">{{ module.name }}</b><button v-if="course.instructors.includes(user._id)" class="btn btn-sm btn-danger float-right mr-3" @click="deleteModule({courseID: course._id, sectionID: section._id, moduleID: module._id})">Remove</button></p>
+            <div v-for="(module, index) in section.modules" :key="index" class="card-title border border-dark rounded pl-2 pt-3 pb-3">
+              <div v-if="module.type === 'content'">
+                <div class="pl-2 fa fa-book"></div>
+                <div class="d-inline pl-1" @click="enterModule(index, module.type)">{{ module.name }}</div>
+              </div>
+              <div v-else>
+                <i class="pl-2 fa fa-file-alt"/>
+                <div class="d-inline pl-1" @click="enterModule(index, module.type)">{{ module.name }}</div>
+                <div class="float-right mr-3">0/10</div>
+              </div>
+              <button v-if="course.instructors.includes(user._id)" class="btn btn-sm btn-danger float-right mr-3" @click="deleteModule({courseID: course._id, sectionID: section._id, moduleID: module._id})">Remove</button>
+            </div>
         </div>
     </section>
 </div>

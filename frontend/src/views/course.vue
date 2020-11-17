@@ -16,18 +16,6 @@
     </div>
   </div>
   <div class="editor-item">
-      <!-- <div class="form-group">
-        <label for="sectionName">Section Name</label><br/>
-        <input type="text" id="sectionName" name="sectionName" v-model="sectionContent.name" @click="updateSection({sectionID: activeSection, field: 'name', value: $event.target.value})">
-      </div>
-      <br/>
-      <input type="text" id="sectionContent" name="sectionContent" @change="updateSection({sectionID: activeSection, field: 'content', value: $event.target.value})">
-      <button class="btn btn-success" @click="this.updateSection(updatedSection)">Update</button>
-      <div class="form-group w-3">
-        <label for="exampleFormControlTextarea1">Section Content</label>
-        <textarea class="form-control" style="width: 50%" v-model="sectionContent.content" id="exampleFormControlTextarea1" rows="3" @change="updateSection({sectionID: activeSection, field: 'content', value: $event.target.value})"></textarea>
-    </div> -->
-    <!-- <modules v-bind:section="course.sections[sectionIndex]" v-bind:sectionIndex="sectionIndex"></modules> -->
     <component v-bind:section="course.sections[sectionIndex]" v-bind:sectionIndex="sectionIndex" v-bind:module="course.sections[sectionIndex].modules[this.selectedModule.index]" v-bind:moduleIndex="this.selectedModule.index" :is="dynamicComponent"/>
   </div>
   <div v-if="course.instructors.includes(user._id)" class="modal fade" id="createSectionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

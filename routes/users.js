@@ -189,6 +189,9 @@ router.post("/startAssessment", async (req, res) => {
   let moduleID = req.body.moduleID;
 
   let userID = JWT.decode(req.cookies.token).sub;
+
+  userID = ObjectID(userID)
+  
   console.log(userID);
   userID = ObjectId(userID);
   let selectedCourse = await Course.findOne({ "_id": courseID, "students": userID, "sections": {$elemMatch: { "_id": ObjectId(sectionID), "modules":{ $elemMatch: { "_id": ObjectId(moduleID) } } }} }, { "sections.modules.$": 1})
