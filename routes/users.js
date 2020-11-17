@@ -13,7 +13,7 @@ const nodemailer = require("nodemailer");
 const bcrypt = require("bcryptjs");
 const { check, validationResult } = require('express-validator');
 const mongoose = require('mongoose');
-const { ObjectID } = require("mongodb");
+const { ObjectID, ObjectId } = require("mongodb");
 
 
 // eslint-disable-next-line new-cap
@@ -190,8 +190,8 @@ router.post("/startAssessment", async (req, res) => {
 
   let userID = JWT.decode(req.cookies.token).sub;
   console.log(userID);
-  
-  let selectedCourse = await Course.findOne({ "_id": courseID, "students":  _})
+  userID = ObjectId(userID);
+  let selectedCourse = await Course.findOne({ "_id": courseID, "students": userID, "sections": {$elemMatch: { "_id": ObjectId(sectionID), "modules":{ $elemMatch: { "_id": ObjectId(moduleID) } } }} }, { "sections.modules.$": 1})
   console.log("TestingAssessment: ", selectedCourse);
   res.send(selectedCourse);
   // if (selectedCourse.students.includes(userID)) {

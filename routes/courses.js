@@ -3,20 +3,23 @@ const router = express.Router();
 const Course = require("../models/course");
 const JWT = require("jsonwebtoken");
 const User = require("../models/user");
+const { ObjectId } = require("mongodb");
+
+
 
 router.get("/getCourse/:courseID", async (req, res) => {
     let courseID = req.params.courseID;
-    let userId = JWT.decode(req.cookies.token).sub
-
-    console.log(courseID, userId)
-
-    let selectedCourse = await Course.findById(courseID).lean();
+    let userID = JWT.decode(req.cookies.token).sub
     
-    if (!selectedCourse){
+    let selectedCourse = await Course.findOne({"_id": courseID }, (err, course) => {
+        return course.toObject();
+    })
+    if (!selectedCourse) {
         return res.status(404).send("Resource not found/doesn't exist")
     }
-    
-    if (selectedCourse.instructors.includes(userId) || selectedCourse.students.includes(userId)){
+
+
+    if (selectedCourse.instructors.includes(userID) || selectedCourse.students.includes(userID)){
         res.send(selectedCourse)
     } else {
         res.status(404).send("User does not have access to this resource")
@@ -66,7 +69,9 @@ router.put("/updateCourse", async (req, res) => {
     let userID = JWT.decode(req.cookies.token).sub
     let update = generateUpdate(req.body.field, req.body.value);
 
-    let selectedCourse = await Course.findById(courseID).lean();
+    let selectedCourse = await Course.findById(courseID, (err, course) => {
+        return course.toObject()
+    });
 
     // content
     if (selectedCourse.instructors.includes(userID)){
@@ -82,7 +87,9 @@ router.put("/updateSection", async (req, res) => {
     let sectionID = req.body.sectionID;
     let userID = JWT.decode(req.cookies.token).sub;
     
-    let selectedCourse = await Course.findById(courseID).lean();
+    let selectedCourse = await Course.findById(courseID, (err, course) => {
+        return course.toObject();
+    });
 
     if (selectedCourse.instructors.includes(userID)){
         let update = { $set: {} }
@@ -99,7 +106,10 @@ router.post("/deleteSection", async (req, res) => {
 
     let userID = JWT.decode(req.cookies.token).sub;
 
-    let selectedCourse = await Course.findById(courseID).lean();
+    let selectedCourse = await Course.findById(courseID,(err, course) => {
+        return course.toObject()
+    });
+
     if (selectedCourse.instructors.includes(userID)) {
         let update = {$pull: {}}
         update.$pull["sections"] = { "_id": sectionID };
@@ -113,7 +123,10 @@ router.post("/createModule", async (req, res) => {
     let sectionID = req.body.sectionID;
     let userID = JWT.decode(req.cookies.token).sub;
 
-    let selectedCourse = await Course.findById(courseID).lean();
+    let selectedCourse = await Course.findById(courseID, (err, course) => {
+        return course.toObject()
+    });
+
     let newModule = {
         name: req.body.name,
         description: req.body.description,
@@ -136,7 +149,9 @@ router.put("/updateModule", async (req, res) => {
     let value = req.body.value;
     let userID = JWT.decode(req.cookies.token).sub;
      
-    let selectedCourse = await Course.findById(courseID).lean();
+    let selectedCourse = await Course.findById(courseID, (err, course) => {
+        return course.toObject()
+    });
 
     if (selectedCourse.instructors.includes(userID)){
         let update = { $set: {} }
@@ -154,7 +169,9 @@ router.post("/deleteModule", async (req, res) => {
 
     let userID = JWT.decode(req.cookies.token).sub;
     
-    let selectedCourse = await Course.findById(courseID).lean();
+    let selectedCourse = await Course.findById(courseID, (err, course) => {
+        return course.toObject()
+    });
     if (selectedCourse.instructors.includes(userID)) {
         let update = {$pull: {}}
         update.$pull["sections.$.modules"] = { "_id": moduleID };
@@ -170,7 +187,9 @@ router.post("/createModuleContent", async (req, res) => {
     let type = req.body.type;
     let userID = JWT.decode(req.cookies.token).sub;
 
-    let selectedCourse = await Course.findById(courseID).lean();
+    let selectedCourse = await Course.findById(courseID, (err, course) => {
+        return course.toObject()
+    });
 
     console.log(req.body)
     console.log(selectedCourse)
@@ -192,7 +211,9 @@ router.put("/updateModuleContent", async (req, res) => {
     let value = req.body.value;
 
     console.log(req.body);
-    let selectedCourse = await Course.findById(courseID).lean();
+    let selectedCourse = await Course.findById(courseID, (err, course) => {
+        return course.toObject()
+    });
     if (selectedCourse.instructors.includes(userID)) {
         let update = {$set: {}}
         update.$set["sections.$.modules.$[module].content.$[content].value"] = value;
@@ -211,7 +232,9 @@ router.post("/createAssessmentContent", async (req, res) => {
 
     let userID = JWT.decode(req.cookies.token).sub;
     console.log(req.body)
-    let selectedCourse = await Course.findById(courseID).lean();
+    let selectedCourse = await Course.findById(courseID, (err, course) => {
+        return course.toObject()
+    });
   
     if (selectedCourse.instructors.includes(userID)) {
         let update = {$push: {}}
@@ -232,7 +255,10 @@ router.put("/updateAssessmentContent", async (req, res) => {
     let value = req.body.value
     console.log("reqbody", req.body.value)
 
-    let selectedCourse = await Course.findById(courseID).lean();
+    let selectedCourse = await Course.findById(courseID, (err, course) => {
+        return course.toObject()
+    });
+
     if(selectedCourse.instructors.includes(userID)) {
         let update = {$set: {}}
         update.$set["sections.$.modules.$[module].content"] = value;
@@ -250,7 +276,9 @@ router.post("/deleteAssessmentContent", async (req, res) => {
 
     let userID = JWT.decode(req.cookies.token).sub;
 
-    let selectedCourse = await Course.findById(courseID).lean();
+    let selectedCourse = await Course.findById(courseID, (err, course) => {
+        return course.toObject()
+    });
     if (selectedCourse.instructors.includes(userID)) {
         let update = {$pull: {}}
         update.$pull[`sections.$.modules.$[module].content`] = { "_id": contentID };
@@ -267,7 +295,9 @@ router.post("/deleteModuleContent", async (req, res) => {
 
     let userID = JWT.decode(req.cookies.token).sub;
 
-    let selectedCourse = await Course.findById(courseID).lean();
+    let selectedCourse = await Course.findById(courseID, (err, course) => {
+        return course.toObject()
+    });
     if (selectedCourse.instructors.includes(userID)) {
         let update = {$pull: {}}
         update.$pull["sections.$.modules.$[module].content"] = { "_id": contentID };
