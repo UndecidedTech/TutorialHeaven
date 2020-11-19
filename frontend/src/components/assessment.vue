@@ -5,9 +5,11 @@
   <button class="btn btn-success" v-if="course.instructors.includes(user._id)" @click="save({sectionID: section._id, moduleID: module._id, value: module.content})">Save</button>
   </div>
   <div id="student" v-if="!course.instructors.includes(user._id)">
-    <div v-for="(question, index) in module.content" :key="index" class="pl-3">
+    <div v-for="(question, index) in module.content" :key="index" class="card w-75 m-3">
+      <div class="card-body">
       <multipleChoice v-if="question.type === 'multiple-choice'" v-bind:question="question" v-bind:index="index"/>
       <trueFalse v-else-if="question.type === 'trueFalse'" v-bind:question="question" v-bind:index="index"/>
+      </div>
     </div>
     test: {{ test }}
     <button class="btn btn-danger float-right mt-3 mr-3" @click="submit({responses: test, courseID: $route.params.courseID, sectionID: $route.params.sectionID, moduleID: $route.params.moduleID})">Submit</button>
@@ -20,7 +22,8 @@
       <a class="dropdown-item" name="trueFalse" @click="addQuestion({type: 'trueFalse', sectionID: section._id, moduleID: module._id})"> True or False</a>
     </div>
     </div>
-    <div v-for="(question, index) in module.content" :key="index">
+    <div v-for="(question, index) in module.content" :key="index" class="card w-75 m-3">
+      <div class="card-body">
       <multipleChoice v-if="question.type === 'multiple-choice'" v-bind:question="question" v-bind:index="index" v-bind:section="section" v-bind:module="module" v-bind:answers="answers"/>
       <trueFalse v-else-if="question.type === 'trueFalse'" v-bind:question="question" v-bind:index="index" v-bind:section="section" v-bind:module="module" v-bind:answers="answers"/>
       <div class="input-group">
@@ -29,8 +32,8 @@
           <option value="">...</option>
           <option v-for="(test, index) in relationCompute" :key="index" :value="test._id" :id="test.name">{{test.name}}</option>
         </select>
+        </div>
       </div>
-      <hr/>
     </div>
   </div>
 </div>
