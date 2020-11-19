@@ -101,6 +101,11 @@ export default {
       } else {
         alert('Please fill required forms')
       }
+    },
+    async submitAssessment ({ _ }, data) {
+      const res = await axios.post('/api/courses/submitAssessement', data)
+      if (res.status === 200) {
+      }
     }
   }
 }
