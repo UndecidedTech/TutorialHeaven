@@ -182,11 +182,13 @@ router.post("/reset/:token", async (req, res) => {
   
 })
 
-router.post("/startAssessment", async (req, res) => {
+router.post("/submitAssessment", async (req, res) => {
   let courseID = req.body.courseID;
   let sectionID = req.body.sectionID;
   // let contentID = req.body.contentID;
   let moduleID = req.body.moduleID;
+
+  let responses = req.body.responses;
 
   let userID = JWT.decode(req.cookies.token).sub;
 
@@ -223,13 +225,23 @@ router.post("/startAssessment", async (req, res) => {
 
 
   if (checkUser !== null) {
+  
+    let update = {$set: {} }
+    update.$set["courses.$[course].results.responses"] = responses;
+  
+    let userUpdate = await User.findOneAndUpdate({"_id": userID}, update, { new: true, arrayFilters: [{"course._id": courseID}]}, (err, user) => {
+      return user.toObject();
+    })
+    
     return res.status(404).send("User already started Assessment");
+  
   } else {
+    
     let update = {$push: {} };
     update.$push["courses.$[course].results"] = {
       "_id": selectedAssessment._id,
       "score": undefined,
-      "responses": [] 
+      "responses": responses 
     }
   
     let userUpdate = await User.findOneAndUpdate({"_id": userID}, update, { new: true, arrayFilters: [{"course._id": courseID}]}, (err, user) => {
