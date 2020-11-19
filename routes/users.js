@@ -193,19 +193,51 @@ router.post("/startAssessment", async (req, res) => {
   userID = ObjectID(userID)
   
   console.log(userID);
-  userID = ObjectId(userID);
-  let selectedCourse = await Course.findOne({ "_id": courseID, "students": userID, "sections": {$elemMatch: { "_id": ObjectId(sectionID), "modules":{ $elemMatch: { "_id": ObjectId(moduleID) } } }} }, { "sections.modules.$": 1})
+  let selectedCourse = await Course.findOne({ "_id": courseID, "students": userID, "sections": {$elemMatch: { "_id": ObjectId(sectionID), "modules":{ $elemMatch: { "_id": ObjectId(moduleID) } } }} }, { "sections.modules.$": 1}, (err, course) => {
+    return course.toObject();
+  })
   console.log("TestingAssessment: ", selectedCourse);
-  res.send(selectedCourse);
-  // if (selectedCourse.students.includes(userID)) {
-    // let selectedAssessment = await Course.findOne({"_id": courseID, })    
-    // let assessmentDoc = {
-    //   "_id": selectedAssessment._id
-    // }
-    // let update = {$set: {}}
-      // update.$set[]
-  // }
 
+  // select the Assessment Object 
+  let selectedAssessment = selectedCourse.sections[0].modules.find((module) => {
+    let modID = module._id.toString();
+    if (module.type !== "assessment") {
+      return undefined;
+    }
+    
+    if (moduleID === modID) {
+      console.log("WE HERE BR0");
+      return module;
+    }
+  })
+
+  console.log(selectedAssessment);
+
+  // check that user hasn't already started assessment
+  let checkUser = await User.findOne({ "_id": userID, "courses": {$elemMatch: { "_id": ObjectId(courseID), "results": { $elemMatch: { "_id": selectedAssessment._id } }}}}, (err, user) => {
+    console.log(user);
+    return user
+  })
+
+  console.log("User Check Stage: ", checkUser);
+
+
+  if (checkUser !== null) {
+    return res.status(404).send("User already started Assessment");
+  } else {
+    let update = {$push: {} };
+    update.$push["courses.$[course].results"] = {
+      "_id": selectedAssessment._id,
+      "score": undefined,
+      "responses": [] 
+    }
+  
+    let userUpdate = await User.findOneAndUpdate({"_id": userID}, update, { new: true, arrayFilters: [{"course._id": courseID}]}, (err, user) => {
+      return user.toObject();
+    })
+  
+    return res.send("User started Exam");
+  }
 })
 
 // useful helper function
