@@ -27,7 +27,7 @@
       <div class="input-group-prepend"><span class="input-group-text">Relation</span></div>
         <select class="form-control input">
           <option value="">...</option>
-          <option v-for="(test, index) in section.modules" :key="index" :value="test._id" :id="test.name" >{{test.name}}</option>
+          <option v-for="(test, index) in relationCompute" :key="index" :value="test._id" :id="test.name">{{test.name}}</option>
         </select>
       </div>
       <hr/>
@@ -81,6 +81,10 @@ export default {
     test: function () {
       const test = this.module.content.filter(ele => ele.value)
       return test
+    },
+    relationCompute: function () {
+      const relate = this.section.modules.filter(ele => ele.type !== 'assessment')
+      return relate
     }
   }
 }
