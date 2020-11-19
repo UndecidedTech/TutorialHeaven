@@ -1,28 +1,38 @@
 <template>
 <div>
   <div id="instructor" v-if="course.instructors.includes(user._id)">
-    <div class="input-group">
+    <button class="btn btn-danger" @click="removeQuestion({sectionID: section._id, moduleID: module._id, contentID: question._id})"> Remove Question</button>
+    <div class="input-group pt-2 pb-2">
       <div class="input-group-prepend">
         <span class="input-group-text">Question</span>
       </div>
       <input class="w-25" type="text" v-model="question.question">
     </div>
-    <div>
-      <select class="custom-select custom-select-sm select" v-model="question.answer">
+    <div class="input-group pt-2 pb-2">
+      <div class="input-group-prepend"><span class="input-group-text">Answer</span></div>
+      <select class="form-control input" v-model="question.answer">
         <option value="true">True</option>
         <option value="false">False</option>
       </select>
     </div>
+    <div class="input-group pt-2 pb-2">
+      <div class="input-group-prepend"><span class="input-group-text">Relation</span></div>
+        <select class="form-control input">
+          <option value=""></option>
+          <option value=""></option>
+        </select>
+      </div>
     {{ question }}
+    <hr/>
   </div>
   <div id="student" v-else>
-   <span class="font-weight-bold">{{ question.question }}</span>
+   <span class="font-weight-bold">{{index + 1}}. {{ question.question }}</span>
       <div class="custom-control custom-radio">
-        <input  type="radio" class="custom-control-input" id="true" name="trueFalse">
+        <input type="radio" class="custom-control-input" id="true" name="trueFalse" value="true" v-model="question.value">
         <label class="custom-control-label" for="true">True</label>
       </div>
       <div class="custom-control custom-radio">
-        <input  type="radio" class="custom-control-input" id="false" name="trueFalse">
+        <input type="radio" class="custom-control-input" id="false" value="false" name="trueFalse" v-model="question.value">
         <label class="custom-control-label" for="false">False</label>
       </div>
       <hr/>
@@ -44,7 +54,8 @@ export default {
     question: Object,
     index: Number,
     section: Object,
-    module: Object
+    module: Object,
+    answers: Array
   },
   methods: {
     ...mapActions({
@@ -65,5 +76,8 @@ export default {
 <style scoped lang="css">
 .select {
   width: 7%
+}
+.input {
+  max-width: 25%;
 }
 </style>

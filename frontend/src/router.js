@@ -18,7 +18,7 @@ const routes = [
   { path: '/userProfile', component: userProfile, name: 'userProfile' },
   { path: '/userSignUp', component: userSignUp, name: 'userSignUp' },
   { path: '/userDashboard', component: userDashboard, name: 'userDashboard' },
-  { path: '/course/:courseName/:courseID', component: course, name: 'course', params: true },
+  { path: '/course/:courseID/:sectionID?/:moduleID?/:contentID?', component: course, name: 'course', params: true },
   { path: '*', component: notFound },
   { path: '/reset/:token', component: userReset, name: 'userReset', params: true }
 ]

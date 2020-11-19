@@ -11,14 +11,15 @@
             <div v-for="(module, index) in section.modules" :key="index" class="card-title border border-dark rounded pl-2 pt-3 pb-3">
               <div v-if="module.type === 'content'">
                 <div class="pl-2 fa fa-book"></div>
-                <div class="d-inline pl-1" @click="enterModule(index, module.type)">{{ module.name }}</div>
+                <div class="d-inline pl-1" @click="enterModule(module._id)">{{ module.name }}</div>
+                <button v-if="course.instructors.includes(user._id)" class="btn btn-sm btn-danger float-right mr-3" @click="deleteModule({courseID: course._id, sectionID: section._id, moduleID: module._id})">Remove</button>
               </div>
               <div v-else>
                 <i class="pl-2 fa fa-file-alt"/>
-                <div class="d-inline pl-1" @click="enterModule(index, module.type)">{{ module.name }}</div>
-                <div class="float-right mr-3">0/10</div>
+                <div class="d-inline pl-1" @click="enterModule(module._id)">{{ module.name }}</div>
+                <div v-if="!course.instructors.includes(user._id)" class="float-right mr-3">0/10</div>
+                <button v-if="course.instructors.includes(user._id)" class="btn btn-sm btn-danger float-right mr-3" @click="deleteModule({courseID: course._id, sectionID: section._id, moduleID: module._id})">Remove</button>
               </div>
-              <button v-if="course.instructors.includes(user._id)" class="btn btn-sm btn-danger float-right mr-3" @click="deleteModule({courseID: course._id, sectionID: section._id, moduleID: module._id})">Remove</button>
             </div>
         </div>
     </section>
@@ -37,7 +38,8 @@
           <input id="moduleName" v-model="name" type="text" class="form-control" required>
           <label for="moduleDescription">Module Description</label>
           <input id="moduleDescription" v-model="description" type="text" class="form-control" required>
-          <select v-model="type">
+          <label for="select">Type</label>
+          <select id="select" class="form-control" v-model="type">
             <option value="assessment">Assessment</option>
             <option value="content">Content</option>
           </select>
@@ -62,8 +64,7 @@ export default {
     }
   },
   props: {
-    section: Object,
-    sectionIndex: Number
+    section: Object
   },
   methods: {
     ...mapMutations({
@@ -73,11 +74,8 @@ export default {
       addModule: 'courses/createModule',
       deleteModule: 'courses/deleteModule'
     }),
-    enterModule (index, type) {
-      this.selectModule({
-        type: type,
-        index: index
-      })
+    enterModule (id) {
+      this.$router.push({ name: 'course', params: { sectionID: this.section._id, moduleID: id } })
     }
   },
   computed: {

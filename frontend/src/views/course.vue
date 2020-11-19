@@ -16,7 +16,7 @@
     </div>
   </div>
   <div class="editor-item">
-    <component v-bind:section="course.sections[sectionIndex]" v-bind:sectionIndex="sectionIndex" v-bind:module="course.sections[sectionIndex].modules[this.selectedModule.index]" v-bind:moduleIndex="this.selectedModule.index" :is="dynamicComponent"/>
+    <component v-if="shitInfo.sectionIndex >= 0" v-bind:section="course.sections[shitInfo.sectionIndex]" v-bind:sectionIndex="shitInfo.sectionIndex" v-bind:module="course.sections[shitInfo.sectionIndex].modules[shitInfo.moduleIndex]" v-bind:moduleIndex="shitInfo.moduleIndex" :is="componentRender" />
   </div>
   <div v-if="course.instructors.includes(user._id)" class="modal fade" id="createSectionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -44,15 +44,15 @@ import { mapActions, mapGetters } from 'vuex'
 import $ from 'jquery'
 import draggable from 'vuedraggable'
 import modules from '../components/modules'
-import moduleContent from '../components/moduleContent'
 import assessment from '../components/assessment'
+import moduleContent from '../components/moduleContent'
 
 export default {
   components: {
     draggable,
     modules,
-    moduleContent,
-    assessment
+    assessment,
+    moduleContent
   },
   name: 'course',
   data () {
@@ -61,8 +61,7 @@ export default {
         name: '',
         courseID: this.$route.params.courseID
       },
-      activeSection: 0,
-      sectionIndex: 0
+      activeSection: 0
     }
   },
   methods: {
@@ -77,17 +76,13 @@ export default {
       if ($(`a[name='${sectionID}']`).is('.active')) {
         $(`a[name='${sectionID}']`).removeClass('active')
         this.activeSection = ''
-        this.sectionContent = {
-          name: '',
-          content: ''
-        }
+        this.$router.push({ name: 'course', params: { courseID: this.course._id } })
       } else {
         console.log(sectionID)
         $('#list-tab a').removeClass('active')
         $(`a[name='${sectionID}']`).addClass('active')
-        this.sectionContent = this.course.sections.find(elem => elem._id === sectionID)
-        this.sectionIndex = index
         this.activeSection = sectionID
+        this.$router.push({ name: 'course', params: { sectionID: sectionID } })
       }
     }
   },
@@ -97,12 +92,29 @@ export default {
       course: 'courses/course',
       selectedModule: 'courses/selectedModule'
     }),
-    dynamicComponent () {
-      console.log(this.selectedModule)
-      if (this.selectedModule.type === 'content') {
-        return 'moduleContent'
-      } else if (this.selectedModule.type === 'assessment') {
-        return 'assessment'
+    shitInfo: function () {
+      if (this.$route.params.sectionID) {
+        const test = {
+          sectionIndex: this.course.sections.findIndex(i => i._id === this.$route.params.sectionID)
+        }
+        if (this.$route.params.moduleID) {
+          test.moduleIndex = this.course.sections[test.sectionIndex].modules.findIndex(i => i._id === this.$route.params.moduleID)
+        }
+        if (this.$route.params.contentID) {
+          test.contentIndex = this.course.sections[test.sectionIndex].modules[test.moduleIndex].content.findIndex(i => i._id === this.$route.params.contentID)
+        }
+        return test
+      } else {
+        return false
+      }
+    },
+    componentRender: function () {
+      if (this.$route.params.moduleID) {
+        if (this.course.sections[this.shitInfo.sectionIndex].modules[this.shitInfo.moduleIndex].type === 'content') {
+          return 'moduleContent'
+        } else {
+          return this.course.sections[this.shitInfo.sectionIndex].modules[this.shitInfo.moduleIndex].type
+        }
       } else {
         return 'modules'
       }
@@ -112,7 +124,10 @@ export default {
     this.getCourse(this.$route.params.courseID)
   },
   mounted () {
-    this.active(this.course.sections[0]._id, 0)
+    if (!this.$route.params.sectionID) {
+      this.$router.push({ name: 'course', params: { sectionID: this.course.sections[0]._id } })
+      $(`a[name='${this.$route.params.sectionID}']`).addClass('active')
+    }
   }
 }
 </script>

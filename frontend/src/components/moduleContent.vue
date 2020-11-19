@@ -1,7 +1,7 @@
 <template>
 <div class="appBackground">
+  <button class="btn btn-primary" @click="goBack">Return</button>
   <div v-if="course.instructors.includes(user._id)">
-  <button class="btn btn-primary" @click="selectModule({type: '', index: 0})">Return</button>
   <div class="dropdown show pt-2 pr-2 pl-4 float-right">
     <a class="btn btn-info dropdown-toggle" role="button" id="addContent" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add Content</a>
     <div class="dropdown-menu" aria-labelledby="addContent">
@@ -35,7 +35,6 @@
   </div>
   </div>
 <div v-else>
-<button class="btn btn-primary" @click="selectModule({type: '', index: 0})">Return</button>
 <div class="editor">
 <div class="form-group" v-for="(content, index) in section.modules[moduleIndex].content" :key="index">
     <div class="editor-item" v-if="content.type === 'text'">
@@ -55,7 +54,7 @@
 </template>
 <script>
 import { VueEditor } from 'vue2-editor'
-import { mapActions, mapGetters, mapMutations } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import draggable from 'vuedraggable'
 
 export default {
@@ -74,15 +73,15 @@ export default {
     }
   },
   methods: {
-    ...mapMutations({
-      selectModule: 'courses/SET_SELECTEDMODULE'
-    }),
     ...mapActions({
       updateModuleContent: 'courses/updateModuleContent',
       addContent: 'courses/createModuleContent',
       updateModule: 'courses/updateModule',
       deleteModuleContent: 'courses/deleteModuleContent'
-    })
+    }),
+    goBack () {
+      this.$router.push(this.$router.push({ name: 'course', params: { sectionID: this.section._id, moduleID: undefined } }))
+    }
   },
   computed: {
     ...mapGetters({
