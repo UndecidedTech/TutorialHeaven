@@ -103,9 +103,10 @@ export default {
       }
     },
     async submitAssessment ({ _ }, data) {
-      const res = await axios.post('/api/courses/submitAssessement', data)
-      if (res.status === 200) {
-      }
+      console.log(data)
+      // const res = await axios.post('/api/courses/submitAssessement', data)
+      // if (res.status === 200) {
+      // }
     }
   }
 }

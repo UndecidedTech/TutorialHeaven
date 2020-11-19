@@ -10,7 +10,7 @@
       <trueFalse v-else-if="question.type === 'trueFalse'" v-bind:question="question" v-bind:index="index"/>
     </div>
     test: {{ test }}
-    <button class="btn btn-danger float-right mt-3 mr-3" @click="submit(_)">Submit</button>
+    <button class="btn btn-danger float-right mt-3 mr-3" @click="submit({responses: test, courseID: $route.params.courseID, sectionID: $route.params.sectionID, moduleID: $route.params.moduleID})">Submit</button>
   </div>
   <div id="instructor" v-else>
     <div class="dropdown show pt-2 pr-2 pl-4 float-right">
@@ -23,6 +23,14 @@
     <div v-for="(question, index) in module.content" :key="index">
       <multipleChoice v-if="question.type === 'multiple-choice'" v-bind:question="question" v-bind:index="index" v-bind:section="section" v-bind:module="module" v-bind:answers="answers"/>
       <trueFalse v-else-if="question.type === 'trueFalse'" v-bind:question="question" v-bind:index="index" v-bind:section="section" v-bind:module="module" v-bind:answers="answers"/>
+      <div class="input-group">
+      <div class="input-group-prepend"><span class="input-group-text">Relation</span></div>
+        <select class="form-control input">
+          <option value="">...</option>
+          <option v-for="(test, index) in section.modules" :key="index" :value="test._id" :id="test.name" >{{test.name}}</option>
+        </select>
+      </div>
+      <hr/>
     </div>
   </div>
 </div>
@@ -55,7 +63,8 @@ export default {
     ...mapActions({
       addQuestion: 'courses/createAssessmentContent',
       save: 'courses/updateAssessmentContent',
-      removeQuestion: 'courses/deleteAssessmentContent'
+      removeQuestion: 'courses/deleteAssessmentContent',
+      submit: 'user/submitAssessment'
     }),
     addIncorrectAnswer (index) {
       this.module.content[index].choices.push({ value: '' })
@@ -78,4 +87,7 @@ export default {
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="css">
+.input {
+  max-width: 25%;
+}
 </style>
