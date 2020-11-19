@@ -12,7 +12,10 @@ router.get("/getCourse/:courseID", async (req, res) => {
     let userID = JWT.decode(req.cookies.token).sub
     
     let selectedCourse = await Course.findOne({"_id": courseID }, (err, course) => {
-        return course.toObject();
+        if (course)
+            return course.toObject();
+        else
+            return course
     })
     if (!selectedCourse) {
         return res.status(404).send("Resource not found/doesn't exist")

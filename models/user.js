@@ -10,6 +10,11 @@ const responseSchema = new Schema({
 })
 
 const resultSchema = new Schema({
+    submitted: {
+        type: Boolean,
+        default: false,
+        required: false
+    },
     score: {
         type: Number,
         default: undefined,

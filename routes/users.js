@@ -182,7 +182,7 @@ router.post("/reset/:token", async (req, res) => {
   
 })
 
-router.post("/submitAssessment", async (req, res) => {
+router.post("/saveAssessment", async (req, res) => {
   let courseID = req.body.courseID;
   let sectionID = req.body.sectionID;
   // let contentID = req.body.contentID;
@@ -242,6 +242,78 @@ router.post("/submitAssessment", async (req, res) => {
       "_id": selectedAssessment._id,
       "score": undefined,
       "responses": responses 
+    }
+  
+    let userUpdate = await User.findOneAndUpdate({"_id": userID}, update, { new: true, arrayFilters: [{"course._id": courseID}]}, (err, user) => {
+      return user.toObject();
+    })
+  
+    return res.send("User started Exam");
+  }
+})
+
+router.post("/submitAssessment", async (req, res) => {
+  let courseID = req.body.courseID;
+  let sectionID = req.body.sectionID;
+  // let contentID = req.body.contentID;
+  let moduleID = req.body.moduleID;
+  let responses = req.body.responses;
+
+  let userID = JWT.decode(req.cookies.token).sub;
+
+  userID = ObjectID(userID)
+
+
+  let selectedCourse = await Course.findOne({ "_id": courseID, "students": userID, "sections": {$elemMatch: { "_id": ObjectId(sectionID), "modules":{ $elemMatch: { "_id": ObjectId(moduleID) } } }} }, { "sections.modules.$": 1}, (err, course) => {
+    return course.toObject();
+  })
+  console.log("TestingAssessment: ", selectedCourse);
+
+  // select the Assessment Object 
+  let selectedAssessment = selectedCourse.sections[0].modules.find((module) => {
+    let modID = module._id.toString();
+    if (module.type !== "assessment") {
+      return undefined;
+    }
+    
+    if (moduleID === modID) {
+      console.log("WE HERE BR0");
+      return module;
+    }
+  })
+
+  for (let i = 0; i > responses.length; i++) {
+    if (responses[i].answer ===  
+  }
+
+  // check that user has already started assessment
+  let checkUser = await User.findOne({ "_id": userID, "courses": {$elemMatch: { "_id": ObjectId(courseID), "results": { $elemMatch: { "_id": selectedAssessment._id } }}}}, (err, user) => {
+    return user
+  })
+
+  console.log("User Check Stage: ", checkUser);
+
+
+  if (checkUser !== null) {
+  
+    let update = {$set: {} }
+    update.$set["courses.$[course].results.responses"] = responses;
+    update.$set["courses.$[course].results.submitted"] = true;
+
+    let userUpdate = await User.findOneAndUpdate({"_id": userID}, update, { new: true, arrayFilters: [{"course._id": courseID}]}, (err, user) => {
+      return user.toObject();
+    })
+    
+    return res.status(404).send("User already started Assessment");
+  
+  } else {
+    
+    let update = {$push: {} };
+    update.$push["courses.$[course].results"] = {
+      "_id": selectedAssessment._id,
+      "score": undefined,
+      "responses": responses,
+      "submitted": true 
     }
   
     let userUpdate = await User.findOneAndUpdate({"_id": userID}, update, { new: true, arrayFilters: [{"course._id": courseID}]}, (err, user) => {
