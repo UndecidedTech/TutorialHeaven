@@ -24,7 +24,12 @@ const contentSchema = new Schema({
     choices: {
         type: Array,
         required: false
-    } 
+    },
+    relation: {
+        type: Schema.Types.ObjectId,
+        required: false,
+        default: ""
+    }
 })
 
 const moduleSchema = new Schema({
