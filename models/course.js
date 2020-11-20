@@ -27,8 +27,7 @@ const contentSchema = new Schema({
     },
     relation: {
         type: Schema.Types.ObjectId,
-        required: false,
-        default: ""
+        required: false
     }
 })
 
