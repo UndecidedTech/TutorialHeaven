@@ -14,6 +14,7 @@ const bcrypt = require("bcryptjs");
 const { check, validationResult } = require('express-validator');
 const mongoose = require('mongoose');
 const { ObjectID, ObjectId } = require("mongodb");
+const { response } = require("express");
 
 
 // eslint-disable-next-line new-cap
@@ -224,26 +225,35 @@ router.post("/saveAssessment", async (req, res) => {
   console.log("User Check Stage: ", checkUser);
 
 
+  responses = responses.map((response) => {
+    return {
+      "value": response.value
+    }
+  })
+
+  console.log("AfterMap: ", responses);
+
   if (checkUser !== null) {
   
     let update = {$set: {} }
-    update.$set["courses.$[course].results.responses"] = responses;
-  
-    let userUpdate = await User.findOneAndUpdate({"_id": userID}, update, { new: true, arrayFilters: [{"course._id": courseID}]}, (err, user) => {
+    update.$set["courses.$[course].results.$[result].responses"] = responses;
+    console.log(userID);
+    let userUpdate = await User.findOneAndUpdate({ "_id": userID }, update, { new: true, arrayFilters: [{"course._id": ObjectId(courseID)}, {"result._id": ObjectId(selectedAssessment._id)}]}, (err, user) => {
+      console.log("errorLine: ", user)
       return user.toObject();
     })
     
-    return res.status(404).send("User already started Assessment");
+    return res.status(404).send("User responses Set");
   
   } else {
-    
-    let update = {$push: {} };
-    update.$push["courses.$[course].results"] = {
+   console.log("RAN THIS CODE"); 
+    let update = {$addToSet: {} };
+    update.$addToSet["courses.$[course].results"] = {
       "_id": selectedAssessment._id,
       "score": undefined,
       "responses": responses 
     }
-  
+    console.log("update: ", update);
     let userUpdate = await User.findOneAndUpdate({"_id": userID}, update, { new: true, arrayFilters: [{"course._id": courseID}]}, (err, user) => {
       return user.toObject();
     })
@@ -282,41 +292,72 @@ router.post("/submitAssessment", async (req, res) => {
     }
   })
 
-  for (let i = 0; i > responses.length; i++) {
-    if (responses[i].answer ===  
+  responses = responses.map((response) => {
+    return {
+      "value": response.value
+    }
+  })
+  let correctCount = 0;
+  for (let i = 0; i < responses.length; i++) {
+    console.log("Check AnswerLoop: ", responses[i].value, selectedAssessment.content[i].answer);
+    if (responses[i].value === selectedAssessment.content[i].answer) {
+      responses[i]["correct"] = true;
+      correctCount++;
+    } else {
+      responses[i]["correct"] = false;
+    }
   }
 
+  let score = Math.ceil(((correctCount/responses.length) * 100));
+
+  // check percentage of answers correct and set their score
+
+
   // check that user has already started assessment
-  let checkUser = await User.findOne({ "_id": userID, "courses": {$elemMatch: { "_id": ObjectId(courseID), "results": { $elemMatch: { "_id": selectedAssessment._id } }}}}, (err, user) => {
-    return user
+  let checkUser = await User.findOne({ "_id": userID, "courses": {$elemMatch: { "_id": ObjectId(courseID), "results": { $elemMatch: { "_id": selectedAssessment._id } }}}}, { "courses.results.$": 1}, (err, user) => {
+    return user;
   })
+  if (checkUser !== null){
+    checkUser = checkUser.courses[0].results.find((result) => {
+      let resID = result._id.toString();
+      console.log(result); 
+      if (resID === moduleID) {
+        console.log("WE HERE BR0");
+        return result;
+      }
+    })
+  }
+  
 
   console.log("User Check Stage: ", checkUser);
 
 
-  if (checkUser !== null) {
+  if (checkUser !== null && checkUser.submitted === false) {
   
     let update = {$set: {} }
-    update.$set["courses.$[course].results.responses"] = responses;
-    update.$set["courses.$[course].results.submitted"] = true;
+    update.$set["courses.$[course].results.$[result].responses"] = responses;
+    update.$set["courses.$[course].results.$[result].submitted"] = true;
+    update.$set["courses.$[course].results.$[result].score"] = score;
 
-    let userUpdate = await User.findOneAndUpdate({"_id": userID}, update, { new: true, arrayFilters: [{"course._id": courseID}]}, (err, user) => {
-      return user.toObject();
+    let userUpdate = await User.findOneAndUpdate({"_id": userID}, update, { new: true, arrayFilters: [{"course._id": courseID }, { "result._id": ObjectId(moduleID)}]}, (err, user) => {
+      return user
     })
     
-    return res.status(404).send("User already started Assessment");
+    return res.send("User started Ass. and results saved");
   
+  } else if (checkUser !== null && checkUser.submitted === true) {
+    res.send("Assignment already submitted");
   } else {
-    
-    let update = {$push: {} };
-    update.$push["courses.$[course].results"] = {
+    console.log("NEVER STARTED SAVE");  
+    let update = {$addToSet: {} };
+    update.$addToSet["courses.$[course].results"] = {
       "_id": selectedAssessment._id,
-      "score": undefined,
+      "score": score,
       "responses": responses,
       "submitted": true 
     }
   
-    let userUpdate = await User.findOneAndUpdate({"_id": userID}, update, { new: true, arrayFilters: [{"course._id": courseID}]}, (err, user) => {
+    let userUpdate = await User.findOneAndUpdate({"_id": userID}, update, { new: true, arrayFilters: [{ "course._id": courseID }]}, (err, user) => {
       return user.toObject();
     })
   

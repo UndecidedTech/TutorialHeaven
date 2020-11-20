@@ -3,9 +3,13 @@ const bcrypt = require("bcryptjs");
 const Schema = mongoose.Schema;
 
 const responseSchema = new Schema({
-    answer: {
+    value: {
         type: String,
         default: ""
+    },
+    correct: {
+        type: Boolean,
+        required: false 
     }
 })
 
