@@ -5,12 +5,14 @@
   <button class="btn btn-success" v-if="course.instructors.includes(user._id)" @click="save({sectionID: section._id, moduleID: module._id, value: module.content})">Save</button>
   </div>
   <div id="student" v-if="!course.instructors.includes(user._id)">
-    <div v-for="(question, index) in module.content" :key="index" class="pl-3">
+    <div v-for="(question, index) in module.content" :key="index" class="card w-75 m-3">
+      <div class="card-body">
       <multipleChoice v-if="question.type === 'multiple-choice'" v-bind:question="question" v-bind:index="index"/>
       <trueFalse v-else-if="question.type === 'trueFalse'" v-bind:question="question" v-bind:index="index"/>
+      </div>
     </div>
     test: {{ test }}
-    <button class="btn btn-danger float-right mt-3 mr-3" @click="submit(_)">Submit</button>
+    <button class="btn btn-danger float-right mt-3 mr-3" @click="submit({responses: test, courseID: $route.params.courseID, sectionID: $route.params.sectionID, moduleID: $route.params.moduleID})">Submit</button>
   </div>
   <div id="instructor" v-else>
     <div class="dropdown show pt-2 pr-2 pl-4 float-right">
@@ -20,9 +22,18 @@
       <a class="dropdown-item" name="trueFalse" @click="addQuestion({type: 'trueFalse', sectionID: section._id, moduleID: module._id})"> True or False</a>
     </div>
     </div>
-    <div v-for="(question, index) in module.content" :key="index">
+    <div v-for="(question, index) in module.content" :key="index" class="card w-75 m-3">
+      <div class="card-body">
       <multipleChoice v-if="question.type === 'multiple-choice'" v-bind:question="question" v-bind:index="index" v-bind:section="section" v-bind:module="module" v-bind:answers="answers"/>
       <trueFalse v-else-if="question.type === 'trueFalse'" v-bind:question="question" v-bind:index="index" v-bind:section="section" v-bind:module="module" v-bind:answers="answers"/>
+      <div class="input-group">
+      <div class="input-group-prepend"><span class="input-group-text">Relation</span></div>
+        <select class="form-control input">
+          <option value="">...</option>
+          <option v-for="(test, index) in relationCompute" :key="index" :value="test._id" :id="test.name">{{test.name}}</option>
+        </select>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -55,7 +66,8 @@ export default {
     ...mapActions({
       addQuestion: 'courses/createAssessmentContent',
       save: 'courses/updateAssessmentContent',
-      removeQuestion: 'courses/deleteAssessmentContent'
+      removeQuestion: 'courses/deleteAssessmentContent',
+      submit: 'user/submitAssessment'
     }),
     addIncorrectAnswer (index) {
       this.module.content[index].choices.push({ value: '' })
@@ -72,10 +84,17 @@ export default {
     test: function () {
       const test = this.module.content.filter(ele => ele.value)
       return test
+    },
+    relationCompute: function () {
+      const relate = this.section.modules.filter(ele => ele.type !== 'assessment')
+      return relate
     }
   }
 }
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="css">
+.input {
+  max-width: 25%;
+}
 </style>

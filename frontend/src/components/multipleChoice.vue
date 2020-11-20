@@ -14,13 +14,6 @@
       </div>
       <input v-model="question.answer" type="text" name="answer" class="form-control input">
       </div>
-      <div class="input-group">
-      <div class="input-group-prepend"><span class="input-group-text">Relation</span></div>
-        <select class="form-control input">
-          <option value=""></option>
-          <option value=""></option>
-        </select>
-      </div>
       <button class="btn btn-sm btn-dark" @click="addIncorrectAnswer(index)">Add Incorrect Answer</button>
       <div v-for="(incorrectAnswer, index) in question.choices" :key="index">
       <div class="input-group pt-2 pb-2">
@@ -31,7 +24,6 @@
       </div>
     </div>
     {{ question }}
-    <hr/>
   </div>
   <div id="student" v-else>
     <span class="font-weight-bold">{{index + 1}}. {{ question.question }}</span>
@@ -46,7 +38,6 @@
           </div>
         </div>
         {{ question }}
-    <hr/>
   </div>
 </div>
 </template>
