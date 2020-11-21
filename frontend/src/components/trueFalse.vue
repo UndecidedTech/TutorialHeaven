@@ -18,21 +18,35 @@
     {{ question }}
   </div>
   <div id="student" v-else>
-   <span class="font-weight-bold">{{index + 1}}. {{ question.question }}</span>
+    <div v-if="submitted">
+      <span class="font-weight-bold">{{index + 1}}. {{ question.question }}</span>
       <div class="custom-control custom-radio">
-        <input type="radio" class="custom-control-input" id="true" name="trueFalse" value="true" v-model="question.value">
+        <input type="radio" class="custom-control-input submitted-input" id="true" name="trueFalse" value="true" disabled>
         <label class="custom-control-label" for="true">True</label>
       </div>
       <div class="custom-control custom-radio">
-        <input type="radio" class="custom-control-input" id="false" value="false" name="trueFalse" v-model="question.value">
+        <input type="radio" class="custom-control-input submitted-input" id="false" value="false" name="trueFalse" disabled>
+        <label class="custom-control-label" for="false">False</label>
+      </div>
+    </div>
+    <div v-else>
+      <span class="font-weight-bold">{{index + 1}}. {{ question.question }}</span>
+      <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input submitted-input" id="true" name="trueFalse" value="true" v-model="question.value">
+        <label class="custom-control-label" for="true">True</label>
+      </div>
+      <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input submitted-input" id="false" value="false" name="trueFalse" v-model="question.value">
         <label class="custom-control-label" for="false">False</label>
       </div>
       {{ question }}
+    </div>
     </div>
   </div>
 </template>
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import $ from 'jquery'
 
 export default {
   name: 'trueFalse',
@@ -46,7 +60,8 @@ export default {
     index: Number,
     section: Object,
     module: Object,
-    answers: Array
+    answers: Array,
+    submitted: Boolean
   },
   methods: {
     ...mapActions({
@@ -58,8 +73,35 @@ export default {
   computed: {
     ...mapGetters({
       course: 'courses/course',
-      user: 'user/user'
-    })
+      user: 'user/user',
+      userCourses: 'user/userCourses'
+    }),
+    userResponse () {
+      const course = this.userCourses.find(course => {
+        if (course._id === this.$route.params.courseID) {
+          return course
+        }
+      })
+      const result = course.results.find(result => {
+        if (result._id === this.$route.params.moduleID) {
+          return result
+        }
+      })
+      return result
+    }
+  },
+  mounted () {
+    if (this.submitted) {
+      $('.submitted-input').each((index, element) => {
+        const jElement = $(element)
+        const eleValue = element.value
+        this.userResponse.responses.forEach(response => {
+          if (response.value === eleValue) {
+            jElement.prop('checked', true)
+          }
+        })
+      })
+    }
   }
 }
 </script>

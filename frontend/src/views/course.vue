@@ -140,12 +140,16 @@ export default {
     align-items: flex-start;
 }
 .editor-sidebar {
-    align-self: stretch;
-    width: 20%;
-    border-right: 3px solid rgba(136, 133, 133, 0.534);
+  align-self: stretch;
+  width: 20%;
+  border-right: 3px solid rgba(136, 133, 133, 0.534);
 }
 .editor-item {
     flex-grow: 1;
     align-self: stretch;
+}
+.list-group-item.active {
+  background-color: rgb(89, 177, 180);
+  border-color: rgb(89, 177, 180);
 }
 </style>

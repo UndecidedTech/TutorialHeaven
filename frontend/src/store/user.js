@@ -102,9 +102,21 @@ export default {
         alert('Please fill required forms')
       }
     },
-    async submitAssessment ({ _ }, data) {
+    async submitAssessment ({ commit }, data) {
+      if (data.responses.length === 0) {
+        return alert('You have not selected any answers')
+      } else {
+        console.log(data)
+        const res = await axios.post('/api/users/submitAssessment', data)
+        if (res.status === 200) {
+          commit('SET_USER', res.data)
+          commit('SET_COURSES', res.data.courses)
+        }
+      }
+    },
+    async saveAssessment ({ _ }, data) {
       console.log(data)
-      // const res = await axios.post('/api/courses/submitAssessement', data)
+      // const res = await axios.post('/api/users/submitAssessment', data)
       // if (res.status === 200) {
       // }
     }

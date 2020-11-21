@@ -5,14 +5,22 @@
   <button class="btn btn-success" v-if="course.instructors.includes(user._id)" @click="save({sectionID: section._id, moduleID: module._id, value: module.content})">Save</button>
   </div>
   <div id="student" v-if="!course.instructors.includes(user._id)">
-    <div v-for="(question, index) in module.content" :key="index" class="card w-75 m-3">
+    <div v-for="(question, index) in module.content" :key="index">
+      <div v-if="isSubmitted" class="card w-75 m-3" :class="checkAnswer(index, question) ? 'border-success' : 'border-danger'">
       <div class="card-body">
-      <multipleChoice v-if="question.type === 'multiple-choice'" v-bind:question="question" v-bind:index="index"/>
-      <trueFalse v-else-if="question.type === 'trueFalse'" v-bind:question="question" v-bind:index="index"/>
+          <multipleChoice v-if="question.type === 'multiple-choice'" v-bind:question="question" v-bind:index="index" v-bind:submitted="true"/>
+          <trueFalse v-else-if="question.type === 'trueFalse'" v-bind:question="question" v-bind:index="index" v-bind:submitted="true"/>
+          <button v-if="question.relation" class="btn btn-warning"  @click="goToRelation(question.relation)">Related Material</button>
+        </div>
+      </div>
+      <div v-else class="card w-75 m-3">
+      <div class="card-body">
+        <multipleChoice v-if="question.type === 'multiple-choice'" v-bind:question="question" v-bind:index="index"/>
+        <trueFalse v-else-if="question.type === 'trueFalse'" v-bind:question="question" v-bind:index="index"/>
       </div>
     </div>
-    test: {{ test }}
-    <button class="btn btn-danger float-right mt-3 mr-3" @click="submit({responses: test, courseID: $route.params.courseID, sectionID: $route.params.sectionID, moduleID: $route.params.moduleID})">Submit</button>
+    </div>
+    <button v-if="!isSubmitted" class="btn btn-danger float-right mt-3 mr-3" @click="submit({responses: test, courseID: $route.params.courseID, sectionID: $route.params.sectionID, moduleID: $route.params.moduleID}); goBack();">Submit</button>
   </div>
   <div id="instructor" v-else>
     <div class="dropdown show pt-2 pr-2 pl-4 float-right">
@@ -28,7 +36,7 @@
       <trueFalse v-else-if="question.type === 'trueFalse'" v-bind:question="question" v-bind:index="index" v-bind:section="section" v-bind:module="module" v-bind:answers="answers"/>
       <div class="input-group">
       <div class="input-group-prepend"><span class="input-group-text">Relation</span></div>
-        <select class="form-control input">
+        <select class="form-control input" v-model="question.relation">
           <option value="">...</option>
           <option v-for="(test, index) in relationCompute" :key="index" :value="test._id" :id="test.name">{{test.name}}</option>
         </select>
@@ -73,13 +81,20 @@ export default {
       this.module.content[index].choices.push({ value: '' })
     },
     goBack () {
-      this.$router.push(this.$router.push({ name: 'course', params: { sectionID: this.section._id, moduleID: undefined } }))
+      this.$router.push({ name: 'course', params: { sectionID: this.section._id, moduleID: undefined } })
+    },
+    checkAnswer (index, question) {
+      return this.userResponse.responses[index].correct
+    },
+    goToRelation (relationID) {
+      this.$router.push({ name: 'course', params: { sectionID: this.section._id, moduleID: relationID } })
     }
   },
   computed: {
     ...mapGetters({
       course: 'courses/course',
-      user: 'user/user'
+      user: 'user/user',
+      userCourses: 'user/userCourses'
     }),
     test: function () {
       const test = this.module.content.filter(ele => ele.value)
@@ -88,6 +103,40 @@ export default {
     relationCompute: function () {
       const relate = this.section.modules.filter(ele => ele.type !== 'assessment')
       return relate
+    },
+    isSubmitted () {
+      const course = this.userCourses.find(course => {
+        if (course._id === this.$route.params.courseID) {
+          return course
+        }
+      })
+      const resultScore = course.results.find(result => {
+        if (result._id === this.$route.params.moduleID) {
+          return result
+        }
+      })
+      if (typeof resultScore === 'undefined') {
+        return false
+      } else {
+        return resultScore.submitted
+      }
+    },
+    userResponse () {
+      const course = this.userCourses.find(course => {
+        if (course._id === this.$route.params.courseID) {
+          return course
+        }
+      })
+      const result = course.results.find(result => {
+        if (result._id === this.$route.params.moduleID) {
+          return result
+        }
+      })
+      if (typeof result === 'undefined') {
+        return { responses: [] }
+      } else {
+        return result
+      }
     }
   }
 }

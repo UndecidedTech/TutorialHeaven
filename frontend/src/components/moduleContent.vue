@@ -98,6 +98,7 @@ export default {
   display: flex;
   flex-flow: column;
   align-items: stretch;
+  max-width: 100vw;
 }
 .editor-item {
   border: 1px solid gray;

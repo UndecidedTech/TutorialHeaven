@@ -26,23 +26,38 @@
     {{ question }}
   </div>
   <div id="student" v-else>
-    <span class="font-weight-bold">{{index + 1}}. {{ question.question }}</span>
+    <div v-if="submitted">
+      <span class="font-weight-bold">{{index + 1}}. {{ question.question }}</span>
         <div class="custom-control custom-radio">
-          <input type="radio" class="custom-control-input" :value="question.answer" :id="question.answer" :name="'option'+question._id" v-model="question.value">
+          <input type="radio" class="custom-control-input submitted-input" :value="question.answer" :id="question.answer" :name="'option'+question._id" v-model="question.value" disabled>
           <label class="custom-control-label" :for="question.answer">{{ question.answer }}</label>
         </div>
         <div v-for="(incorrectAnswer, index) in question.choices" :key="index">
           <div class="custom-control custom-radio">
-          <input type="radio" class="custom-control-input" :value="incorrectAnswer.value" :id="incorrectAnswer.value" :name="'option'+question._id" v-model="question.value">
+          <input type="radio" class="custom-control-input submitted-input" :value="incorrectAnswer.value" :id="incorrectAnswer.value" :name="'option'+question._id" v-model="question.value" disabled>
           <label class="custom-control-label" :for="incorrectAnswer.value"> {{ incorrectAnswer.value }}</label>
           </div>
         </div>
-        {{ question }}
+    </div>
+    <div v-else>
+      <span class="font-weight-bold">{{index + 1}}. {{ question.question }}</span>
+        <div class="custom-control custom-radio">
+          <input type="radio" class="custom-control-input" :value="question.answer" :id="question._id" :name="'option'+question._id" v-model="question.value">
+          <label class="custom-control-label" :for="question._id">{{ question.answer }}</label>
+        </div>
+        <div v-for="(incorrectAnswer, index) in question.choices" :key="index">
+          <div class="custom-control custom-radio">
+          <input type="radio" class="custom-control-input" :value="incorrectAnswer.value" :id="incorrectAnswer.value+question._id" :name="'option'+question._id" v-model="question.value">
+          <label class="custom-control-label" :for="incorrectAnswer.value+question._id"> {{ incorrectAnswer.value }}</label>
+          </div>
+        </div>
+    </div>
   </div>
 </div>
 </template>
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import $ from 'jquery'
 
 export default {
   name: 'multipleChoice',
@@ -56,7 +71,8 @@ export default {
     index: Number,
     section: Object,
     module: Object,
-    answers: Array
+    answers: Array,
+    submitted: Boolean
   },
   methods: {
     ...mapActions({
@@ -64,14 +80,6 @@ export default {
       save: 'courses/updateAssessmentContent',
       removeQuestion: 'courses/deleteAssessmentContent'
     }),
-    answerStatus (event) {
-      console.log(event)
-      if (event === this.question.answer) {
-        this.isAnswerRight = true
-      } else {
-        this.isAnswerRight = false
-      }
-    },
     addIncorrectAnswer (index) {
       this.module.content[index].choices.push({ value: '' })
     }
@@ -79,8 +87,35 @@ export default {
   computed: {
     ...mapGetters({
       course: 'courses/course',
-      user: 'user/user'
-    })
+      user: 'user/user',
+      userCourses: 'user/userCourses'
+    }),
+    userResponse () {
+      const course = this.userCourses.find(course => {
+        if (course._id === this.$route.params.courseID) {
+          return course
+        }
+      })
+      const result = course.results.find(result => {
+        if (result._id === this.$route.params.moduleID) {
+          return result
+        }
+      })
+      return result
+    }
+  },
+  mounted () {
+    if (this.submitted) {
+      $('.submitted-input').each((index, element) => {
+        const jElement = $(element)
+        const eleValue = element.value
+        this.userResponse.responses.forEach(response => {
+          if (response.value === eleValue) {
+            jElement.prop('checked', true)
+          }
+        })
+      })
+    }
   }
 }
 </script>

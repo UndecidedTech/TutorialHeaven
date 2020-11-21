@@ -243,7 +243,7 @@ router.post("/saveAssessment", async (req, res) => {
       return user.toObject();
     })
     
-    return res.status(404).send("User responses Set");
+    return res.status(404).send(userUpdate.toObject());
   
   } else {
    console.log("RAN THIS CODE"); 
@@ -258,7 +258,7 @@ router.post("/saveAssessment", async (req, res) => {
       return user.toObject();
     })
   
-    return res.send("User started Exam");
+    return res.send(userUpdate);
   }
 })
 
@@ -339,11 +339,11 @@ router.post("/submitAssessment", async (req, res) => {
     update.$set["courses.$[course].results.$[result].submitted"] = true;
     update.$set["courses.$[course].results.$[result].score"] = score;
 
-    let userUpdate = await User.findOneAndUpdate({"_id": userID}, update, { new: true, arrayFilters: [{"course._id": courseID }, { "result._id": ObjectId(moduleID)}]}, (err, user) => {
+    let userUpdate = await User.findOneAndUpdate({"_id": userID}, update, { "fields": {"password": 0, "resetPasswordToken": 0, "resetPasswordExpires": 0}, new: true, arrayFilters: [{"course._id": courseID }, { "result._id": ObjectId(moduleID)}]}, (err, user) => {
       return user
     })
     
-    return res.send("User started Ass. and results saved");
+    return res.send(userUpdate.toObject());
   
   } else if (checkUser !== null && checkUser.submitted === true) {
     res.send("Assignment already submitted");
@@ -357,11 +357,12 @@ router.post("/submitAssessment", async (req, res) => {
       "submitted": true 
     }
   
-    let userUpdate = await User.findOneAndUpdate({"_id": userID}, update, { new: true, arrayFilters: [{ "course._id": courseID }]}, (err, user) => {
+    let userUpdate = await User.findOneAndUpdate({"_id": userID}, update, { "fields": { "password": 0, "resetPasswordToken": 0, "resetPasswordExpires": 0 }, new: true, arrayFilters: [{ "course._id": courseID }]}, (err, user) => {
       return user.toObject();
     })
-  
-    return res.send("User started Exam");
+    
+    
+    return res.send(userUpdate.toObject());
   }
 })
 

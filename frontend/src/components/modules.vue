@@ -4,20 +4,38 @@
     <h1 class="d-inline" style="padding-left: 10px; padding-top: 30px;">Modules</h1>
     <button v-if="course.instructors.includes(user._id)" class="btn btn-primary float-right" data-toggle="modal" data-target="#createModule"> Add Module </button>
     <hr/>
-    <section class="card align-self-center" style="width: auto;margin: 20px;">
+    <section v-if="course.instructors.includes(user._id)" class="card align-self-center" style="width: auto;margin: 20px;">
         <div class="card-body">
             <p class=""><b>{{ section.name }}</b>: {{ section.description }}</p>
             <hr/>
             <div v-for="(module, index) in section.modules" :key="index" class="card-title border border-dark rounded pl-2 pt-3 pb-3">
               <div v-if="module.type === 'content'">
                 <div class="pl-2 fa fa-book"></div>
-                <div class="d-inline pl-1" @click="enterModule(module._id)">{{ module.name }}</div>
+                <div class="d-inline pl-1" @click="enterModule(module._id)"> {{ module.name }}</div>
                 <button v-if="course.instructors.includes(user._id)" class="btn btn-sm btn-danger float-right mr-3" @click="deleteModule({courseID: course._id, sectionID: section._id, moduleID: module._id})">Remove</button>
               </div>
               <div v-else>
                 <i class="pl-2 fa fa-file-alt"/>
-                <div class="d-inline pl-1" @click="enterModule(module._id)">{{ module.name }}</div>
-                <div v-if="!course.instructors.includes(user._id)" class="float-right mr-3">0/10</div>
+                <div class="d-inline pl-1" @click="enterModule(module._id)"> {{ module.name }}</div>
+                <button v-if="course.instructors.includes(user._id)" class="btn btn-sm btn-danger float-right mr-3" @click="deleteModule({courseID: course._id, sectionID: section._id, moduleID: module._id})">Remove</button>
+              </div>
+            </div>
+        </div>
+    </section>
+    <section v-else class="card align-self-center" style="width: auto;margin: 20px;">
+        <div class="card-body">
+            <p class=""><b>{{ section.name }}</b>: {{ section.description }}</p>
+            <hr/>
+            <div v-for="(module, index) in section.modules" :key="index" class="card-title border border-dark rounded pl-2 pt-3 pb-3">
+              <div v-if="module.type === 'content'">
+                <div class="pl-2 fa fa-book"></div>
+                <div class="d-inline pl-1" @click="enterModule(module._id)"> {{ module.name }}</div>
+                <button v-if="course.instructors.includes(user._id)" class="btn btn-sm btn-danger float-right mr-3" @click="deleteModule({courseID: course._id, sectionID: section._id, moduleID: module._id})">Remove</button>
+              </div>
+              <div v-else>
+                <i class="pl-2 fa fa-file-alt"/>
+                <div @click="enterModule(module._id)" class="d-inline pl-1"> {{ module.name }}</div>
+                <div v-if="!course.instructors.includes(user._id)" class="float-right mr-3" >{{ setScore(module._id).value}}</div>
                 <button v-if="course.instructors.includes(user._id)" class="btn btn-sm btn-danger float-right mr-3" @click="deleteModule({courseID: course._id, sectionID: section._id, moduleID: module._id})">Remove</button>
               </div>
             </div>
@@ -76,12 +94,35 @@ export default {
     }),
     enterModule (id) {
       this.$router.push({ name: 'course', params: { sectionID: this.section._id, moduleID: id } })
+    },
+    setScore (moduleID) {
+      const course = this.userCourses.find(course => {
+        if (course._id === this.$route.params.courseID) {
+          return course
+        }
+      })
+      const resultScore = course.results.find(result => {
+        if (result._id === moduleID) {
+          return result
+        }
+      })
+      console.log(resultScore)
+      if (typeof resultScore !== 'undefined') {
+        if (typeof resultScore.score === 'undefined') {
+          return { value: 'Not Started', submitted: resultScore.submitted }
+        } else {
+          return { value: resultScore.score, submitted: resultScore.submitted }
+        }
+      } else {
+        return { value: 'Not Started', submitted: false }
+      }
     }
   },
   computed: {
     ...mapGetters({
       user: 'user/user',
-      course: 'courses/course'
+      course: 'courses/course',
+      userCourses: 'user/userCourses'
     })
   }
 }
@@ -91,6 +132,6 @@ export default {
 .card-title:hover {
   cursor: pointer;
   color: white;
-  background-color: #007bff;
+  background-color: rgb(89, 177, 180);
 }
 </style>
