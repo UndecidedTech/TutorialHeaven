@@ -15,7 +15,6 @@
         <option value="false">False</option>
       </select>
     </div>
-    {{ question }}
   </div>
   <div id="student" v-else>
     <div v-if="submitted">
@@ -39,7 +38,6 @@
         <input type="radio" class="custom-control-input submitted-input" id="false" value="false" name="trueFalse" v-model="question.value">
         <label class="custom-control-label" for="false">False</label>
       </div>
-      {{ question }}
     </div>
     </div>
   </div>

@@ -165,10 +165,10 @@ export default {
   border:1px solid;
   position:relative;
   right:0px;
-  top: 45vh;
-  opacity: 45%;
+  top:45vh;
+  opacity:40%;
 }
 .sub:hover {
-  opacity: 100%;
+  opacity:100%;
 }
 </style>
