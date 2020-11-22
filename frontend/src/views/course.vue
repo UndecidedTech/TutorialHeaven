@@ -169,6 +169,6 @@ export default {
   opacity:40%;
 }
 .sub:hover {
-  opacity:100%;
+  opacity:100;
 }
 </style>
