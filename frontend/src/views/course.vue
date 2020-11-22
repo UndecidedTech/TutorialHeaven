@@ -6,7 +6,7 @@
     <hr/>
     <draggable v-if="course.instructors.includes(user._id)" v-model="course.sections" group="sections" @start="drag=true" @end="drag=false" @update="updateCourse({courseID: course._id, field: 'sections', value: course.sections  })">
     <div v-for="(section, index) in this.course.sections" :key="section._id" class="list-group" id="list-tab" role="tablist">
-      <div> <a class="list-group-item list-group-item-action" id="sectionItem" @click="active(section._id, index)" :name="[[ section._id ]]" role="tab">{{ section.name }}</a> <button v-if="course.instructors.includes(user._id)" class="btn btn-sm btn-danger" @click="deleteSection({courseID: course._id, sectionID: section._id})">Remove</button></div>
+      <div> <a class="list-group-item list-group-item-action" id="sectionItem" @click="active(section._id, index)" :name="[[ section._id ]]" role="tab">{{ section.name }}<button v-if="course.instructors.includes(user._id)" class="btn btn-sm btn-danger float-right" @click="deleteSection({courseID: course._id, sectionID: section._id})">Remove</button></a> </div>
     </div>
     </draggable>
     <div v-else>
@@ -161,11 +161,14 @@ export default {
   background-color: rgb(89, 177, 180);
   border-color: rgb(89, 177, 180);
 }
-.sub{
-    border:1px solid;
-    position:relative;
-    right:0px;
-    top: 45vh;
-    color: black;
+.sub {
+  border:1px solid;
+  position:relative;
+  right:0px;
+  top: 45vh;
+  opacity: 40%;
+}
+.sub:hover {
+  opacity: 100%;
 }
 </style>
