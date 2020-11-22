@@ -166,7 +166,7 @@ export default {
   position:relative;
   right:0px;
   top: 45vh;
-  opacity: 40%;
+  opacity: 45%;
 }
 .sub:hover {
   opacity: 100%;
