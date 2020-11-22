@@ -15,7 +15,7 @@
     </div>
     </div>
   </div>
-  <button class="sub btn btn-sm btn-secondary" @click="shrink()"><i class="fas fa-angle-double-left" v-if="open"/><i class="fas fa-angle-double-right" v-else/></button>
+  <button class="sub" @click="shrink()"><i class="fas fa-angle-double-left" v-if="open"/><i class="fas fa-angle-double-right" v-else/></button>
   <div class="editor-item">
     <component v-if="shitInfo.sectionIndex >= 0" v-bind:section="course.sections[shitInfo.sectionIndex]" v-bind:sectionIndex="shitInfo.sectionIndex" v-bind:module="course.sections[shitInfo.sectionIndex].modules[shitInfo.moduleIndex]" v-bind:moduleIndex="shitInfo.moduleIndex" :is="componentRender" />
   </div>
@@ -167,6 +167,7 @@ export default {
   right:0px;
   top:45vh;
   opacity:40%;
+  background-color: cadetblue;
 }
 .sub:hover {
   opacity:100;
