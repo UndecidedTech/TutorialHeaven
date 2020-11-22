@@ -1,6 +1,6 @@
 <template>
 <div class="flex-container appBackground">
-  <div class="editor-sidebar">
+  <div class="editor-sidebar" v-show="open">
     <h1 class="d-inline">Sections</h1>
     <button v-if="course.instructors.includes(user._id)" class="btn btn-sm btn-primary float-right m-2" data-toggle="modal" data-target="#createSectionModal">+</button>
     <hr/>
@@ -15,6 +15,7 @@
     </div>
     </div>
   </div>
+  <button class="sub btn btn-sm btn-secondary" @click="shrink()"><i class="fas fa-angle-double-left" v-if="open"/><i class="fas fa-angle-double-right" v-else/></button>
   <div class="editor-item">
     <component v-if="shitInfo.sectionIndex >= 0" v-bind:section="course.sections[shitInfo.sectionIndex]" v-bind:sectionIndex="shitInfo.sectionIndex" v-bind:module="course.sections[shitInfo.sectionIndex].modules[shitInfo.moduleIndex]" v-bind:moduleIndex="shitInfo.moduleIndex" :is="componentRender" />
   </div>
@@ -61,6 +62,7 @@ export default {
         name: '',
         courseID: this.$route.params.courseID
       },
+      open: true,
       activeSection: 0
     }
   },
@@ -83,6 +85,13 @@ export default {
         $(`a[name='${sectionID}']`).addClass('active')
         this.activeSection = sectionID
         this.$router.push({ name: 'course', params: { sectionID: sectionID } })
+      }
+    },
+    shrink () {
+      if (this.open) {
+        this.open = false
+      } else {
+        this.open = true
       }
     }
   },
@@ -151,5 +160,12 @@ export default {
 .list-group-item.active {
   background-color: rgb(89, 177, 180);
   border-color: rgb(89, 177, 180);
+}
+.sub{
+    border:1px solid;
+    position:relative;
+    right:0px;
+    top: 45vh;
+    color: black;
 }
 </style>
