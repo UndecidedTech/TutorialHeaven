@@ -20,11 +20,11 @@
     <div v-if="submitted">
       <span class="font-weight-bold">{{index + 1}}. {{ question.question }}</span>
       <div class="custom-control custom-radio">
-        <input type="radio" class="custom-control-input submitted-input" id="true" name="trueFalse" value="true" disabled>
+        <input type="radio" class="custom-control-input submitted-input" :id="'true'+question._id" :name="question._id" value="true" disabled>
         <label class="custom-control-label" for="true">True</label>
       </div>
       <div class="custom-control custom-radio">
-        <input type="radio" class="custom-control-input submitted-input" id="false" value="false" name="trueFalse" disabled>
+        <input type="radio" class="custom-control-input submitted-input" :id="'false'+question._id" value="false" :name="question._id" disabled>
         <label class="custom-control-label" for="false">False</label>
       </div>
     </div>
