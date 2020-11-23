@@ -31,13 +31,14 @@
     <div v-else>
       <span class="font-weight-bold">{{index + 1}}. {{ question.question }}</span>
       <div class="custom-control custom-radio">
-        <input type="radio" class="custom-control-input submitted-input" id="true" name="trueFalse" value="true" v-model="question.value">
-        <label class="custom-control-label" for="true">True</label>
+        <input type="radio" class="custom-control-input" :id="'true'+question._id" :name="question._id" value="true" v-model="question.value">
+        <label class="custom-control-label" :for="'true'+question._id">True</label>
       </div>
       <div class="custom-control custom-radio">
-        <input type="radio" class="custom-control-input submitted-input" id="false" value="false" name="trueFalse" v-model="question.value">
-        <label class="custom-control-label" for="false">False</label>
+        <input type="radio" class="custom-control-input" :id="'false'+question._id" :name="question._id" value="false" v-model="question.value">
+        <label class="custom-control-label" :for="'false'+question._id">False</label>
       </div>
+      {{ question }}
     </div>
     </div>
   </div>

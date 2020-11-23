@@ -36,6 +36,7 @@
   </div>
 <div v-else>
 <div class="editor">
+<div class="title">{{ module.name }}</div>
 <div class="form-group" v-for="(content, index) in section.modules[moduleIndex].content" :key="index">
     <div class="editor-item" v-if="content.type === 'text'">
       <div v-html="content.value"></div>
@@ -66,7 +67,8 @@ export default {
   props: {
     section: Object,
     sectionIndex: Number,
-    moduleIndex: Number
+    moduleIndex: Number,
+    module: Object
   },
   data () {
     return {
@@ -106,6 +108,11 @@ export default {
 }
 .editor textarea {
   flex-basis: 50%;
+}
+.title {
+  margin: 5px;
+  font-size: 35px;
+  font-weight: bolder;
 }
 
 </style>
