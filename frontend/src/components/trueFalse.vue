@@ -38,7 +38,6 @@
         <input type="radio" class="custom-control-input" :id="'false'+question._id" :name="question._id" value="false" v-model="question.value">
         <label class="custom-control-label" :for="'false'+question._id">False</label>
       </div>
-      {{ question }}
     </div>
     </div>
   </div>
