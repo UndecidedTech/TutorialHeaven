@@ -113,7 +113,6 @@ export default {
     display: flex;
     justify-content: space-around;
     align-items: flex-start;
-    border: 2px solid #5e0d0d;
 }
 .dashboard-sidebar {
     align-self: stretch;
