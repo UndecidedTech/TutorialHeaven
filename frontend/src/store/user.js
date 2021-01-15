@@ -33,15 +33,6 @@ export default {
     SET_USER_AVI (state, avi) {
       state.user.avi = avi
     },
-    REM_USER (state) {
-      state.user = null
-    },
-    REM_TOKEN (state) {
-      state.token = null
-    },
-    REM_COURSES (state) {
-      state.courses = []
-    },
     SET_COURSES (state, courses) {
       state.courses = courses
     }

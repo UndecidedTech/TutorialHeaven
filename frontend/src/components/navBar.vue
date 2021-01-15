@@ -2,12 +2,16 @@
 <header>
  <nav class="navbar navbar-expand-lg navbar-dark bg-nav">
   <a @click="goHome()" class="navbar-brand btn p-0 text-white mb-0 h1">TutorialHeaven</a>
+  <div class="vl">|</div>
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto text-white">
-      <li class="nav-item active">
-        <button @click="goDashboard()"  class="btn nav-link text-white" >
+      <li class="nav-item active" v-if="authenticted">
+        <button @click="goDashboard()" class="btn nav-link text-white">
           <i class="fas fa-home"/>
         </button>
+      </li>
+      <li class="nav-item active">
+        <button @click="goCatalogue()" class="btn nav-link text-white">Catalogue</button>
       </li>
     </ul>
     <button v-if="!authenticated" @click="goSignUp()" class="signupBtn btn btn-success">Sign Up</button>
@@ -19,7 +23,7 @@
         </a>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
           <a class="dropdown-item" @click="goProfile()"><i class="fas fa-user"/> Profile Settings</a>
-
+          <a class="dropdown-item" @click="goStats()"><i class="fas fa-chart-line"/> Statistics</a>
           <div class="dropdown-divider"></div>
           <a @click="logOut()" class="dropdown-item"><i class="fas fa-sign-out-alt"/> Logout</a>
         </div>
@@ -54,8 +58,14 @@ export default {
     goDashboard () {
       this.$router.push({ name: 'userDashboard' })
     },
+    goStats () {
+      this.$router.push({ name: 'statsDashboard' })
+    },
     logOut () {
       this.signOut()
+    },
+    goCatalogue () {
+      this.$router.push({ name: 'courseCatalogue' })
     }
   },
   computed: {
@@ -77,6 +87,10 @@ export default {
 }
 .dropdown-toggle {
   cursor: pointer;
+}
+.vl {
+  border-left: 2px solid white;
+  margin-right: 10px;
 }
 
 </style>

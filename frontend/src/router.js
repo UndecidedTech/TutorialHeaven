@@ -8,6 +8,8 @@ import notFound from './views/404'
 import course from './views/course'
 import userReset from './views/userPasswordReset'
 import moduleContent from './components/moduleContent'
+import statsDashboard from './views/statsDashboard'
+import courseCatalog from './views/courseCatalog'
 
 Vue.use(Router)
 
@@ -20,7 +22,9 @@ const routes = [
   { path: '/userDashboard', component: userDashboard, name: 'userDashboard' },
   { path: '/course/:courseID/:sectionID?/:moduleID?/:contentID?', component: course, name: 'course', params: true },
   { path: '*', component: notFound },
-  { path: '/reset/:token', component: userReset, name: 'userReset', params: true }
+  { path: '/reset/:token', component: userReset, name: 'userReset', params: true },
+  { path: '/statsDashboard/:courseID?', component: statsDashboard, name: 'statsDashboard', params: true },
+  { path: '/courseCatalog', component: courseCatalog, name: 'courseCatalog' }
 ]
 
 export default new Router({

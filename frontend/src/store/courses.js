@@ -9,7 +9,8 @@ export default {
     selectedModule: {
       type: '',
       index: 0
-    }
+    },
+    courseList: []
   },
 
   getters: {
@@ -18,6 +19,9 @@ export default {
     },
     selectedModule (state) {
       return state.selectedModule
+    },
+    courseList (state) {
+      return state.courseList
     }
   },
   mutations: {
@@ -27,6 +31,9 @@ export default {
     },
     SET_SELECTEDMODULE (state, value) {
       state.selectedModule = value
+    },
+    SET_COURSE_LIST (state, courseList) {
+      state.courseList = courseList
     }
   },
 
@@ -141,6 +148,13 @@ export default {
       if (res.status === 200) {
         console.log(res.data)
         commit('SET_COURSE', res.data)
+      }
+    },
+    async getCourseList ({ commit }) {
+      const res = await axios.get('/api/courses/courseList')
+      if (res.status === 200) {
+        console.log(res.data)
+        commit('SET_COURSE_LIST', res.data)
       }
     }
   }

@@ -15,9 +15,11 @@ export default new Vuex.Store({
   },
   actions: {
     signOut ({ commit }) {
-      commit('user/REM_USER')
-      commit('user/REM_TOKEN')
+      commit('user/SET_USER', null)
+      commit('user/SET_TOKEN', null)
       commit('courses/SET_SELECTEDMODULE', { type: '', index: null })
+      commit('user/SET_COURSES', [])
+      commit('courses/SET_COURSE_LIST', [])
       console.log('Logged Out')
       router.push({ name: 'homePage' })
     }

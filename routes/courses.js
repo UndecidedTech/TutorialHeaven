@@ -309,6 +309,11 @@ router.post("/deleteModuleContent", async (req, res) => {
         let moduleUpdate = await Course.findOneAndUpdate({"_id": courseID, "sections._id": sectionID}, update, { new: true, arrayFilters: [{ 'module._id': moduleID }] })
         res.send(moduleUpdate)
     }
+}),
+router.get("/courseList", async (req, res) => {
+
+  let courseList = await Course.find({})
+  res.send(courseList)
 })
 
 //useful helper function for generating MongoDB updates
