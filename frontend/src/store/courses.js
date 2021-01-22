@@ -150,11 +150,19 @@ export default {
         commit('SET_COURSE', res.data)
       }
     },
-    async getCourseList ({ commit }) {
-      const res = await axios.get('/api/courses/courseList')
-      if (res.status === 200) {
-        console.log(res.data)
-        commit('SET_COURSE_LIST', res.data)
+    async getCourseList ({ commit }, searchText) {
+      if (searchText) {
+        const res = await axios.get('/api/catalog', { params: { search: searchText } })
+        if (res.status === 200) {
+          console.log('search data: ', res.data)
+          commit('SET_COURSE_LIST', res.data)
+        }
+      } else {
+        const res = await axios.get('/api/catalog')
+        if (res.status === 200) {
+          console.log(res.data)
+          commit('SET_COURSE_LIST', res.data)
+        }
       }
     }
   }

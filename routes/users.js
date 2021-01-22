@@ -364,8 +364,7 @@ router.post("/submitAssessment", async (req, res) => {
     
     return res.send(userUpdate.toObject());
   }
-})
-
+}),
 // useful helper function
 function generateUpdate(field, value) {
   const update = {"$set": {}}

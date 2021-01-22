@@ -4,8 +4,11 @@ const Course = require("../models/course");
 const JWT = require("jsonwebtoken");
 const User = require("../models/user");
 const { ObjectId } = require("mongodb");
+const multiparty = require("multiparty");
 
 
+const upload = require("../services/uploadImage");
+const singleUpload = upload.single('image');
 
 router.get("/getCourse/:courseID", async (req, res) => {
     let courseID = req.params.courseID;
@@ -30,30 +33,74 @@ router.get("/getCourse/:courseID", async (req, res) => {
 
 });
 
+
 router.post("/createCourse", async (req, res) => {
-    let userId = JWT.decode(req.cookies.token).sub
-    let courseData = {
-        "name": req.body.name,
-        "created_by": userId,
-        "instructors": [userId],
-        "subject": [req.body.subject],
-        "subscription": req.body.subscription
-    }
+    let userId = JWT.decode(req.cookies.token).sub;
 
-    let courseObject = await new Course(courseData).save();
+    singleUpload(req, res, async function (err) {
+      if (err) {
+        return res.status(422).send({ errors: [{ title: 'Image Upload Error', detail: err.message }] });
+      }
+      let userId = JWT.decode(req.cookies.token).sub;
+      
+      
+      // console.log("Inside Body:", req.body)
+      // console.log("Inside Function: ", req.file);
+      // console.log("Inside Coursedata", courseData);
+      // save the file's url to a property on the user's db record --> will use that to render their profile picture
+      // let update = {"$set": {"avi": req.file.location}};
+       let courseData = {
+          "image": req.file.location,
+          "name": req.body.name,
+          "subject": [req.body.subject],
+          "subscription": req.body.subscription,
+          "description": req.body.description,
+          "instructors": [userId],
+          "created_by": userId 
+        };
 
-    let userCourse = {
-        "name": req.body.name,
-        "role": "instructor",
-        "subject": [req.body.subject],
-        "creator": true,
-        "_id": courseObject.toObject()._id
-    }
 
-    let userUpdate = await User.findOneAndUpdate({"_id": userId}, {$push: {"courses": userCourse }}, {new: true})
+        let courseObject = await new Course(courseData).save();
 
-    res.send(userUpdate.toObject());
-});
+        let userCourse = {
+            "name": req.body.name,
+            "role": "instructor",
+            "subject": [req.body.subject],
+            "creator": true,
+            "_id": courseObject.toObject()._id
+        }
+
+        let userUpdate = await User.findOneAndUpdate({"_id": userId}, {$push: {"courses": userCourse }}, {new: true})
+
+        res.send(userUpdate.toObject())
+    });
+    
+})
+
+// router.post("/createCourse", async (req, res) => {
+//     let userId = JWT.decode(req.cookies.token).sub
+//     let courseData = {
+//         "name": req.body.name,
+//         "created_by": userId,
+//         "instructors": [userId],
+//         "subject": [req.body.subject],
+//         "subscription": req.body.subscription
+//     }
+
+//     let courseObject = await new Course(courseData).save();
+
+//     let userCourse = {
+//         "name": req.body.name,
+//         "role": "instructor",
+//         "subject": [req.body.subject],
+//         "creator": true,
+//         "_id": courseObject.toObject()._id
+//     }
+
+//     let userUpdate = await User.findOneAndUpdate({"_id": userId}, {$push: {"courses": userCourse }}, {new: true})
+
+//     res.send(userUpdate.toObject());
+// });
 
 router.post("/createSection", async (req, res) => {
   console.log(req.body)
@@ -309,12 +356,8 @@ router.post("/deleteModuleContent", async (req, res) => {
         let moduleUpdate = await Course.findOneAndUpdate({"_id": courseID, "sections._id": sectionID}, update, { new: true, arrayFilters: [{ 'module._id': moduleID }] })
         res.send(moduleUpdate)
     }
-}),
-router.get("/courseList", async (req, res) => {
-
-  let courseList = await Course.find({})
-  res.send(courseList)
 })
+
 
 //useful helper function for generating MongoDB updates
 function generateUpdate(field, value) {

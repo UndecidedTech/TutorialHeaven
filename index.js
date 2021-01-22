@@ -20,7 +20,7 @@ const app = express();
 
 // Middleware
 app.use(express.json());
-app.use(express.urlencoded());
+app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use(cors({
     "origin": ["http://localhost:8081", "http://localhost:8080"],
@@ -58,6 +58,9 @@ const courses = require("./routes/courses");
 const router = require("./routes/users");
 
 app.use("/api/courses", courses);
+
+const catalog = require("./routes/catalog")
+app.use("/api/catalog", catalog)
 
 app.use(express.static("./public"));
 app.listen(port, () => console.log(`Server started on ${port}`));

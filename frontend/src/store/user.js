@@ -83,8 +83,15 @@ export default {
       }
     },
     async createCourse ({ state, dispatch }, courseData) {
+      const fd = new FormData()
+      fd.append('image', courseData.image, courseData.image.name)
+      fd.append('description', courseData.description)
+      fd.append('name', courseData.name)
+      fd.append('subject', courseData.subject)
+      fd.append('subscription', courseData.subscription)
+      console.log(courseData)
       if (courseData.name && courseData.subject) {
-        const res = await axios.post('/api/courses/createCourse', courseData)
+        const res = await axios.post('/api/courses/createCourse', fd)
         console.log(courseData)
         if (res.status === 200) {
           dispatch('getCourses', state.user._id)
@@ -110,6 +117,12 @@ export default {
       // const res = await axios.post('/api/users/submitAssessment', data)
       // if (res.status === 200) {
       // }
+    },
+    async joinCourse ({ _ }, data) {
+      const res = await axios.post('/api/catalog', data)
+      if (res.status === 200) {
+        console.log(res.data)
+      }
     }
   }
 }

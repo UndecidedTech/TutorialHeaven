@@ -78,6 +78,16 @@ const courseSchema = new Schema({
         type: String,
         required: true
     },
+    description: {
+        type: String,
+        required: true,
+        default: ""
+    },
+    image: {
+        type: String,
+        required: false,
+        default: "https://tutorialheaven.s3.us-east-2.amazonaws.com/defaultAvatar.png"
+    },
     subject: {
         type: Array,
         default: []

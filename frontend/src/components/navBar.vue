@@ -1,17 +1,17 @@
 <template>
 <header>
- <nav class="navbar navbar-expand-lg navbar-dark bg-nav">
+ <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-nav">
   <a @click="goHome()" class="navbar-brand btn p-0 text-white mb-0 h1">TutorialHeaven</a>
   <div class="vl">|</div>
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto text-white">
-      <li class="nav-item active" v-if="authenticted">
+      <li class="nav-item active" v-if="authenticated">
         <button @click="goDashboard()" class="btn nav-link text-white">
           <i class="fas fa-home"/>
         </button>
       </li>
       <li class="nav-item active">
-        <button @click="goCatalogue()" class="btn nav-link text-white">Catalogue</button>
+        <button @click="goCatalog()" class="btn nav-link text-white">Catalog</button>
       </li>
     </ul>
     <button v-if="!authenticated" @click="goSignUp()" class="signupBtn btn btn-success">Sign Up</button>
@@ -64,8 +64,8 @@ export default {
     logOut () {
       this.signOut()
     },
-    goCatalogue () {
-      this.$router.push({ name: 'courseCatalogue' })
+    goCatalog () {
+      this.$router.push({ name: 'courseCatalog' })
     }
   },
   computed: {

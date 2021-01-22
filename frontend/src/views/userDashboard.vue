@@ -38,13 +38,15 @@
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="exampleModalLabel">Create Course</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="closeModal()">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div class="modal-body">
               <label for="courseName">Course Name</label>
               <input v-model="newCourse.name" id="courseName" type="text" class="form-control" required>
+              <label for="courseDescription">Description</label>
+              <textarea v-model="newCourse.description" rows="5" cols="48"/>
               <label for="subject">Subject</label>
               <select v-model="newCourse.subject" class="custom-select" id="subject" required>
               <option value="Greek History">Greek History</option>
@@ -52,6 +54,13 @@
               <option value="Japanese History">Japanese History</option>
               <option value="Other">Other</option>
               </select>
+              <label for="fileUpload">Image Upload</label>
+              <form>
+                <div class="custom-file">
+                  <input name="fileUpload" type="file" class="custom-file-input" id="customFile" @change="selectedFile($event)">
+                  <label class="custom-file-label" for="customFile">Choose file</label>
+                </div>
+              </form>
             </div>
             <div class="modal-footer">
               <button type="button" @click="createCourse(newCourse)" data-dismiss="modal" class="btn btn-primary">Create</button>
@@ -64,6 +73,7 @@
 </template>
 
 <script>
+import $ from 'jquery'
 import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'userDashboard',
@@ -72,9 +82,11 @@ export default {
   data () {
     return {
       newCourse: {
+        image: null,
+        description: null,
         name: null,
         subject: null,
-        subscription: true
+        subscription: false
       },
       notifications: [{
         title: 'Baseline results',
@@ -92,6 +104,21 @@ export default {
     },
     viewCourse (courseName, id) {
       this.$router.push({ name: 'course', params: { courseName: courseName, courseID: id } })
+    },
+    selectedFile (event) {
+      console.log('triggered')
+      this.newCourse.image = event.target.files[0]
+      console.log(this.newCourse.image)
+    },
+    closeModal () {
+      this.newCourse = {
+        image: null,
+        description: null,
+        name: null,
+        subject: null,
+        subscription: true
+      }
+      $('#customFile').val('')
     }
   },
   computed: {
@@ -103,6 +130,11 @@ export default {
   created () {
     this.getCourses(this.user._id)
     console.log(this.courses)
+  },
+  mounted () {
+    $('#createCourseModal').on('hidden.bs.modal', (evt) => {
+      this.closeModal()
+    })
   }
 }
 </script>

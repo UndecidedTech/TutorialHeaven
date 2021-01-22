@@ -24,6 +24,7 @@
     "mongoose": "^5.10.2",
     "multer": "^1.4.2",
     "multer-s3": "^2.9.0",
+    "multiparty": "^4.2.2",
     "nodemailer": "^6.4.14",
     "parser": "^0.1.4",
     "passport": "^0.4.1",
