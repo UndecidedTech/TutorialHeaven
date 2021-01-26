@@ -122,6 +122,7 @@ export default {
       const res = await axios.post('/api/catalog', data)
       if (res.status === 200) {
         console.log(res.data)
+        router.push({ name: 'userDashboard' })
       }
     }
   }

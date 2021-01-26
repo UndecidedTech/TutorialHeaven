@@ -152,7 +152,7 @@ export default {
     },
     async getCourseList ({ commit }, searchText) {
       if (searchText) {
-        const res = await axios.get('/api/catalog', { params: { search: searchText } })
+        const res = await axios.get('/api/catalog', { params: { query: searchText.query || '', subscribe: searchText.subscribe || false, enrolled: searchText.enrolled || false } })
         if (res.status === 200) {
           console.log('search data: ', res.data)
           commit('SET_COURSE_LIST', res.data)

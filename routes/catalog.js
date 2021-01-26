@@ -5,17 +5,44 @@ const JWT = require("jsonwebtoken");
 const User = require("../models/user");
 const { ObjectId } = require("mongodb");
 
+/** 
+* @api {get} /catalog Get Courses List
+* @apiName getCourses
+* @apiGroup Catalog
+*
+* @apiParam {String} query String used for partial match regex search on Course names.
+*/
 
 // get endpoint
 // TODO: 
 //  sort by popularity
 //  filter by keyword
 
+
+
 router.get("/", async (req, res) => {
 
-  if (req.query.search) {
-      const regex = new RegExp(escapeRegex(req.query.search), "gi");
-      await Course.find({"name": regex}, (err, courses) => {
+  let userID = JWT.decode(req.cookies.token).sub
+  let searchQuery = req.query
+  let search = {}
+
+  if  (searchQuery.query && searchQuery.query !== '') {
+      const regex = new RegExp(escapeRegex(searchQuery.query), "gi"); 
+      search.name = regex
+  }
+
+  if (searchQuery.subscribe == 'true') {
+    search.subscription = true 
+  }
+
+  if (searchQuery.enrolled == 'true') {
+      search.students = userID
+      search.instructors = userID
+  }
+
+  if (searchQuery.query || searchQuery.subscribe == 'true' || searchQuery.enrolled == 'true') {
+      console.log("search: ", search)
+      await Course.find(search, (err, courses) => {
           if (err) {
               console.error(err)
           } else {
@@ -23,32 +50,44 @@ router.get("/", async (req, res) => {
           }
       })
   } else {
-    let courseList = await Course.find({})
+    let courseList = await Course.find()
     res.send(courseList)
   }
 })
+
+/** 
+* @api {post} /catalog Join Course
+* @apiName joinCourse
+* @apiGroup Catalog
+*
+* @apiParam {String} courseID String used to retrieve course based on id
+*
+*/
 
 router.post("/", async (req, res) => {
      let userID = JWT.decode(req.cookies.token).sub;
      let courseID = req.body.courseID;
      
-     let updatedCourse = await Course.findByIdAndUpdate({ "_id": courseID }, { "$push": { "students": userID } }, { new: true })
+     let courseSearch = await Course.findById({ "_id": courseID })
      
     //  console.log(updatedCourse)
     
-     if (updatedCourse.students.includes(userID) || updatedCourse.instructors.includes(userID)) {
+     if (courseSearch.students.includes(userID) || courseSearch.instructors.includes(userID)) {
         res.status(405).send("User is already in the course or the resource is invalid")
      } else {
         let courseData = {
-            name: updatedCourse.name,
-            subject: updatedCourse.subject,
+            name: courseSearch.name,
+            subject: courseSearch.subject,
             role: "student",
             creator: false,
-            _id: updatedCourse._id
+            _id: courseSearch._id
          }
          console.log(courseData)
-    
+         // update user to accept course data
          let updatedUser = await User.findByIdAndUpdate({ "_id": userID }, { $push: { "courses": courseData} }, { new: true })
+
+         let updatedCourse = await Course.findByIdAndUpdate({ "_id": courseID }, { $push : { "students": userID } }, { new: true })
+
          console.log("userUpdate: ", updatedUser)
          res.send("success")
      }

@@ -67,7 +67,7 @@ const courseSchema = new Schema({
         required: true
     },
     instructors: {
-        type: Array,
+        type: [Schema.Types.ObjectId],
         required: true
     },
     students: {

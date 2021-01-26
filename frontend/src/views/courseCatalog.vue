@@ -17,11 +17,11 @@
   </tr>
 </table> -->
   <div class="row justify-content-end">
-    <input type="text" class="form-control search-bar" placeholder="Search" aria-label="Search" @keyup="getCourseList({query: $event.target.value, subscribe: subscribe, enrolled: enrolled})">
-     <button type="button" :class="subscribe === false ? 'btn btn-light filterBTN' : 'btn btn-info filterBTN'" data-toggle="button" aria-pressed="false" autocomplete="off" @click="subscribeToggle">
-      Subscribed
+    <input type="text" class="form-control search-bar" placeholder="Search" aria-label="Search" id="querySearch" @keyup="getCourseList({query: $event.target.value, subscribe: subscribe, enrolled: enrolled})">
+     <button type="button" :class="subscribe === false ? 'btn btn-light filterBTN' : 'btn btn-info filterBTN'" data-toggle="button" aria-pressed="false" autocomplete="off" @click="subscribeToggle(); getCourseList({query: getSearchValue(), subscribe: subscribe, enrolled: enrolled});">
+      Subscription
     </button>
-    <button type="button" :class="enrolled === false ? 'btn btn-light filterBTN' : 'btn btn-info filterBTN'" data-toggle="button" aria-pressed="false" autocomplete="off" @click="enrolledToggle">
+    <button type="button" :class="enrolled === false ? 'btn btn-light filterBTN' : 'btn btn-info filterBTN'" data-toggle="button" aria-pressed="false" autocomplete="off" @click="enrolledToggle(); getCourseList({query: getSearchValue(), subscribe: subscribe, enrolled: enrolled});">
       Enrolled
     </button>
   </div>
@@ -31,8 +31,9 @@
   <div class="card-body">
     <h5 class="card-title">{{ course.name }}</h5>
     <p class="card-text">{{ course.description}}</p>
-    <button class="btn btn-success" data-toggle="modal" data-target="#joinConfirmModal" @click="selectJoinCourse({courseID: course._id, name: course.name, subscription: course.subscription})">Join</button>
-    <i v-if="course.subscription" class="fas fa-money-bill-alt fa-2x" style="float: right;color: green;"></i>
+    <button v-if="!isUserInCourse(course, user._id)" class="btn btn-success" data-toggle="modal" data-target="#joinConfirmModal" @click="selectJoinCourse({courseID: course._id, name: course.name, subscription: course.subscription})">Join</button>
+    <button v-else class="btn btn-dark" disabled>Joined</button>
+    <!-- <i v-if="course.subscription" class="fas fa-money-bill-alt fa-2x" style="float: right;color: green;"></i> -->
   </div>
     </div>
     </div>
@@ -59,7 +60,7 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-success" @click="joinCourse(selectedCourse)">Yes</button>
+        <button type="button" class="btn btn-success" data-dismiss="modal" @click="joinCourse(selectedCourse)">Yes</button>
         <button type="button" data-dismiss="modal" class="btn btn-danger">No</button>
       </div>
     </div>
@@ -69,6 +70,7 @@
 </div>
 </template>
 <script>
+import $ from 'jquery'
 import { mapGetters, mapActions } from 'vuex'
 export default {
   name: 'courseCatalog',
@@ -105,11 +107,20 @@ export default {
       } else {
         this.enrolled = true
       }
+    },
+    isUserInCourse (course, userID) {
+      if (course.students.includes(userID) || course.instructors.includes(userID)) {
+        return true
+      } else return false
+    },
+    getSearchValue () {
+      return $('#querySearch').val()
     }
   },
   computed: {
     ...mapGetters({
-      courseList: 'courses/courseList'
+      courseList: 'courses/courseList',
+      user: 'user/user'
     })
   },
   watch: {
