@@ -8,6 +8,18 @@ const JWT = require("jsonwebtoken");
 
 const singleUpload = upload.single('image');
 
+/** 
+* @api {post} /image-upload Upload Image
+* @apiName image-upload
+* @apiGroup Images
+*
+* @apiParam {String} query String used for partial match regex search on Course names.
+*/
+
+// get endpoint
+// TODO: 
+//  sort by popularity
+//  filter by keyword
 
 router.post('/image-upload', (req, res) => {
   let userId = JWT.decode(req.cookies.token).sub;

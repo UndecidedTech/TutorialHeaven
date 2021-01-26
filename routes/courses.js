@@ -10,6 +10,19 @@ const multiparty = require("multiparty");
 const upload = require("../services/uploadImage");
 const singleUpload = upload.single('image');
 
+/** 
+* @api {get} /getCourse/:courseID Get CourseID
+* @apiName courseID
+* @apiGroup Courses
+*
+* @apiParam {String} query String used for partial match regex search on Course names.
+*/
+
+// get endpoint
+// TODO: 
+//  sort by popularity
+//  filter by keyword
+
 router.get("/getCourse/:courseID", async (req, res) => {
     let courseID = req.params.courseID;
     let userID = JWT.decode(req.cookies.token).sub
@@ -33,6 +46,18 @@ router.get("/getCourse/:courseID", async (req, res) => {
 
 });
 
+/** 
+* @api {post} /createCourse Create Course
+* @apiName createCourse
+* @apiGroup Courses
+*
+* @apiParam {String} query String used for partial match regex search on Course names.
+*/
+
+// get endpoint
+// TODO: 
+//  sort by popularity
+//  filter by keyword
 
 router.post("/createCourse", async (req, res) => {
     let userId = JWT.decode(req.cookies.token).sub;
@@ -102,6 +127,19 @@ router.post("/createCourse", async (req, res) => {
 //     res.send(userUpdate.toObject());
 // });
 
+/** 
+* @api {post} /createSection Create Section
+* @apiName createSection
+* @apiGroup Courses
+*
+* @apiParam {String} query String used for partial match regex search on Course names.
+*/
+
+// get endpoint
+// TODO: 
+//  sort by popularity
+//  filter by keyword
+
 router.post("/createSection", async (req, res) => {
   console.log(req.body)
   let userID = JWT.decode(req.cookies.token).sub;
@@ -113,6 +151,19 @@ router.post("/createSection", async (req, res) => {
   let sectionCreate = await Course.findOneAndUpdate({"_id": courseID}, {$push: {"sections": newSection }}, {new: true})
   res.send(sectionCreate.toObject())
 })
+
+/** 
+* @api {put} /updateCourse Update Course
+* @apiName updateCourse
+* @apiGroup Courses
+*
+* @apiParam {String} query String used for partial match regex search on Course names.
+*/
+
+// get endpoint
+// TODO: 
+//  sort by popularity
+//  filter by keyword
 
 router.put("/updateCourse", async (req, res) => {
     let courseID = req.body.courseID;
@@ -134,6 +185,19 @@ router.put("/updateCourse", async (req, res) => {
     }
 })
 
+/** 
+* @api {put} /updateSection Update Section
+* @apiName updateSection
+* @apiGroup Courses
+*
+* @apiParam {String} query String used for partial match regex search on Course names.
+*/
+
+// get endpoint
+// TODO: 
+//  sort by popularity
+//  filter by keyword
+
 router.put("/updateSection", async (req, res) => {
     let courseID = req.body.courseID;
     let sectionID = req.body.sectionID;
@@ -152,6 +216,19 @@ router.put("/updateSection", async (req, res) => {
     }
 })
 
+/** 
+* @api {post} /deleteSection Delete Section
+* @apiName deleteSection
+* @apiGroup Courses
+*
+* @apiParam {String} query String used for partial match regex search on Course names.
+*/
+
+// get endpoint
+// TODO: 
+//  sort by popularity
+//  filter by keyword
+
 router.post("/deleteSection", async (req, res) => {
     let courseID = req.body.courseID;
     let sectionID = req.body.sectionID;
@@ -169,6 +246,19 @@ router.post("/deleteSection", async (req, res) => {
         res.send(sectionUpdate)
     }
 })
+
+/** 
+* @api {post} /createModule Create Module
+* @apiName createModule
+* @apiGroup Courses
+*
+* @apiParam {String} query String used for partial match regex search on Course names.
+*/
+
+// get endpoint
+// TODO: 
+//  sort by popularity
+//  filter by keyword
 
 router.post("/createModule", async (req, res) => {
     let courseID = req.body.courseID;
@@ -193,6 +283,19 @@ router.post("/createModule", async (req, res) => {
     }
 })
 
+/** 
+* @api {put} /updateModule Update Modeule
+* @apiName updateModule
+* @apiGroup Courses
+*
+* @apiParam {String} query String used for partial match regex search on Course names.
+*/
+
+// get endpoint
+// TODO: 
+//  sort by popularity
+//  filter by keyword
+
 router.put("/updateModule", async (req, res) => {
     let courseID = req.body.courseID;
     let sectionID = req.body.sectionID;
@@ -214,6 +317,19 @@ router.put("/updateModule", async (req, res) => {
     }
 })
 
+/** 
+* @api {post} /deleteModule Delete Modeule
+* @apiName deleteModule
+* @apiGroup Courses
+*
+* @apiParam {String} query String used for partial match regex search on Course names.
+*/
+
+// get endpoint
+// TODO: 
+//  sort by popularity
+//  filter by keyword
+
 router.post("/deleteModule", async (req, res) => {
     let courseID = req.body.courseID;
     let sectionID = req.body.sectionID;
@@ -231,6 +347,19 @@ router.post("/deleteModule", async (req, res) => {
         res.send(moduleUpdate)
     }
 })
+
+/** 
+* @api {post} /createModuleContent Create Module Content
+* @apiName createModuleContent
+* @apiGroup Courses
+*
+* @apiParam {String} query String used for partial match regex search on Course names.
+*/
+
+// get endpoint
+// TODO: 
+//  sort by popularity
+//  filter by keyword
 
 router.post("/createModuleContent", async (req, res) => {
     let courseID = req.body.courseID;
@@ -252,6 +381,19 @@ router.post("/createModuleContent", async (req, res) => {
         res.send(moduleUpdate);
     }
 })
+
+/** 
+* @api {put} /updateModuleContent Update Module Content
+* @apiName updateModuleContent
+* @apiGroup Courses
+*
+* @apiParam {String} query String used for partial match regex search on Course names.
+*/
+
+// get endpoint
+// TODO: 
+//  sort by popularity
+//  filter by keyword
 
 router.put("/updateModuleContent", async (req, res) => {
     let courseID = req.body.courseID;
@@ -276,6 +418,19 @@ router.put("/updateModuleContent", async (req, res) => {
 
 })
 
+/** 
+* @api {post} /createAssessmentContent Create Assessment Content
+* @apiName createAssessmentContent
+* @apiGroup Courses
+*
+* @apiParam {String} query String used for partial match regex search on Course names.
+*/
+
+// get endpoint
+// TODO: 
+//  sort by popularity
+//  filter by keyword
+
 router.post("/createAssessmentContent", async (req, res) => {
     let courseID = req.body.courseID;
     let sectionID = req.body.sectionID;
@@ -295,6 +450,19 @@ router.post("/createAssessmentContent", async (req, res) => {
         res.send(assessmentUpdate);
     }
 })
+
+/** 
+* @api {put} /updateAssessmentContent Update Assessment Content
+* @apiName updateAssessmentContent
+* @apiGroup Courses
+*
+* @apiParam {String} query String used for partial match regex search on Course names.
+*/
+
+// get endpoint
+// TODO: 
+//  sort by popularity
+//  filter by keyword
 
 router.put("/updateAssessmentContent", async (req, res) => {
     let courseID = req.body.courseID;
@@ -320,6 +488,19 @@ router.put("/updateAssessmentContent", async (req, res) => {
     }
 })
 
+/** 
+* @api {post} /deleteAssessmentContent Delete Assessment Content
+* @apiName deleteAssessmentContent
+* @apiGroup Courses
+*
+* @apiParam {String} query String used for partial match regex search on Course names.
+*/
+
+// get endpoint
+// TODO: 
+//  sort by popularity
+//  filter by keyword
+
 router.post("/deleteAssessmentContent", async (req, res) => {
     let courseID = req.body.courseID;
     let sectionID = req.body.sectionID;
@@ -338,6 +519,19 @@ router.post("/deleteAssessmentContent", async (req, res) => {
         res.send(assessmentUpdate)
     }
 })
+
+/** 
+* @api {post} /deleteModuleContent Delete Module Content
+* @apiName deleteModuleContent
+* @apiGroup Courses
+*
+* @apiParam {String} query String used for partial match regex search on Course names.
+*/
+
+// get endpoint
+// TODO: 
+//  sort by popularity
+//  filter by keyword
 
 router.post("/deleteModuleContent", async (req, res) => {
     let courseID = req.body.courseID;
