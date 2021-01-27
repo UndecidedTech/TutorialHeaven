@@ -32,6 +32,5 @@ html,body {
 #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #000000;
 }
 </style>

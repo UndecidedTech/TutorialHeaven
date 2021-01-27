@@ -26,7 +26,7 @@ const routes = [
   { path: '/reset/:token', component: userReset, name: 'userReset', params: true },
   { path: '/statsDashboard/:courseID?', component: statsDashboard, name: 'statsDashboard', params: true },
   { path: '/courseCatalog', component: courseCatalog, name: 'courseCatalog' },
-  { path: '/forum/:courseID', component: forum, name: 'forum', params: true }
+  { path: '/forum/:courseID/:threadID?', component: forum, name: 'forum', params: true }
 ]
 
 export default new Router({
