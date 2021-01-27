@@ -20,11 +20,50 @@ const { response } = require("express");
 // eslint-disable-next-line new-cap
 const router = express.Router();
 
+/** 
+* @api {post} /signup Sign Up
+* @apiName signUp
+* @apiGroup Users
+*
+* @apiParam {String} query String used for partial match regex search on Course names.
+*/
+
+// get endpoint
+// TODO: 
+//  sort by popularity
+//  filter by keyword
+
 router.route("/signup")
   .post(UsersController.signUp);
 
+/** 
+* @api {post} /signin Sign In
+* @apiName signIn
+* @apiGroup Users
+*
+* @apiParam {String} query String used for partial match regex search on Course names.
+*/
+
+// get endpoint
+// TODO: 
+//  sort by popularity
+//  filter by keyword
+
 router.route("/signin")
   .post(passport.authenticate("local", {session: false}), UsersController.signIn);
+
+/** 
+* @api {get} /profile/:userId Get User ID
+* @apiName getUserId
+* @apiGroup Users
+*
+* @apiParam {String} query String used for partial match regex search on Course names.
+*/
+
+// get endpoint
+// TODO: 
+//  sort by popularity
+//  filter by keyword
 
 router.get("/profile/:userId", async (req, res) => {
     let userId = req.params.userId;
@@ -39,6 +78,19 @@ router.get("/profile/:userId", async (req, res) => {
     else
       res.status(404).send("User not found");
   });
+
+/** 
+* @api {post} /profile Profile
+* @apiName profile
+* @apiGroup Users
+*
+* @apiParam {String} query String used for partial match regex search on Course names.
+*/
+
+// get endpoint
+// TODO: 
+//  sort by popularity
+//  filter by keyword
 
 router.post("/profile", [
   check("userId", "User ID should not be empty/Must be ObjectID").not().isEmpty().customSanitizer(value => {
@@ -65,6 +117,19 @@ router.post("/profile", [
     res.status(404).send("User not authorized to perform this action")
   }
 })
+
+/** 
+* @api {post} /forgot Forgot Password
+* @apiName forgotPassword
+* @apiGroup Users
+*
+* @apiParam {String} query String used for partial match regex search on Course names.
+*/
+
+// get endpoint
+// TODO: 
+//  sort by popularity
+//  filter by keyword
 
 router.post("/forgot", async (req, res) => {
   console.log("forgotPassword triggered")
@@ -122,6 +187,19 @@ router.post("/forgot", async (req, res) => {
   }
 })
 
+/** 
+* @api {get} /reset/:token Get Reset Token
+* @apiName token
+* @apiGroup Users
+*
+* @apiParam {String} query String used for partial match regex search on Course names.
+*/
+
+// get endpoint
+// TODO: 
+//  sort by popularity
+//  filter by keyword
+
 router.get('/reset/:token', async (req, res) => {
   console.log(req.params.token)
   let selectedUser = await User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: {$gt: Date.now() }})
@@ -132,6 +210,19 @@ router.get('/reset/:token', async (req, res) => {
     res.status(404).send("Password reset token is invalid or has expired.");
   }
 })
+
+/** 
+* @api {post} /reset/:token Reset Token
+* @apiName emailToken
+* @apiGroup Users
+*
+* @apiParam {String} query String used for partial match regex search on Course names.
+*/
+
+// get endpoint
+// TODO: 
+//  sort by popularity
+//  filter by keyword
 
 router.post("/reset/:token", async (req, res) => {
   let selectedUser = await User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() }})
@@ -182,6 +273,19 @@ router.post("/reset/:token", async (req, res) => {
   }
   
 })
+
+/** 
+* @api {post} /saveAssessment Save Assessment
+* @apiName saveAssessment
+* @apiGroup Users
+*
+* @apiParam {String} query String used for partial match regex search on Course names.
+*/
+
+// get endpoint
+// TODO: 
+//  sort by popularity
+//  filter by keyword
 
 router.post("/saveAssessment", async (req, res) => {
   let courseID = req.body.courseID;
@@ -261,6 +365,19 @@ router.post("/saveAssessment", async (req, res) => {
     return res.send(userUpdate);
   }
 })
+
+/** 
+* @api {post} /submitAssessment Submit Assessment
+* @apiName submitAssessment
+* @apiGroup Users
+*
+* @apiParam {String} query String used for partial match regex search on Course names.
+*/
+
+// get endpoint
+// TODO: 
+//  sort by popularity
+//  filter by keyword
 
 router.post("/submitAssessment", async (req, res) => {
   let courseID = req.body.courseID;
