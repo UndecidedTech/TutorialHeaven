@@ -5,7 +5,7 @@ const JWT = require("jsonwebtoken");
 const User = require("../models/user");
 const { ObjectId } = require("mongodb");
 const multiparty = require("multiparty");
-
+const Forum = require("../models/forum");
 
 const upload = require("../services/uploadImage");
 const singleUpload = upload.single('image');
@@ -68,7 +68,6 @@ router.post("/createCourse", async (req, res) => {
       }
       let userId = JWT.decode(req.cookies.token).sub;
       
-      
       // console.log("Inside Body:", req.body)
       // console.log("Inside Function: ", req.file);
       // console.log("Inside Coursedata", courseData);
@@ -86,6 +85,12 @@ router.post("/createCourse", async (req, res) => {
 
 
         let courseObject = await new Course(courseData).save();
+
+        let forumData = {
+            "courseId": courseObject.toObject()._id
+        }
+
+        let forumObject = await new Forum(forumData).save()
 
         let userCourse = {
             "name": req.body.name,

@@ -3,6 +3,7 @@ import createPersistedState from 'vuex-persistedstate'
 import Vuex from 'vuex'
 import user from './user'
 import courses from './courses'
+import forum from './forum'
 import router from '../router'
 
 Vue.use(Vuex)
@@ -28,6 +29,7 @@ export default new Vuex.Store({
   },
   modules: {
     user,
-    courses
+    courses,
+    forum
   }
 })

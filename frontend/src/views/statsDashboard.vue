@@ -8,6 +8,7 @@
       </select>
     </div>
     <div v-if="selectedCourse.role == 'instructor'">
+      <statsChart/>
       Instructor stats not implemented yet!
       <br/>
       Number of Instructors {{course.instructors.length}}
@@ -26,10 +27,12 @@
 </template>
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import statsChart from '../components/statsChart'
 
 export default {
   name: 'statsDashboard',
   components: {
+    statsChart
   },
   data () {
     return {

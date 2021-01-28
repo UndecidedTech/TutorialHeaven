@@ -55,12 +55,17 @@ const images = require("./routes/images");
 app.use("/api/images", images);
 
 const courses = require("./routes/courses");
+
 const router = require("./routes/users");
 
 app.use("/api/courses", courses);
 
 const catalog = require("./routes/catalog")
+
 app.use("/api/catalog", catalog)
+
+const forum = require("./routes/forum")
+app.use("/api/forum", forum)
 
 app.use(express.static("./public"));
 app.listen(port, () => console.log(`Server started on ${port}`));
