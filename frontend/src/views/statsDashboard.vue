@@ -8,7 +8,12 @@
       </select>
     </div>
     <div v-if="selectedCourse.role == 'instructor'">
-      <statsChart/>
+      <div class="d-flex flex-row justify-content-around">
+        <statsCounter :number="course.instructors.length" :title="'# of Instructors'"/>
+        <statsCounter :number="course.students.length" :title="'# of Students'"/>
+        <statsCounter :number="course.sections.length" :title="'# of Sections'"/>
+      </div>
+      <statsChart :chart-data="chartData(course)"/>
       Instructor stats not implemented yet!
       <br/>
       Number of Instructors {{course.instructors.length}}
@@ -28,11 +33,13 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import statsChart from '../components/statsChart'
+import statsCounter from '../components/statsCounter'
 
 export default {
   name: 'statsDashboard',
   components: {
-    statsChart
+    statsChart,
+    statsCounter
   },
   data () {
     return {
@@ -46,6 +53,18 @@ export default {
     updateCourseID () {
       this.$router.push({ name: 'statsDashboard', params: { courseID: this.selectedCourse._id } })
       this.getCourse(this.$route.params.courseID)
+    },
+    chartData (c) {
+      return {
+        labels: ['Students', 'Instructors', 'Sections'],
+        datasets: [
+          {
+            label: 'Data One',
+            backgroundColor: '#f87979',
+            data: [c.instructors.length, c.students.length, c.sections.length]
+          }
+        ]
+      }
     }
   },
   computed: {
@@ -59,7 +78,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="css">
 #courseSelect {
-  width: 50%;
+  width: 25%;
   padding: 5px;
 }
 </style>

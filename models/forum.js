@@ -3,8 +3,14 @@ const Schema = mongoose.Schema;
 
 const postSchema = new Schema({
     created_by: {
-        type: mongoose.SchemaTypes.ObjectId,
-        required: true
+        name: {
+            type: String,
+            required: true
+        },
+        userId: {
+            type: mongoose.SchemaTypes.ObjectId,
+            required: true
+        }
     },
     created_on: {
         type: Date,
@@ -21,6 +27,16 @@ const postSchema = new Schema({
 }) 
 
 const threadSchema = new Schema({
+    relation: {
+      sectionId: {
+        type: mongoose.SchemaTypes.ObjectId,
+        required: false
+      },
+      moduleId: {
+        type: mongoose.SchemaTypes.ObjectId,
+        required: false
+      }
+    },
     title: {
         type: String,
         required: true
@@ -35,8 +51,14 @@ const threadSchema = new Schema({
         default: "https://tutorialheaven.s3.us-east-2.amazonaws.com/defaultAvatar.png"
     },
     created_by: {
-        type: mongoose.SchemaTypes.ObjectId,
-        required: true
+        name: {
+            type: String,
+            required: true
+        },
+        userId: {
+            type: mongoose.SchemaTypes.ObjectId,
+            required: true
+        }
     },
     created_on: {
         type: Date,

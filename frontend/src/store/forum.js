@@ -1,4 +1,5 @@
 import axios from 'axios'
+import Vue from 'vue'
 
 axios.defaults.withCredentials = true
 
@@ -18,7 +19,7 @@ export default {
   },
   mutations: {
     SET_THREADS (state, newThreads) {
-      state.threads = newThreads
+      Vue.set(state, 'threads', newThreads)
     },
     SET_THREAD (state, newThread) {
       state.thread = newThread
@@ -31,16 +32,32 @@ export default {
       commit('SET_THREADS', res.data)
       console.log(res.data)
     },
-    async createThread ({ _ }, newThread) {
+    async createThread ({ commit }, newThread) {
       console.log(newThread)
       const fd = new FormData()
       fd.append('image', newThread.image, newThread.image.name)
       fd.append('text', newThread.text)
       fd.append('courseID', newThread.courseID)
       fd.append('title', newThread.title)
+      fd.append('sectionID', newThread.relation.sectionID)
+      fd.append('moduleID', newThread.relation.moduleID)
       const res = await axios.post('/api/forum', fd)
+      if (res.status === 200) {
+        commit('SET_THREADS', res.data.threads)
+      }
+    },
+    async likeThread ({ commit }, data) {
+      console.log(data)
+      const res = await axios.post('/api/forum/like', data)
       if (res.data === 200) {
         console.log(res.data)
+        commit('SET_THREADS', res.data)
+      }
+    },
+    async createPost ({ commit }, data) {
+      const res = await axios.post('/api/forum/post', data)
+      if (res.status === 200) {
+        commit('SET_THREADS', res.data.threads)
       }
     }
   }

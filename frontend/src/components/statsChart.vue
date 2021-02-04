@@ -4,11 +4,13 @@
 </div>
 
 <script>
-import { Bar } from 'vue-chartjs'
+import { Bar, mixins } from 'vue-chartjs'
+const { reactiveProp } = mixins
 
 export default {
   name: 'statsChart',
   extends: Bar,
+  mixins: [reactiveProp],
   components: {
   },
   data () {
@@ -20,21 +22,6 @@ export default {
         scaleSteps: 1,
         scaleStepWidth: 50,
         scaleStartValue: 0
-      },
-      chartData: {
-        labels: ['Students', 'Instructors', 'Sections'],
-        datasets: [
-          {
-            label: 'Data One',
-            backgroundColor: '#f87979',
-            data: [30, 40, 40]
-          },
-          {
-            label: 'Test',
-            backgroundColor: '#f87979',
-            data: [9, 10, 10]
-          }
-        ]
       }
     }
   },
