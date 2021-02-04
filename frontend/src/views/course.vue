@@ -164,9 +164,9 @@ export default {
 .sub {
   border:1px solid;
   position:relative;
+  opacity:40%;
   right:0px;
   top:45vh;
-  opacity:40%;
   background-color: cadetblue;
 }
 .sub:hover {
