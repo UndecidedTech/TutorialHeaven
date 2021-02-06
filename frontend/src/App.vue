@@ -33,4 +33,8 @@ html,body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+.pointer {
+  cursor: pointer;
+}
 </style>

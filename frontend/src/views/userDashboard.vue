@@ -22,12 +22,23 @@
             <div class="notification-item">
                 <h1 style="padding-left: 10px; padding-top: 30px;">Notifications</h1>
                 <hr/>
-                <section class="card align-self-center" style="width: auto;margin: 20px;">
-                  <div v-for="(notif, index) in notifications" :key="index">
-                    <div class="card-body">
-                        <a class="card-title ">{{ notif.title }}</a>
-                        <hr/>
-                        <p class="card-text">{{notif.content}}</p>
+                <section class="align-self-center" style="width: auto;margin: 20px;">
+                  <div class="mb-3 border-bottom py-3 d-flex flex-column width-full" v-for="(notif, index) in notifications" :key="index">
+                    <div class="body">
+                    <div class="d-flex flex-items-baseline">
+                      <span class="mr-3">
+                        <a @click="goProfile()" class="d-inline-block pointer">
+                          <img class="avatar avatar-user" width="32" height="32" src="@/assets/logo.png"/>
+                        </a>
+                      </span>
+                      <div>
+                        PLACEHOLDER TEXT IS HERE LALALALLALALAL
+                      </div>
+                    </div>
+                    <div class="Box mt-2">
+                        <a class="cardTitle font-weight-bold">{{ notif.title }}</a>
+                        <p class="cardInfo">{{notif.content}}</p>
+                    </div>
                     </div>
                   </div>
                 </section>
@@ -91,6 +102,10 @@ export default {
       notifications: [{
         title: 'Baseline results',
         content: 'You are ready to start the javascript lessons!'
+      },
+      {
+        title: 'Baseline results',
+        content: 'You are ready to start the javascript lessons!'
       }]
     }
   },
@@ -119,6 +134,9 @@ export default {
         subscription: true
       }
       $('#customFile').val('')
+    },
+    goProfile () {
+      this.$router.push({ name: 'userProfile' })
     }
   },
   computed: {
@@ -161,9 +179,57 @@ export default {
   text-decoration: none;
   background-color: transparent;
   }
-  .editCourseButton:hover {
-    background-color: #007bff;
-    color: white;
-  }
+
+.editCourseButton:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+.cardTitle {
+  color: #24292e!important;
+}
+
+.cardTitle:hover {
+  color:#007bff!important;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.cardInfo {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.border-bottom {
+    border-bottom: 1px solid #e1e4e8!important;
+}
+
+.Box {
+    padding: 1em;
+    background-color: #fff;
+    border: 1px solid #e1e4e8;
+    border-radius: 6px;
+}
+.flex-items-baseline {
+    align-items: baseline!important;
+}
+
+.avatar {
+    display: inline-block;
+    overflow: hidden;
+    line-height: 1;
+    vertical-align: middle;
+    background-color: #fff;
+    border-radius: 6px;
+    box-shadow: 0 0 0 1px grey;
+}
+
+.avatar-user {
+    border-radius: 50%!important;
+}
+
+.width-full {
+    width: 100%!important;
+}
 
 </style>
