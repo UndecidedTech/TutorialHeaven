@@ -10,6 +10,7 @@
       <div class="card-body">
           <multipleChoice v-if="question.type === 'multiple-choice'" v-bind:question="question" v-bind:index="index" v-bind:submitted="true"/>
           <trueFalse v-else-if="question.type === 'trueFalse'" v-bind:question="question" v-bind:index="index" v-bind:submitted="true"/>
+          <openQuestion v-else-if="question.type === 'openQuestion'" v-bind:question="question" v-bind:index="index" v-bind:submitted="true"/>
           <button v-if="question.relation" class="btn btn-warning"  @click="goToRelation(question.relation)">Related Material</button>
         </div>
       </div>
@@ -17,6 +18,7 @@
       <div class="card-body">
         <multipleChoice v-if="question.type === 'multiple-choice'" v-bind:question="question" v-bind:index="index"/>
         <trueFalse v-else-if="question.type === 'trueFalse'" v-bind:question="question" v-bind:index="index"/>
+        <openQuestion v-else-if="question.type === 'openQuestion'" v-bind:question="question" v-bind:index="index"/>
       </div>
     </div>
     </div>
@@ -28,12 +30,14 @@
     <div class="dropdown-menu" aria-labelledby="addContent">
       <a class="dropdown-item" name="multipleChoice" @click="addQuestion({type: 'multiple-choice', sectionID: section._id, moduleID: module._id})">Multiple Choice</a>
       <a class="dropdown-item" name="trueFalse" @click="addQuestion({type: 'trueFalse', sectionID: section._id, moduleID: module._id})"> True or False</a>
+      <a class="dropdown-item" name="openQuestion" @click="addQuestion({type: 'open-ended', sectionID: section._id, moduleID: module._id})"> Open Answer</a>
     </div>
     </div>
     <div v-for="(question, index) in module.content" :key="index" class="card w-75 m-3">
       <div class="card-body">
       <multipleChoice v-if="question.type === 'multiple-choice'" v-bind:question="question" v-bind:index="index" v-bind:section="section" v-bind:module="module" v-bind:answers="answers"/>
       <trueFalse v-else-if="question.type === 'trueFalse'" v-bind:question="question" v-bind:index="index" v-bind:section="section" v-bind:module="module" v-bind:answers="answers"/>
+      <openQuestion v-else-if="question.type === 'open-ended'" v-bind:question="question" v-bind:index="index" v-bind:section="section" v-bind:module="module" v-bind:answers="answers"/>
       <div class="input-group">
       <div class="input-group-prepend"><span class="input-group-text">Relation</span></div>
         <select class="form-control input" v-model="question.relation">
@@ -50,11 +54,13 @@
 import { mapGetters, mapActions } from 'vuex'
 import multipleChoice from './multipleChoice'
 import trueFalse from './trueFalse'
+import openQuestion from './openQuestion'
 export default {
   name: 'assessment',
   components: {
     multipleChoice,
-    trueFalse
+    trueFalse,
+    openQuestion
   },
   data () {
     return {
