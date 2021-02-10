@@ -8,7 +8,8 @@ export default {
   state: {
     token: null,
     user: null,
-    courses: []
+    courses: [],
+    notifications: []
   },
 
   getters: {
@@ -35,6 +36,9 @@ export default {
     },
     SET_COURSES (state, courses) {
       state.courses = courses
+    },
+    SET_NOTIFICATIONS (state, notifications) {
+      state.notifications = notifications
     }
   },
 
@@ -123,6 +127,26 @@ export default {
       if (res.status === 200) {
         console.log(res.data)
         router.push({ name: 'userDashboard' })
+      }
+    },
+    async getNotifications ({ commit }, data) {
+      console.log('here?', data)
+      const res = await axios.get('/api/notifications', {
+        params: {
+          userID: data.userID
+        }
+      })
+      console.log(res)
+      if (res.status === 200) {
+        console.log(res.data)
+        // save data to the store here
+      }
+    },
+    async markRead ({ commit }, data) {
+      const res = await axios.post('/api/notification', data)
+      if (res.status === 200) {
+        console.log(res.data)
+        // save data to the store here
       }
     }
   }

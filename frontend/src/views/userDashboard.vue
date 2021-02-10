@@ -37,7 +37,7 @@
                     </div>
                     <div class="Box mt-2">
                         <a class="cardTitle font-weight-bold">{{ notif.title }}</a>
-                        <p class="cardInfo">{{notif.content}}</p>
+                        <p class="cardInfo">{{notif.content}}<button class="float-right btn btn-light" @click="markRead(notif)"><i class="fa fa-user"/></button></p>
                     </div>
                     </div>
                   </div>
@@ -112,7 +112,9 @@ export default {
   methods: {
     ...mapActions({
       getCourses: 'user/getCourses',
-      createCourse: 'user/createCourse'
+      createCourse: 'user/createCourse',
+      getNotifications: 'user/getNotifications',
+      markRead: 'user/markRead'
     }),
     editCourse (courseName, id) {
       this.$router.push({ name: 'course', params: { courseName: courseName, courseID: id } })
@@ -147,7 +149,8 @@ export default {
   },
   created () {
     this.getCourses(this.user._id)
-    console.log(this.courses)
+    this.getNotifications({ userID: this.user._id })
+    // console.log(this.courses)
   },
   mounted () {
     $('#createCourseModal').on('hidden.bs.modal', (evt) => {
