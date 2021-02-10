@@ -98,15 +98,7 @@ export default {
         name: null,
         subject: null,
         subscription: false
-      },
-      notifications: [{
-        title: 'Baseline results',
-        content: 'You are ready to start the javascript lessons!'
-      },
-      {
-        title: 'Baseline results',
-        content: 'You are ready to start the javascript lessons!'
-      }]
+      }
     }
   },
   methods: {
@@ -144,7 +136,8 @@ export default {
   computed: {
     ...mapGetters({
       user: 'user/user',
-      courses: 'user/userCourses'
+      courses: 'user/userCourses',
+      notifications: 'user/notifications'
     })
   },
   created () {

@@ -21,6 +21,9 @@ export default {
     },
     userCourses (state) {
       return state.courses
+    },
+    notifications (state) {
+      return state.notifications
     }
   },
 
@@ -140,6 +143,7 @@ export default {
       if (res.status === 200) {
         console.log(res.data)
         // save data to the store here
+        commit('SET_NOTIFICATIONS', res.data)
       }
     },
     async markRead ({ commit }, data) {
