@@ -47,10 +47,8 @@ export default {
       }
     },
     async likeThread ({ commit }, data) {
-      console.log(data)
       const res = await axios.post('/api/forum/like', data)
-      if (res.data === 200) {
-        console.log(res.data)
+      if (res.status === 200) {
         commit('SET_THREADS', res.data)
       }
     },
@@ -59,6 +57,16 @@ export default {
       if (res.status === 200) {
         commit('SET_THREADS', res.data.threads)
       }
+    },
+    async removeThread ({ _ }, data) {
+      const res = await axios.post('/api/forum/deleteThread', data)
+      if (res.status === 200) {
+        console.log(res.data)
+      }
+    },
+    async removePost ({ _ }, data) {
+      const res = await axios.post('/api/forum/deletePost', data)
+      console.log(res)
     }
   }
 }

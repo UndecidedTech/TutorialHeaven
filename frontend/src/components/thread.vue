@@ -4,19 +4,19 @@
         <div class="row row-0 justify-content-center">
         <div class="col-md-3">
             <img
-                :src="findMainPost().image"
+                :src="findMainThread().image"
                 class="w-100 h-100 p-2 threadImage"
                 alt="Card side image"
             />
         </div>
         <div class="col">
             <div class="card-body pl-0">
-            <h3 class="card-title threadTitle">{{ findMainPost().title }}</h3>
-            <div class="text-body" v-html="findMainPost().text"></div>
+            <h3 class="card-title threadTitle">{{ findMainThread().title }}</h3>
+            <div class="text-body" v-html="findMainThread().text"></div>
             <div class="d-flex align-items-center pt-4 mt-auto">
                 <div class="ms-3">
-                <div class="text-body">{{ findMainPost().created_by.name }}</div>
-                <div class="text-muted">{{ findMainPost().created_on }}</div>
+                <div class="text-body">{{ findMainThread().created_by.name }}</div>
+                <div class="text-muted">{{ findMainThread().created_on }}</div>
                 </div>
                 <div class="ml-auto fa-2x">
                   <span data-toggle="tooltip" data-placement="top" title="Reply">
@@ -24,29 +24,30 @@
                   </span>
                   <span class="fa-layers fa-fw"  data-toggle="tooltip" data-placement="top" title="Like" @click="likeThread({courseID:$route.params.courseID, threadID: thread._id})">
                       <i class="far fa-heart"></i>
-                      <span class="fa-layers-counter" style="font-size: 3rem;">{{ findMainPost().likes.length }}</span>
+                      <span class="fa-layers-counter" style="font-size: 3rem;">{{ findMainThread().likes.length }}</span>
                   </span>
                 </div>
             </div>
-            <a class="float-right relationLink" @click="$router.push({ name: 'course', params: {courseID: $route.params.courseID, sectionID: findMainPost().relation.sectionId, moduleID: findMainPost().relation.moduleId } })">Related Material</a>
+            <a class="float-right relationLink" @click="$router.push({ name: 'course', params: {courseID: $route.params.courseID, sectionID: findMainThread().relation.sectionId, moduleID: findMainThread().relation.moduleId } })">Related Material</a>
             </div>
         </div>
         </div>
         <div class="collapse p-3" id="mainThreadReply">
-          <VueEditor v-model="editorContent" :id="'postEditor'+findMainPost()._id"></VueEditor>
+          <VueEditor v-model="editorContent" :id="'postEditor'+findMainThread()._id"></VueEditor>
           <button class="btn btn-sm btn-danger float-right m-2" @click="createPost({text: editorContent, courseID: $route.params.courseID, threadID: $route.params.threadID})">Post Reply</button>
         </div>
   </div>
-  <div v-for="(post, index) in findMainPost().posts" :key="index" style="width: 85%;">
+  <div class="m-2" v-for="(post, index) in findPosts()" :key="index" style="width: 85%;">
     <div class="card d-flex">
+      <button v-if="course.instructors.includes(user._id)" @click="removePost({courseID: $route.params.courseID, threadID: $route.params.threadID, postID: post._id})" class="btn btn-danger" style="width: 25%">Remove Post</button>
           <div class="row row-0 justify-content-center flex-grow-1">
           <div class="col">
               <div class="card-body">
               <h4 class="card-title">{{ post.created_by.name }}</h4>
-              <div class="text-body">{{ post.text }}</div>
-              <div class="d-flex align-items-center pt-4 mt-auto">
+              <div class="text-body" v-html="post.text"></div>
+              <div class="d-flex align-items-center">
                   <div class="ms-3">
-                  <div class="text-muted">{{ post.date }}</div>
+                  <div class="text-muted">{{ post.created_on }}</div>
                   </div>
                   <div class="ml-auto fa-2x">
                   <span data-toggle="tooltip" data-placement="top" title="Reply">
@@ -63,35 +64,58 @@
         </div>
     </div>
   </div>
+  <pagination @pagechanged="setCurrentPage($event)" :totalPages="Math.ceil(findMainThread().posts.length / 5)" :currentPage="currentPage"/>
 </div>
 </template>
 <script>
 import { VueEditor } from 'vue2-editor'
+import pagination from './pagination'
 import $ from 'jquery'
 import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'thread',
   components: {
-    VueEditor
+    VueEditor,
+    pagination
   },
   data () {
     return {
       threadID: this.$route.params.threadID,
-      editorContent: ''
+      editorContent: '',
+      currentPage: 1
     }
   },
   methods: {
     ...mapActions({
-      createPost: 'forum/createPost'
+      createPost: 'forum/createPost',
+      removePost: 'forum/removePost'
     }),
-    findMainPost () {
+    findMainThread () {
       return this.threads.find(ele => ele._id === this.threadID)
+    },
+    findPosts () {
+      const posts = this.findMainThread().posts
+      if (this.currentPage === 1) {
+        const sliceFloor = this.currentPage - 1
+        console.log('floor', sliceFloor)
+        return posts.slice(sliceFloor, this.currentPage * 5)
+      } else {
+        const sliceFloor = (this.currentPage - 1) * 5
+        console.log(sliceFloor, (this.currentPage * 5) - 1)
+        return posts.slice(sliceFloor, (this.currentPage * 5))
+      }
+    },
+    setCurrentPage (e) {
+      console.log('currentPage = ', e)
+      this.currentPage = e
     }
   },
 
   computed: {
     ...mapGetters({
-      threads: 'forum/threads'
+      threads: 'forum/threads',
+      user: 'user/user',
+      course: 'courses/course'
     })
   },
   mounted () {
