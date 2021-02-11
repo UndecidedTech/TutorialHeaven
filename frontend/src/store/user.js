@@ -147,7 +147,8 @@ export default {
       }
     },
     async markRead ({ commit }, data) {
-      const res = await axios.post('/api/notification', data)
+      console.log('Marked: ', data)
+      const res = await axios.post('/api/notifications', data)
       if (res.status === 200) {
         console.log(res.data)
         // save data to the store here

@@ -24,15 +24,71 @@ router.get("/", async (req, res) => {
     let courseIds = courses.map((course) => {
         return course._id
     })
+
+    let readNotifications = selectedUser.read_notifications;
     
     // console.log(courseIds);
 
     let selectedNotifications = await Notification.find({ "courseId": {$in : courseIds} })
 
+    // let selectedNotifications = await Notification.find({ "courseId": {$in : courseIds}, "_id": {$nin: readNotifications } })
     
 
     console.log(selectedNotifications);
     res.send(selectedNotifications)
+})
+
+
+router.post("/", async (req, res) => {
+    console.log(req.body)
+
+    let userID = JWT.decode(req.cookies.token).sub
+    let notificationID = req.body._id
+
+    let selectedUser = await User.findById(userID, (err, user) => {
+        if (user) {
+            return user.toObject()
+        } else {
+            return user
+        }
+    })
+    
+    console.log(selectedUser)
+
+    let readNotifications = undefined;
+
+    if (selectedUser) {
+        readNotifications = selectedUser.read_notifications;
+    }
+
+    if (readNotifications.includes(notificationID)) {
+        let update = {$pull: {}};
+        update.$pull['read_notifications'] = notificationID
+        
+        let userUpdate = await User.findByIdAndUpdate(userID, update, { new: true }, (err, user) => {
+            if (user) {
+                return user.toObject()
+            } else {
+                return user
+            }
+        })
+        
+        res.send(userUpdate)
+    } else {
+        let update = { $push: {} }
+        update.$push['read_notifications'] = notificationID
+
+        let userUpdate = await User.findByIdAndUpdate(userID, update, { new: true }, (err, user) => {
+            if (user) {
+                return user.toObject()
+            } else {
+                return user
+            }
+        })
+
+        res.send(userUpdate)
+
+    }
 })
 
 module.exports = router;

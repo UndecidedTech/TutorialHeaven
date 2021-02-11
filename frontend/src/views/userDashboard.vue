@@ -24,7 +24,7 @@
                 <hr/>
                 <section class="align-self-center" style="width: auto;margin: 20px;">
                   <div class="mb-3 border-bottom py-3 d-flex flex-column width-full" v-for="(notif, index) in notifications" :key="index">
-                    <div class="body">
+                    <div class="body" :class="user.read_notifications.includes(notif._id) ? 'test': ''">
                     <div class="d-flex flex-items-baseline">
                       <span class="mr-3">
                         <a @click="goProfile()" class="d-inline-block pointer">
@@ -32,12 +32,16 @@
                         </a>
                       </span>
                       <div>
-                        PLACEHOLDER TEXT IS HERE LALALALLALALAL
+                         Placeholder text
                       </div>
                     </div>
-                    <div class="Box mt-2">
+                    <div class="Box mt-2" :class="user.read_notifications.includes(notif._id) ? 'test2': ''">
                         <a class="cardTitle font-weight-bold">{{ notif.title }}</a>
-                        <p class="cardInfo">{{notif.content}}<button class="float-right btn btn-light" @click="markRead(notif)"><i class="fa fa-user"/></button></p>
+                        <p class="cardInfo">
+                          {{notif.content}}
+                          <button class="float-right btn btn-light" @click="markRead(notif)"><i class="fas fa-eye"/></button>
+                          <button class="mr-3 float-right btn btn-light" @click="goToResourse(notif)"><i class="fas fa-share"/></button>
+                        </p>
                     </div>
                     </div>
                   </div>
@@ -131,6 +135,9 @@ export default {
     },
     goProfile () {
       this.$router.push({ name: 'userProfile' })
+    },
+    goToResourse () {
+      console.log('test')
     }
   },
   computed: {
@@ -226,6 +233,14 @@ export default {
 
 .width-full {
     width: 100%!important;
+}
+
+.test {
+  opacity: 60%;
+}
+
+.test2 {
+  background: #CCCCCC
 }
 
 </style>

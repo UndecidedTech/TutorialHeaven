@@ -88,6 +88,10 @@ const userSchema = new Schema({
     },
     resetPasswordExpires: {
         type: Date
+    },
+    read_notifications: {
+        type: [mongoose.SchemaTypes.ObjectId],
+        default: []
     }
 });
 
