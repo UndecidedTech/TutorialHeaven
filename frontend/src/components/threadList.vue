@@ -11,6 +11,7 @@
         </div>
         <div class="col">
             <div class="card-body pl-0">
+            <button @click="removeThread({courseID: $route.params.courseID, threadID: thread._id})" v-if="thread.created_by.userId === user._id" class="btn btn-danger float-right">Remove Thread</button>
             <h3 class="card-title threadTitle" @click="goToThread(thread._id)">{{ thread.title }}</h3>
             <div class="text-muted" v-html="thread.text"></div>
             <div class="d-flex align-items-center pt-4 mt-auto">
@@ -38,7 +39,7 @@
 </template>
 <script>
 import $ from 'jquery'
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'threadList',
   props: {
@@ -52,13 +53,17 @@ export default {
   },
   methods: {
     ...mapActions({
-      likeThread: 'forum/likeThread'
+      likeThread: 'forum/likeThread',
+      removeThread: 'forum/removeThread'
     }),
     goToThread (threadID) {
       this.$router.push({ name: 'forum', params: { courseID: this.$route.params.courseID, threadID: threadID } })
     }
   },
   computed: {
+    ...mapGetters({
+      user: 'user/user'
+    })
   },
   mounted () {
     $('[data-toggle="tooltip"]').tooltip({

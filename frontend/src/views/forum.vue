@@ -1,10 +1,14 @@
 <template>
   <div class="appBackground">
     <div v-if="this.$route.params.courseID && !this.$route.params.threadID">
-       <button class="d-inline btn btn-primary float-right mr-3" data-toggle="modal" data-target="#createThreadModal">Create Thread</button>
-      <div v-for="(thread, index) in threads" :key="index" class="container">
+      <div class="d-flex flex-row justify-content-between">
+        <input type="text" class="form-control search-bar" placeholder="Search" aria-label="Search" id="querySearch" @keyup="filterThreadList($event.target.value)">
+        <button class="btn btn-primary m-2" data-toggle="modal" data-target="#createThreadModal">Create Thread</button>
+      </div>
+      <div v-for="(thread, index) in this.filteredThreads" :key="index" class="container">
         <threadList :thread="thread"/>
       </div>
+      <pagination class="d-flex flex-column align-items-center" @pagechanged="setCurrentPage($event)" :totalPages="Math.ceil(filteredThreads.length / 5)" :currentPage="currentPage"/>
       </div>
     <div v-else-if="this.$route.params.courseID && this.$route.params.threadID" class="container">
       <!-- this.$route.params.courseID && this.$route.params.threadID -->
@@ -33,7 +37,6 @@
               <option v-for="(item2, index) in item.modules" :value="{sectionID: item._id, moduleID: item2._id}" :key="index">{{item2.type}}: {{item2.name}}</option>
             </optgroup>
             </select>
-            {{newThread.relation}}
           </div>
           <div class="form-group">
             <label for="text" class="col-form-label">Text:</label>
@@ -58,13 +61,15 @@ import { VueEditor } from 'vue2-editor'
 import { mapGetters, mapActions } from 'vuex'
 import threadList from '../components/threadList'
 import thread from '../components/thread'
+import pagination from '../components/pagination'
 
 export default {
   name: 'forum',
   components: {
     threadList,
     VueEditor,
-    thread
+    thread,
+    pagination
   },
   data () {
     return {
@@ -74,7 +79,9 @@ export default {
         image: '',
         relation: {},
         courseID: this.$route.params.courseID
-      }
+      },
+      currentPage: 1,
+      filteredThreads: []
     }
   },
   methods: {
@@ -88,6 +95,29 @@ export default {
     },
     relationObj (data) {
       return { sectionID: data.sectionID, moduleID: data.moduleID }
+    },
+    findPosts () {
+      const posts = this.filterThreads
+      if (this.currentPage === 1) {
+        const sliceFloor = this.currentPage - 1
+        console.log('floor', sliceFloor)
+        return posts.slice(sliceFloor, this.currentPage * 5)
+      } else {
+        const sliceFloor = (this.currentPage - 1) * 5
+        console.log(sliceFloor, (this.currentPage * 5) - 1)
+        return posts.slice(sliceFloor, (this.currentPage * 5))
+      }
+    },
+    setCurrentPage (e) {
+      console.log('currentPage = ', e)
+      this.currentPage = e
+    },
+    filterThreadList (search) {
+      if (search) {
+        this.filteredThreads = this.threads.filter(e => e.title.toLowerCase().includes(search))
+      } else {
+        this.filteredThreads = this.threads
+      }
     }
   },
   computed: {
@@ -103,6 +133,7 @@ export default {
   mounted () {
     this.getThreads(this.courseID)
     this.getCourse(this.$route.params.courseID)
+    this.filterThreadList(false)
   }
 }
 </script>
@@ -114,5 +145,9 @@ export default {
 */
 .heartIcon {
   float: right;
+}
+.search-bar {
+  width: 25%;
+  margin: 10px;
 }
 </style>

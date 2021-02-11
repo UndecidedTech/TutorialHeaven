@@ -157,4 +157,16 @@ router.post("/post", async (req, res) => {
     res.send(threadUpdate.toObject())
 })
 
+router.post("/deleteThread", async (req,res) => {
+  // let userID = JWT.decode(req.cookies.token).sub
+  let update = {$pull: {}}
+  update.pull["threads"] = {"_id": req.body.threadID}
+
+  let threadUpdate = await Forum.findOneAndUpdate({"courseId": req.body.courseID, "threads._id": req.body.threadID}, update, { new: true})
+  res.send(threadUpdate)
+})
+
+router.post("/deletePost", async (req,res) => {
+  
+})
 module.exports = router;
