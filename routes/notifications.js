@@ -34,6 +34,7 @@ router.get("/", async (req, res) => {
         return res.send(selectedNotifications)
     } else {
         let selectedNotifications = await Notification.find({ "courseId": { $in : courseIds }, "_id": { $nin: readNotifications }, "members": userID  })
+        console.log(selectedNotifications)
         return res.send(selectedNotifications)
     }
 })
