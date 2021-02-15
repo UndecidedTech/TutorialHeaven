@@ -9,6 +9,7 @@ const Notification = require("../models/notification")
 
 router.get("/", async (req, res) => {
     console.log(req.body, req.query)
+    let marked = req.query.marked || false
     let userID = req.query.userID
     
     console.log("userID: ", userID)
@@ -28,10 +29,19 @@ router.get("/", async (req, res) => {
     let readNotifications = selectedUser.read_notifications;
     
     // console.log(courseIds);
+    if (marked) {
+        let selectedNotifications = await Notification.find({ "courseId": {$in : courseIds}}, (err, notification) => {
+            courses.find((course) => {
+                if (course._id === notification.courseId) {
+                    // console.log date timestamp and see if you can do a manual comparison, or whether your call back can check automagically
+                    if (course.timestamp)
+                }
+            })
+        })
+    } else {
+        let selectedNotifications = await Notification.find({ "courseId": { $in : courseIds }, "_id": { $nin: readNotifications } })
+    }
 
-    let selectedNotifications = await Notification.find({ "courseId": {$in : courseIds} })
-
-    // let selectedNotifications = await Notification.find({ "courseId": {$in : courseIds}, "_id": {$nin: readNotifications } })
     
 
     console.log(selectedNotifications);

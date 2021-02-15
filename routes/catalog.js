@@ -3,7 +3,10 @@ const router = express.Router();
 const Course = require("../models/course");
 const JWT = require("jsonwebtoken");
 const User = require("../models/user");
+const Notification = require("../models/notification");
 const { ObjectId } = require("mongodb");
+
+
 
 /** 
 * @api {get} /catalog Get Courses List
@@ -88,6 +91,19 @@ router.post("/", async (req, res) => {
 
          let updatedCourse = await Course.findByIdAndUpdate({ "_id": courseID }, { $push : { "students": userID } }, { new: true })
 
+         // create notification for user joining course
+         let notifData = {
+            courseId: courseSearch._id,
+            title: `You have joined ${courseSearch.name}`,
+            content: `Go to resource to start working on ${courseSearch.name} and looking through the content`,
+            avi: `${courseSearch.image}`,
+            resource: {
+                type: "courses",
+                _id: `${courseSearch._id}`
+            }
+         }
+
+         let updatedNotification = await new Notification(notifData).save()
          console.log("userUpdate: ", updatedUser)
          res.send("success")
      }

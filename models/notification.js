@@ -33,7 +33,15 @@ const notificationSchema = new Schema({
     },
     resource: {
         type: mongoose.SchemaTypes.Mixed,
-        required: true
+        required: false
+    },
+    subresource: {
+        type: mongoose.SchemaTypes.Mixed,
+        required: false
+    },
+    timestamp: {
+        type: Date,
+        default: Date()  
     }
 })
 

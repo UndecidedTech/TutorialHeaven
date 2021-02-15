@@ -53,6 +53,10 @@ const courseSchema = new Schema({
         type: [resultSchema],
         default: [],
         required: false
+    },
+    timestamp: {
+        type: Date,
+        default: Date()
     }
 })
 
