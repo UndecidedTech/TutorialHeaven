@@ -42,6 +42,11 @@ const notificationSchema = new Schema({
     timestamp: {
         type: Date,
         default: Date()  
+    },
+    members: {
+        type: [mongoose.SchemaTypes.ObjectId],
+        required: true,
+        unique: true
     }
 })
 

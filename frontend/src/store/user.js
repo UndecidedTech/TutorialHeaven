@@ -136,6 +136,7 @@ export default {
       console.log('here?', data)
       const res = await axios.get('/api/notifications', {
         params: {
+          marked: false,
           userID: data.userID
         }
       })

@@ -30,22 +30,12 @@ router.get("/", async (req, res) => {
     
     // console.log(courseIds);
     if (marked) {
-        let selectedNotifications = await Notification.find({ "courseId": {$in : courseIds}}, (err, notification) => {
-            courses.find((course) => {
-                if (course._id === notification.courseId) {
-                    // console.log date timestamp and see if you can do a manual comparison, or whether your call back can check automagically
-                    if (course.timestamp)
-                }
-            })
-        })
+        let selectedNotifications = await Notification.find({ "courseId": {$in : courseIds}, "members": userID })
+        return res.send(selectedNotifications)
     } else {
-        let selectedNotifications = await Notification.find({ "courseId": { $in : courseIds }, "_id": { $nin: readNotifications } })
+        let selectedNotifications = await Notification.find({ "courseId": { $in : courseIds }, "_id": { $nin: readNotifications }, "members": userID  })
+        return res.send(selectedNotifications)
     }
-
-    
-
-    console.log(selectedNotifications);
-    res.send(selectedNotifications)
 })
 
 

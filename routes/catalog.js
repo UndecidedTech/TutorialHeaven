@@ -91,6 +91,9 @@ router.post("/", async (req, res) => {
 
          let updatedCourse = await Course.findByIdAndUpdate({ "_id": courseID }, { $push : { "students": userID } }, { new: true })
 
+         // members array
+         let members = courseSearch.instructors.join(courseSearch.students)
+
          // create notification for user joining course
          let notifData = {
             courseId: courseSearch._id,
@@ -100,7 +103,8 @@ router.post("/", async (req, res) => {
             resource: {
                 type: "courses",
                 _id: `${courseSearch._id}`
-            }
+            },
+            members
          }
 
          let updatedNotification = await new Notification(notifData).save()
