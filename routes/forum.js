@@ -157,16 +157,47 @@ router.post("/post", async (req, res) => {
     res.send(threadUpdate.toObject())
 })
 
-router.post("/deleteThread", async (req,res) => {
-  // let userID = JWT.decode(req.cookies.token).sub
-  let update = {$pull: {}}
-  update.pull["threads"] = {"_id": req.body.threadID}
+router.delete("/", async (req,res) => {
+  let userID = JWT.decode(req.cookies.token).sub
+  let courseID = req.body.courseID
+  let threadID = req.body.threadID
 
-  let threadUpdate = await Forum.findOneAndUpdate({"courseId": req.body.courseID, "threads._id": req.body.threadID}, update, { new: true})
-  res.send(threadUpdate)
+
+  let selectedThread = await Forum.findOne({ "courseId": courseID, "threads._id": threadID }, {"threads.$": 1})
+
+  let selectedCourse = await Course.findOne({"_id": courseID})
+
+  if (selectedCourse.instructors.includes(userID) || selectedThread.threads[0].created_by.userId == userID) {
+    let update = {$pull: {}}
+    update.$pull["threads"] = {"_id": threadID}
+
+    let threadUpdate = await Forum.findOneAndUpdate({"courseId": req.body.courseID, "threads._id": req.body.threadID}, update, { new: true})
+    return res.send(threadUpdate.toObject())      
+  } else {
+      return res.status(504).send("User does not have the right to delete this thread")
+  }
 })
 
-router.post("/deletePost", async (req,res) => {
+router.delete("/post", async (req,res) => {
+  let userID = "5f7b7f85c899bd6681a5ec99"          // JWT.decode(req.cookies.token).sub
+  let courseID = req.body.courseID
+  let threadID = req.body.threadID
+  let postID = req.body.postID
+
+  let selectedThread = await Forum.findOne({ "courseId": courseID, "threads._id": threadID }, {"threads.$": 1})
+  let selectedCourse = await Course.findOne({"_id": courseID})
   
+
+  if (selectedCourse.instructors.includes(userID) || selectedThread.threads[0].created_by.userId == userID) {
+    let update = {$pull: {}}
+    update.$pull[`threads.$.posts`] = { "_id": postID }
+
+    let threadUpdate = await Forum.findOneAndUpdate({"courseId": courseID, "threads._id": threadID}, update, { new: true })
+    return res.send(threadUpdate.toObject())      
+  } else {
+      return res.status(504).send("User does not have the right to delete this thread")
+  }
+
 })
+
 module.exports = router;
