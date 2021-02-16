@@ -195,7 +195,7 @@ router.delete("/post", async (req,res) => {
     let threadUpdate = await Forum.findOneAndUpdate({"courseId": courseID, "threads._id": threadID}, update, { new: true })
     return res.send(threadUpdate.toObject())      
   } else {
-      return res.status(504).send("User does not have the right to delete this thread")
+      return res.status(504).send("User does not have the right to delete this post")
   }
 
 })
