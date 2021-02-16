@@ -179,7 +179,7 @@ router.delete("/", async (req,res) => {
 })
 
 router.delete("/post", async (req,res) => {
-  let userID = "5f7b7f85c899bd6681a5ec99"          // JWT.decode(req.cookies.token).sub
+  let userID = JWT.decode(req.cookies.token).sub
   let courseID = req.body.courseID
   let threadID = req.body.threadID
   let postID = req.body.postID
