@@ -1,6 +1,8 @@
 <template>
 <div class="appBackground">
+  <div class="float-right m-3">
   <button class="btn btn-primary" @click="goBack">Return</button>
+  </div>
   <div v-if="course.instructors.includes(user._id)">
   <div class="dropdown show pt-2 pr-2 pl-4 float-right">
     <a class="btn btn-info dropdown-toggle" role="button" id="addContent" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add Content</a>

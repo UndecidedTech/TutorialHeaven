@@ -24,7 +24,7 @@ router.get("/", async (req, res) => {
         }
     })
     if (!selectedForum) {
-        return res.status(404).send("Resource not found/doesn't exist")
+        return res.status(204).send("Resource not found/doesn't exist")
     }
 
     res.send(selectedForum.threads)

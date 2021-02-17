@@ -29,8 +29,12 @@ export default {
     async getThreads ({ commit }, courseID) {
       console.log('getting THreads')
       const res = await axios.get('/api/forum', { params: { courseID } })
-      commit('SET_THREADS', res.data)
-      console.log(res.data)
+      if (res.status === 200) {
+        commit('SET_THREADS', res.data)
+        console.log(res.data)
+      } else if (res.status === 204) {
+        commit('SET_THREADS', [])
+      }
     },
     async createThread ({ commit }, newThread) {
       console.log(newThread)
@@ -65,8 +69,10 @@ export default {
       }
     },
     async removePost ({ _ }, data) {
-      const res = await axios.delete('/api/forum/post', { data: data })
-      console.log(res)
+      const res = await axios.delete('/api/forum/deletePost', { data: data })
+      if (res.status === 200) {
+        console.log(res.data)
+      }
     }
   }
 }
