@@ -158,6 +158,7 @@ router.post("/post", async (req, res) => {
 })
 
 router.delete("/", async (req,res) => {
+  console.log(req.body)
   let userID = JWT.decode(req.cookies.token).sub
   let courseID = req.body.courseID
   let threadID = req.body.threadID

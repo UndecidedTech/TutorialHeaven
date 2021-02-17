@@ -58,14 +58,14 @@ export default {
         commit('SET_THREADS', res.data.threads)
       }
     },
-    async removeThread ({ _ }, data) {
-      const res = await axios.post('/api/forum/deleteThread', data)
+    async removeThread ({ commit }, data) {
+      const res = await axios.delete('/api/forum/', { data: data })
       if (res.status === 200) {
-        console.log(res.data)
+        commit('SET_THREADS', res.data.threads)
       }
     },
     async removePost ({ _ }, data) {
-      const res = await axios.post('/api/forum/deletePost', data)
+      const res = await axios.delete('/api/forum/post', { data: data })
       console.log(res)
     }
   }
