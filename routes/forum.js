@@ -27,7 +27,7 @@ router.get("/", async (req, res) => {
         return res.status(204).send("Resource not found/doesn't exist")
     }
 
-    res.send(selectedForum.threads)
+    res.send(selectedForum)
 })
 
 
@@ -107,7 +107,7 @@ router.post("/like", async (req, res) => {
                 return forum
             }
         })
-        res.send(selectedForum.threads)
+        res.send(selectedForum)
     } else {
         let update = { $push: {}}
         update.$push[`threads.$.likes`] = userID
@@ -124,7 +124,7 @@ router.post("/like", async (req, res) => {
             }
         })
 
-        res.send(selectedForum.threads)
+        res.send(selectedForum)
     }
     // console.log("HERE: ", threadData);
 })

@@ -4,6 +4,7 @@
     <div class="p-4"><h1 class="d-inline">Menu</h1></div>
     <div class="list-group" id="list-tab" role="tablist">
       <div> <a class="list-group-item list-group-item-action pointer" id="sectionItem" role="tab" @click="$router.push({ name: 'forum', params: { courseID: course._id } })">Forum</a> </div>
+      <div> <a class="list-group-item list-group-item-action pointer" id="sectionItem" role="tab">Statistics</a> </div>
     </div>
   </div>
   <button class="sub d-inline" @click="shrink()"><i class="fas fa-angle-double-left" v-if="open"/><i class="fas fa-angle-double-right" v-else/></button>
@@ -61,7 +62,8 @@ export default {
       createSection: 'courses/createSection',
       updateSection: 'courses/updateSection',
       updateCourse: 'courses/updateCourse',
-      deleteSection: 'courses/deleteSection'
+      deleteSection: 'courses/deleteSection',
+      getThreads: 'forum/getThreads'
     }),
     shrink () {
       if (this.open) {
@@ -107,6 +109,7 @@ export default {
   },
   created () {
     this.getCourse(this.$route.params.courseID)
+    this.getThreads(this.$route.params.courseID)
   }
 }
 </script>

@@ -120,7 +120,8 @@ export default {
       newSection: {
         name: '',
         courseID: this.$route.params.courseID
-      }
+      },
+      arrowPosition: []
     }
   },
   methods: {

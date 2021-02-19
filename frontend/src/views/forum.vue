@@ -2,13 +2,13 @@
   <div class="appBackground">
     <div v-if="this.$route.params.courseID && !this.$route.params.threadID">
       <div class="d-flex flex-row justify-content-between">
-        <input type="text" class="form-control search-bar" placeholder="Search" aria-label="Search" id="querySearch" @keyup="filterThreadList($event.target.value)">
+        <input type="text" class="form-control search-bar" placeholder="Search" aria-label="Search" id="querySearch" @keyup="setSearch($event.target.value)">
         <button class="btn btn-primary m-2" data-toggle="modal" data-target="#createThreadModal">Create Thread</button>
       </div>
-      <div v-for="(thread, index) in this.filteredThreads" :key="index" class="container">
+      <div v-for="(thread, index) in filterThreadList" :key="index" class="container">
         <threadList :thread="thread"/>
       </div>
-      <pagination class="d-flex flex-column align-items-center" @pagechanged="setCurrentPage($event)" :totalPages="Math.ceil(filteredThreads.length / 5)" :currentPage="currentPage"/>
+      <pagination class="d-flex flex-column align-items-center" @pagechanged="setCurrentPage($event)" :totalPages="Math.ceil(filterThreadList.length / 5)" :currentPage="currentPage"/>
       </div>
     <div v-else-if="this.$route.params.courseID && this.$route.params.threadID" class="container">
       <!-- this.$route.params.courseID && this.$route.params.threadID -->
@@ -33,8 +33,8 @@
             <label for="select" class="col-form-label">Relation:</label>
             <select id="select" class="form-control input" v-model="newThread.relation">
             <option value="" selected>...</option>
-            <optgroup v-for="(item, index) in course.sections" :value="item._id" :key="index" :label="item.name">
-              <option v-for="(item2, index) in item.modules" :value="{sectionID: item._id, moduleID: item2._id}" :key="index">{{item2.type}}: {{item2.name}}</option>
+            <optgroup v-for="(section, index) in course.sections" :value="section._id" :key="index" :label="section.name">
+              <option v-for="(module, index) in section.modules" :value="{sectionID: module._id, moduleID: module._id}" :key="index">{{module.type.toUpperCase()}}: {{module.name}}</option>
             </optgroup>
             </select>
           </div>
@@ -81,7 +81,7 @@ export default {
         courseID: this.$route.params.courseID
       },
       currentPage: 1,
-      filteredThreads: []
+      search: false
     }
   },
   methods: {
@@ -112,28 +112,26 @@ export default {
       console.log('currentPage = ', e)
       this.currentPage = e
     },
-    filterThreadList (search) {
-      if (search) {
-        this.filteredThreads = this.threads.filter(e => e.title.toLowerCase().includes(search))
-      } else {
-        this.filteredThreads = this.threads
-      }
+    setSearch (e) {
+      this.search = e
     }
   },
   computed: {
     ...mapGetters({
       user: 'user/user',
-      threads: 'forum/threads',
+      threadsList: 'forum/threads',
       course: 'courses/course'
     }),
-    courseID: function () {
-      return this.$route.params.courseID
+    filterThreadList () {
+      if (this.search) {
+        return this.threadsList.threads.filter(e => e.title.toLowerCase().includes(this.search))
+      } else {
+        return this.threadsList.threads
+      }
     }
   },
-  mounted () {
-    this.getThreads(this.courseID)
-    this.getCourse(this.$route.params.courseID)
-    this.filterThreadList(false)
+  created () {
+    this.getThreads(this.$route.params.courseID)
   }
 }
 </script>
