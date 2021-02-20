@@ -34,12 +34,11 @@
         </div>
         <div class="collapse p-3" id="mainThreadReply">
           <VueEditor v-model="editorContent" :id="'postEditor'+findMainThread()._id"></VueEditor>
-          <button class="btn btn-sm btn-danger float-right m-2" @click="createPost({text: editorContent, courseID: $route.params.courseID, threadID: $route.params.threadID})">Post Reply</button>
+          <button class="btn btn-sm btn-danger float-right m-2" data-toggle="collapse" data-target="#mainThreadReply" @click="createPost({text: editorContent, courseID: $route.params.courseID, threadID: $route.params.threadID})">Post Reply</button>
         </div>
   </div>
   <div class="m-2" v-for="(post, index) in findPosts()" :key="index" style="width: 85%;">
     <div class="card d-flex">
-      <button v-if="course.instructors.includes(user._id)" @click="removePost({courseID: $route.params.courseID, threadID: $route.params.threadID, postID: post._id})" class="btn btn-danger" style="width: 25%">Remove Post</button>
           <div class="row row-0 justify-content-center flex-grow-1">
           <div class="col">
               <div class="card-body">
@@ -52,6 +51,9 @@
                   <div class="ml-auto fa-2x">
                   <span data-toggle="tooltip" data-placement="top" title="Reply">
                       <i class="fas fa-reply" data-toggle="collapse" :data-target="'#'+post._id" aria-expanded="false" aria-controls="collapseExample"></i>
+                  </span>
+                  <span class="fa-layers fa-fw red"  data-toggle="tooltip" data-placement="top" title="Delete" v-if="course.instructors.includes(user._id)" @click="removePost({courseID: $route.params.courseID, threadID: $route.params.threadID, postID: post._id})">
+                      <i class="fas fa-times"></i>
                   </span>
                   </div>
               </div>
@@ -91,7 +93,7 @@ export default {
       removePost: 'forum/removePost'
     }),
     findMainThread () {
-      return this.threads.find(ele => ele._id === this.threadID)
+      return this.threadsList.threads.find(ele => ele._id === this.threadID)
     },
     findPosts () {
       const posts = this.findMainThread().posts
@@ -113,7 +115,7 @@ export default {
 
   computed: {
     ...mapGetters({
-      threads: 'forum/threads',
+      threadsList: 'forum/threads',
       user: 'user/user',
       course: 'courses/course'
     })
@@ -148,5 +150,8 @@ export default {
 }
 .relationLink:hover {
   cursor: pointer
+}
+.red {
+  color: #ff253a
 }
 </style>
