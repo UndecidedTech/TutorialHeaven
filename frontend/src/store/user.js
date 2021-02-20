@@ -133,15 +133,14 @@ export default {
       }
     },
     async getNotifications ({ commit }, data) {
+      console.log('here?', data)
       const res = await axios.get('/api/notifications', {
         params: {
           marked: data.marked || false,
           userID: data.userID
         }
       })
-      console.log(res)
       if (res.status === 200) {
-        console.log(res.data)
         // save data to the store here
         commit('SET_NOTIFICATIONS', res.data)
       }
@@ -151,7 +150,8 @@ export default {
       const res = await axios.post('/api/notifications', data)
       if (res.status === 200) {
         console.log(res.data)
-        // save data to the store here
+        // save user data to the store here
+        commit('SET_USER', res.data)
       }
     }
   }

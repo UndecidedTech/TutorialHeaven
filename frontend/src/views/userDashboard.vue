@@ -20,11 +20,10 @@
                 </div>
             </div>
             <div class="notification-item">
-                <button class="btn readButton float-right mt-5 mr-5" :class="read === true ? 'active' : ''">Read</button>
+                <button class="btn float-right mt-5 mr-5" :class="{ readButtonActive: marked, readButton: !marked }" @click="toggleRead()">Read</button>
                 <h1 style="padding-left: 10px; padding-top: 30px;">Notifications</h1>
                 <hr/>
                 <section class="align-self-center" style="width: auto;margin: 20px;">
-                  <input id="readToggle" class="float-right" type="checkbox" checked data-toggle="toggle">
                   <div class="mb-3 border-bottom py-3 d-flex flex-column width-full" v-for="(notif, index) in notifications" :key="index">
                     <div class="body" :class="user.read_notifications.includes(notif._id) ? 'test': ''">
                     <div class="d-flex flex-items-baseline">
@@ -42,7 +41,7 @@
                         <p class="cardInfo">
                           {{notif.content}}
                           <button class="float-right btn btn-light" @click="markRead(notif)"><i class="fas fa-eye"/></button>
-                          <button v-if="notif.resource !== undefined" class="mr-3 float-right btn btn-light" @click="goToResourse(notif)"><i class="fas fa-share"/></button>
+                          <button class="mr-3 float-right btn btn-light" @click="goToResourse(notif)"><i class="fas fa-share"/></button>
                         </p>
                     </div>
                     </div>
@@ -105,7 +104,7 @@ export default {
         subject: null,
         subscription: false
       },
-      read: false
+      marked: false
     }
   },
   methods: {
@@ -139,16 +138,17 @@ export default {
     goProfile () {
       this.$router.push({ name: 'userProfile' })
     },
-    goToResourse (notif) {
-      // console.log('HEY: ', notif, typeof notif)
-      if (notif.resource.type === 'forum') {
-        this.$router.push({name: 'forum', params: { courseID: notif.resource._id, threadID: notif.subresource._id }})
-      } 
-      // Todo: Talk to alex about routing to Course Content pages, may need to refactor some stuff we did earlier
+    goToResourse () {
+      console.log('test')
+    },
+    toggleRead () {
+      if (this.marked === false) {
+        this.marked = true
+      } else {
+        this.marked = false
+      }
 
-      // else if (notif.resource.type === 'course' && notif.subresource !== undefined) {
-      //   this.$router.push({name: 'moduleContent', })
-      // }
+      this.getNotifications({ userID: this.user._id, marked: this.marked })
     }
   },
   computed: {
@@ -166,10 +166,6 @@ export default {
   mounted () {
     $('#createCourseModal').on('hidden.bs.modal', (evt) => {
       this.closeModal()
-    })
-    $('#readToggle').bootstrapToggle({
-      on: "Read",
-      off: "Unread"
     })
   }
 }
@@ -258,9 +254,20 @@ export default {
   background: #CCCCCC
 }
 
+.readButtonActive {
+  background: cadetblue;
+  color: #fff
+}
+
 .readButton:hover {
   background: cadetblue;
-  border-color: cadetblue
+  border-color: cadetblue;
+  color: #fff;
+}
+
+.readButton {
+  background: #fff;
+  border-color:cadetblue;
 }
 
 </style>

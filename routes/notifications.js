@@ -52,8 +52,6 @@ router.post("/", async (req, res) => {
             return user
         }
     })
-    
-    console.log(selectedUser)
 
     let readNotifications = undefined;
 
