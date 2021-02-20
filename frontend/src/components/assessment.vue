@@ -1,10 +1,10 @@
 <template>
 <div>
-  <button class="btn btn-primary mb-3" @click="goBack">Return</button>
-  <div class="float-right mb-3">
-  <button class="btn btn-success" v-if="course.instructors.includes(user._id)" @click="save({sectionID: section._id, moduleID: module._id, value: module.content})">Save</button>
+  <div class="float-right ml-2 mr-2">
+  <button class="btn btn-primary" @click="goBack">Return</button>
   </div>
-  <div id="student" v-if="!course.instructors.includes(user._id)">
+  <div class="container" id="student" v-if="!course.instructors.includes(user._id)">
+    <h1 class="m-3">{{module.name}}</h1>
     <div v-for="(question, index) in module.content" :key="index">
       <div v-if="isSubmitted" class="card w-75 m-3" :class="checkAnswer(index, question) ? 'border-success' : 'border-danger'">
       <div class="card-body">
@@ -25,12 +25,13 @@
     <button v-if="!isSubmitted" class="btn btn-danger float-right mt-3 mr-3" @click="submit({responses: test, courseID: $route.params.courseID, sectionID: $route.params.sectionID, moduleID: $route.params.moduleID}); goBack();">Submit</button>
   </div>
   <div id="instructor" v-else>
-    <div class="dropdown show pt-2 pr-2 pl-4 float-right">
+    <button class="btn btn-success float-right ml-2" @click="save({sectionID: $route.params.sectionID, moduleID: module._id, value: module.content})">Save</button>
+    <div class="dropdown show float-right">
     <a class="btn btn-primary dropdown-toggle" role="button" id="addContent" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add Question</a>
     <div class="dropdown-menu" aria-labelledby="addContent">
-      <a class="dropdown-item" name="multipleChoice" @click="addQuestion({type: 'multiple-choice', sectionID: section._id, moduleID: module._id})">Multiple Choice</a>
-      <a class="dropdown-item" name="trueFalse" @click="addQuestion({type: 'trueFalse', sectionID: section._id, moduleID: module._id})"> True or False</a>
-      <a class="dropdown-item" name="openQuestion" @click="addQuestion({type: 'open-ended', sectionID: section._id, moduleID: module._id})"> Open Answer</a>
+      <a class="dropdown-item" name="multipleChoice" @click="addQuestion({type: 'multiple-choice', sectionID: $route.params.sectionID, moduleID: module._id})">Multiple Choice</a>
+      <a class="dropdown-item" name="trueFalse" @click="addQuestion({type: 'trueFalse', sectionID: $route.params.sectionID, moduleID: module._id})"> True or False</a>
+      <a class="dropdown-item" name="openQuestion" @click="addQuestion({type: 'open-ended', sectionID: $route.params.sectionID, moduleID: module._id})"> Open Answer</a>
     </div>
     </div>
     <div v-for="(question, index) in module.content" :key="index" class="card w-75 m-3">

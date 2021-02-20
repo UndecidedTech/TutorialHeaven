@@ -1,17 +1,16 @@
 import axios from 'axios'
-import Vue from 'vue'
 
 axios.defaults.withCredentials = true
 
 export default {
   namespaced: true,
   state: {
-    threads: [],
+    threadList: {},
     thread: {}
   },
   getters: {
     threads (state) {
-      return state.threads
+      return state.threadList
     },
     thread (state) {
       return state.thread
@@ -19,7 +18,7 @@ export default {
   },
   mutations: {
     SET_THREADS (state, newThreads) {
-      Vue.set(state, 'threads', newThreads)
+      state.threadList = newThreads
     },
     SET_THREAD (state, newThread) {
       state.thread = newThread
@@ -29,8 +28,12 @@ export default {
     async getThreads ({ commit }, courseID) {
       console.log('getting THreads')
       const res = await axios.get('/api/forum', { params: { courseID } })
-      commit('SET_THREADS', res.data)
-      console.log(res.data)
+      if (res.status === 200) {
+        commit('SET_THREADS', res.data)
+        console.log(res.data)
+      } else if (res.status === 204) {
+        commit('SET_THREADS', [])
+      }
     },
     async createThread ({ commit }, newThread) {
       console.log(newThread)
@@ -43,7 +46,7 @@ export default {
       fd.append('moduleID', newThread.relation.moduleID)
       const res = await axios.post('/api/forum', fd)
       if (res.status === 200) {
-        commit('SET_THREADS', res.data.threads)
+        commit('SET_THREADS', res.data)
       }
     },
     async likeThread ({ commit }, data) {
@@ -55,18 +58,20 @@ export default {
     async createPost ({ commit }, data) {
       const res = await axios.post('/api/forum/post', data)
       if (res.status === 200) {
-        commit('SET_THREADS', res.data.threads)
+        commit('SET_THREADS', res.data)
       }
     },
-    async removeThread ({ _ }, data) {
-      const res = await axios.post('/api/forum/deleteThread', data)
+    async removeThread ({ commit }, data) {
+      const res = await axios.delete('/api/forum/', { data: data })
       if (res.status === 200) {
-        console.log(res.data)
+        commit('SET_THREADS', res.data)
       }
     },
-    async removePost ({ _ }, data) {
-      const res = await axios.post('/api/forum/deletePost', data)
-      console.log(res)
+    async removePost ({ commit }, data) {
+      const res = await axios.delete('/api/forum/post', { data: data })
+      if (res.status === 200) {
+        commit('SET_THREADS', res.data)
+      }
     }
   }
 }

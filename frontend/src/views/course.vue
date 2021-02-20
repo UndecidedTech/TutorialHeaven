@@ -1,23 +1,16 @@
 <template>
-<div class="flex-container appBackground">
+<div class="flex-container">
   <div class="editor-sidebar" v-show="open">
-    <h1 class="d-inline">Sections</h1>
-    <button v-if="course.instructors.includes(user._id)" class="btn btn-sm btn-primary float-right m-2" data-toggle="modal" data-target="#createSectionModal">+</button>
-    <hr/>
-    <draggable v-if="course.instructors.includes(user._id)" v-model="course.sections" group="sections" @start="drag=true" @end="drag=false" @update="updateCourse({courseID: course._id, field: 'sections', value: course.sections  })">
-    <div v-for="(section, index) in this.course.sections" :key="section._id" class="list-group" id="list-tab" role="tablist">
-      <div> <a class="list-group-item list-group-item-action" id="sectionItem" @click="active(section._id, index)" :name="[[ section._id ]]" role="tab">{{ section.name }}<button v-if="course.instructors.includes(user._id)" class="btn btn-sm btn-danger float-right" @click="deleteSection({courseID: course._id, sectionID: section._id})">Remove</button></a> </div>
-    </div>
-    </draggable>
-    <div v-else>
-      <div v-for="(section, index) in this.course.sections" :key="section._id" class="list-group" id="list-tab" role="tablist">
-      <div> <a class="list-group-item list-group-item-action" id="sectionItem" @click="active(section._id, index)" :name="[[ section._id ]]" role="tab">{{ section.name }}</a> </div>
-    </div>
+    <div class="p-4"><h1 class="d-inline">Menu</h1></div>
+    <div class="list-group" id="list-tab" role="tablist">
+      <div> <a class="list-group-item list-group-item-action pointer" id="sectionItem" role="tab" @click="$router.push({ name: 'forum', params: { courseID: course._id } })">Forum</a> </div>
+      <div> <a class="list-group-item list-group-item-action pointer" id="sectionItem" role="tab">Statistics</a> </div>
     </div>
   </div>
-  <button class="sub" @click="shrink()"><i class="fas fa-angle-double-left" v-if="open"/><i class="fas fa-angle-double-right" v-else/></button>
+  <button class="sub d-inline" @click="shrink()"><i class="fas fa-angle-double-left" v-if="open"/><i class="fas fa-angle-double-right" v-else/></button>
   <div class="editor-item">
-    <component v-if="shitInfo.sectionIndex >= 0" v-bind:section="course.sections[shitInfo.sectionIndex]" v-bind:sectionIndex="shitInfo.sectionIndex" v-bind:module="course.sections[shitInfo.sectionIndex].modules[shitInfo.moduleIndex]" v-bind:moduleIndex="shitInfo.moduleIndex" :is="componentRender" />
+    <sections v-if="!$route.params.sectionID && !$route.params.moduleID" :sections="course.sections"/>
+    <component v-else v-bind:section="course.sections[courseInfo.sectionIndex]" v-bind:sectionIndex="courseInfo.sectionIndex" v-bind:module="course.sections[courseInfo.sectionIndex].modules[courseInfo.moduleIndex]" v-bind:moduleIndex="courseInfo.moduleIndex" :is="componentRender" />
   </div>
   <div v-if="course.instructors.includes(user._id)" class="modal fade" id="createSectionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -42,18 +35,15 @@
 </template>
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import $ from 'jquery'
-import draggable from 'vuedraggable'
-import modules from '../components/modules'
+import sections from '../components/sections'
 import assessment from '../components/assessment'
 import moduleContent from '../components/moduleContent'
 
 export default {
   components: {
-    draggable,
-    modules,
-    assessment,
-    moduleContent
+    sections,
+    moduleContent,
+    assessment
   },
   name: 'course',
   data () {
@@ -72,21 +62,9 @@ export default {
       createSection: 'courses/createSection',
       updateSection: 'courses/updateSection',
       updateCourse: 'courses/updateCourse',
-      deleteSection: 'courses/deleteSection'
+      deleteSection: 'courses/deleteSection',
+      getThreads: 'forum/getThreads'
     }),
-    active (sectionID, index) {
-      if ($(`a[name='${sectionID}']`).is('.active')) {
-        $(`a[name='${sectionID}']`).removeClass('active')
-        this.activeSection = ''
-        this.$router.push({ name: 'course', params: { courseID: this.course._id } })
-      } else {
-        console.log(sectionID)
-        $('#list-tab a').removeClass('active')
-        $(`a[name='${sectionID}']`).addClass('active')
-        this.activeSection = sectionID
-        this.$router.push({ name: 'course', params: { sectionID: sectionID } })
-      }
-    },
     shrink () {
       if (this.open) {
         this.open = false
@@ -101,7 +79,7 @@ export default {
       course: 'courses/course',
       selectedModule: 'courses/selectedModule'
     }),
-    shitInfo: function () {
+    courseInfo: function () {
       if (this.$route.params.sectionID) {
         const test = {
           sectionIndex: this.course.sections.findIndex(i => i._id === this.$route.params.sectionID)
@@ -114,29 +92,24 @@ export default {
         }
         return test
       } else {
-        return false
+        return 0
       }
     },
     componentRender: function () {
       if (this.$route.params.moduleID) {
-        if (this.course.sections[this.shitInfo.sectionIndex].modules[this.shitInfo.moduleIndex].type === 'content') {
+        if (this.course.sections[this.courseInfo.sectionIndex].modules[this.courseInfo.moduleIndex].type === 'content') {
           return 'moduleContent'
         } else {
-          return this.course.sections[this.shitInfo.sectionIndex].modules[this.shitInfo.moduleIndex].type
+          return this.course.sections[this.courseInfo.sectionIndex].modules[this.courseInfo.moduleIndex].type
         }
       } else {
-        return 'modules'
+        return 'sections'
       }
     }
   },
   created () {
     this.getCourse(this.$route.params.courseID)
-  },
-  mounted () {
-    if (!this.$route.params.sectionID) {
-      this.$router.push({ name: 'course', params: { sectionID: this.course.sections[0]._id } })
-      $(`a[name='${this.$route.params.sectionID}']`).addClass('active')
-    }
+    this.getThreads(this.$route.params.courseID)
   }
 }
 </script>
@@ -150,26 +123,29 @@ export default {
 }
 .editor-sidebar {
   align-self: stretch;
-  width: 20%;
+  width: 15%;
   border-right: 3px solid rgba(136, 133, 133, 0.534);
 }
 .editor-item {
     flex-grow: 1;
     align-self: stretch;
 }
-.list-group-item.active {
+.list-group-item:hover {
   background-color: rgb(89, 177, 180);
   border-color: rgb(89, 177, 180);
 }
 .sub {
   border:1px solid;
   position:relative;
-  opacity:40%;
-  right:0px;
+  opacity:30%;
+  right:0%;
+  width: 25px;
   top:45vh;
+  margin: 0;
+  padding: 0;
   background-color: cadetblue;
 }
 .sub:hover {
-  opacity:100;
+  opacity:100%;
 }
 </style>

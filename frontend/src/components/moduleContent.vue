@@ -1,6 +1,8 @@
 <template>
 <div class="appBackground">
+  <div class="float-right m-3">
   <button class="btn btn-primary" @click="goBack">Return</button>
+  </div>
   <div v-if="course.instructors.includes(user._id)">
   <div class="dropdown show pt-2 pr-2 pl-4 float-right">
     <a class="btn btn-info dropdown-toggle" role="button" id="addContent" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add Content</a>
@@ -42,7 +44,7 @@
       <div v-html="content.value"></div>
     </div>
     <div class="editor-item" v-else-if="content.type === 'image'">
-      <img v-bind:src="content.value" alt="test" class="img-thumbnail w-25 h-25 mb-3">
+      <img v-bind:src="content.value" alt="test" class="img-thumbnail w-50 h-50 mb-3">
     </div>
     <div class="editor-item" v-else-if="content.type === 'video'">
       <iframe width="560" height="315" v-bind:src="content.value" frameborder="0" allowfullscreen></iframe>
@@ -105,6 +107,8 @@ export default {
 .editor-item {
   border: 1px solid gray;
   margin: 10px;
+  border-radius: 5px;
+  padding: 20px;
 }
 .editor textarea {
   flex-basis: 50%;

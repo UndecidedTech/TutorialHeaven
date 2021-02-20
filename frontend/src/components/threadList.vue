@@ -11,7 +11,6 @@
         </div>
         <div class="col">
             <div class="card-body pl-0">
-            <button @click="removeThread({courseID: $route.params.courseID, threadID: thread._id})" v-if="thread.created_by.userId === user._id" class="btn btn-danger float-right">Remove Thread</button>
             <h3 class="card-title threadTitle" @click="goToThread(thread._id)">{{ thread.title }}</h3>
             <div class="text-muted" v-html="thread.text"></div>
             <div class="d-flex align-items-center pt-4 mt-auto">
@@ -28,9 +27,12 @@
                     <i class="far fa-heart"></i>
                     <span class="fa-layers-counter" style="font-size: 3rem;">{{ thread.likes.length }}</span>
                 </span>
+                <span class="fa-layers fa-fw red"  data-toggle="tooltip" data-placement="top" title="Delete" v-if="course.instructors.includes(user._id) || thread.created_by.userI" @click="removeThread({courseID: $route.params.courseID, threadID: thread._id})">
+                      <i class="fas fa-times"></i>
+                  </span>
                 </div>
             </div>
-            <a class="float-right relationLink" @click="$router.push({ name: 'course', params: {courseID: $route.params.courseID, sectionID: thread.relation.sectionId, moduleID: thread.relation.moduleId } })">Related Material</a>
+              <a class="float-right relationLink" @click="$router.push({ name: 'course', params: {courseID: $route.params.courseID, sectionID: thread.relation.sectionId, moduleID: thread.relation.moduleId } })">Related Material</a>
             </div>
         </div>
         </div>
@@ -62,7 +64,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      user: 'user/user'
+      user: 'user/user',
+      course: 'courses/course'
     })
   },
   mounted () {
