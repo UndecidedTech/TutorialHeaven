@@ -126,7 +126,12 @@ export default {
       if (this.search) {
         return this.threadsList.threads.filter(e => e.title.toLowerCase().includes(this.search))
       } else {
-        return this.threadsList.threads
+        console.log('FUCK')
+        if (this.threadsList.threads) {
+          return this.threadsList.threads
+        } else {
+          return []
+        }
       }
     }
   },
