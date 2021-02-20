@@ -20,6 +20,7 @@
                 </div>
             </div>
             <div class="notification-item">
+                <button class="btn readButton float-right mt-5 mr-5" :class="read === true ? 'active' : ''">Read</button>
                 <h1 style="padding-left: 10px; padding-top: 30px;">Notifications</h1>
                 <hr/>
                 <section class="align-self-center" style="width: auto;margin: 20px;">
@@ -102,7 +103,8 @@ export default {
         name: null,
         subject: null,
         subscription: false
-      }
+      },
+      read: false
     }
   },
   methods: {
@@ -241,6 +243,11 @@ export default {
 
 .test2 {
   background: #CCCCCC
+}
+
+.readButton:hover {
+  background: cadetblue;
+  border-color: cadetblue
 }
 
 </style>
