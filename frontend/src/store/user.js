@@ -133,10 +133,9 @@ export default {
       }
     },
     async getNotifications ({ commit }, data) {
-      console.log('here?', data)
       const res = await axios.get('/api/notifications', {
         params: {
-          marked: false,
+          marked: data.marked || false,
           userID: data.userID
         }
       })

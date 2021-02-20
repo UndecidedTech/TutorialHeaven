@@ -10,9 +10,8 @@ const Notification = require("../models/notification")
 router.get("/", async (req, res) => {
     console.log(req.body, req.query)
     let marked = req.query.marked || false
-    let userID = req.query.userID
-    
-    console.log("userID: ", userID)
+    let userID = JWT.decode(req.cookies.token).sub
+
     let selectedUser = await User.findById(userID, (err, user) => {
         if (user) {
             return user.toObject()

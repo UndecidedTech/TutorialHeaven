@@ -24,6 +24,7 @@
                 <h1 style="padding-left: 10px; padding-top: 30px;">Notifications</h1>
                 <hr/>
                 <section class="align-self-center" style="width: auto;margin: 20px;">
+                  <input id="readToggle" class="float-right" type="checkbox" checked data-toggle="toggle">
                   <div class="mb-3 border-bottom py-3 d-flex flex-column width-full" v-for="(notif, index) in notifications" :key="index">
                     <div class="body" :class="user.read_notifications.includes(notif._id) ? 'test': ''">
                     <div class="d-flex flex-items-baseline">
@@ -41,7 +42,7 @@
                         <p class="cardInfo">
                           {{notif.content}}
                           <button class="float-right btn btn-light" @click="markRead(notif)"><i class="fas fa-eye"/></button>
-                          <button class="mr-3 float-right btn btn-light" @click="goToResourse(notif)"><i class="fas fa-share"/></button>
+                          <button v-if="notif.resource !== undefined" class="mr-3 float-right btn btn-light" @click="goToResourse(notif)"><i class="fas fa-share"/></button>
                         </p>
                     </div>
                     </div>
@@ -138,8 +139,16 @@ export default {
     goProfile () {
       this.$router.push({ name: 'userProfile' })
     },
-    goToResourse () {
-      console.log('test')
+    goToResourse (notif) {
+      // console.log('HEY: ', notif, typeof notif)
+      if (notif.resource.type === 'forum') {
+        this.$router.push({name: 'forum', params: { courseID: notif.resource._id, threadID: notif.subresource._id }})
+      } 
+      // Todo: Talk to alex about routing to Course Content pages, may need to refactor some stuff we did earlier
+
+      // else if (notif.resource.type === 'course' && notif.subresource !== undefined) {
+      //   this.$router.push({name: 'moduleContent', })
+      // }
     }
   },
   computed: {
@@ -157,6 +166,10 @@ export default {
   mounted () {
     $('#createCourseModal').on('hidden.bs.modal', (evt) => {
       this.closeModal()
+    })
+    $('#readToggle').bootstrapToggle({
+      on: "Read",
+      off: "Unread"
     })
   }
 }
