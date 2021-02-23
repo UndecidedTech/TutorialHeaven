@@ -41,7 +41,7 @@
                         <p class="cardInfo">
                           {{notif.content}}
                           <button class="float-right btn btn-light" @click="markRead(notif)"><i class="fas fa-eye"/></button>
-                          <button class="mr-3 float-right btn btn-light" @click="goToResourse(notif)"><i class="fas fa-share"/></button>
+                          <button class="mr-3 float-right btn btn-light" @click="goToResource(notif)"><i class="fas fa-share"/></button>
                         </p>
                     </div>
                     </div>
@@ -138,8 +138,15 @@ export default {
     goProfile () {
       this.$router.push({ name: 'userProfile' })
     },
-    goToResourse () {
-      console.log('test')
+    goToResource (notif) {
+      if (notif.resource.type === 'forum') {
+        this.$router.push({ name: 'forum', params: { courseID: notif.resource._id, threadID: notif.subresource._id } })
+      }
+      // Todo: Talk to alex about routing to Course Content pages, may need to refactor some stuff we did earlier
+
+      // else if (notif.resource.type === 'course' && notif.subresource !== undefined) {
+      //   this.$router.push({name: 'moduleContent', })
+      // }
     },
     toggleRead () {
       if (this.marked === false) {

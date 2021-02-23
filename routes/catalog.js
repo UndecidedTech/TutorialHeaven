@@ -91,23 +91,43 @@ router.post("/", async (req, res) => {
 
          let updatedCourse = await Course.findByIdAndUpdate({ "_id": courseID }, { $push : { "students": userID } }, { new: true })
 
-         // members array
-         let members = courseSearch.instructors.join(courseSearch.students)
+         // members array | should just be the member here
+         //  let members = updatedCourse.instructors.concat(updatedCourse.students)
+         
 
          // create notification for user joining course
          let notifData = {
             courseId: courseSearch._id,
-            title: `You have joined ${courseSearch.name}`,
-            content: `Go to resource to start working on ${courseSearch.name} and looking through the content`,
-            avi: `${courseSearch.image}`,
+            title: `You have joined ${updatedCourse.name}`,
+            content: `Start working on ${updatedCourse.name} and looking through the content`,
+            avi: updatedCourse.image,
             resource: {
                 type: "courses",
-                _id: `${courseSearch._id}`
+                _id: updatedCourse._id
             },
-            members
+            members: [userID]
          }
 
-         let updatedNotification = await new Notification(notifData).save()
+         let username = `${updatedUser.firstname} ${updatedUser.lastname}`
+
+         
+
+         let instructorNotif = {
+             courseId: courseSearch._id,
+             title: `New student, ${username}, has joined ${updatedCourse.name}`,
+             content: `Your course, ${updatedCourse.name}, now has ${updatedCourse.students.length} students`,
+             avi: updatedCourse.image,
+             resource: {
+                 type: "courses",
+                 _id: updatedCourse._id
+             },
+             members: updatedCourse.instructors 
+         }
+
+         await new Notification(instructorNotif).save()
+
+         await new Notification(notifData).save()
+         
          console.log("userUpdate: ", updatedUser)
          res.send("success")
      }

@@ -45,8 +45,7 @@ const notificationSchema = new Schema({
     },
     members: {
         type: [mongoose.SchemaTypes.ObjectId],
-        required: true,
-        unique: true
+        required: true
     }
 })
 
