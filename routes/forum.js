@@ -6,6 +6,8 @@ const User = require("../models/user");
 const { ObjectId } = require("mongodb");
 const multiparty = require("multiparty");
 const Forum = require("../models/forum")
+const Notification = require("../models/notification");
+
 
 
 
@@ -142,7 +144,6 @@ router.post("/post", async (req, res) => {
         return user.toObject()
     })
 
-
     let update = { $push: {}}
     update.$push[`threads.$.posts`] = {
         "created_by": {
@@ -152,7 +153,30 @@ router.post("/post", async (req, res) => {
         "text": req.body.text
     }
 
+    let selectedCourse = await Course.findById(courseID)
+
     let threadUpdate = await Forum.findOneAndUpdate({ "courseId": courseID, "threads._id": threadID }, update, { new: true })
+
+    let selectedThread = threadUpdate.threads.find(thread => thread._id === ObjectId(threadID))
+
+    let notif = {
+        courseId: courseID,
+        courseName: selectedCourse.name,
+        title: `${selectedUser.firstname + ' ' + selectedUser.lastname } just replied to your thread`,
+        content: `Check your thread to see what people are saying`,
+        avi: selectedCourse.image,
+        resource: {
+            type: "forum",
+            _id: courseID
+        },
+        subresource: {
+            _id: threadID
+        },
+        members: [selectedThread.created_by.userId],
+        image: selectedThread.image
+    }
+
+    await new Notification(notif).save()
 
     res.send(threadUpdate.toObject())
 })

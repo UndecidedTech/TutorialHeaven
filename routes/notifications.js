@@ -26,14 +26,13 @@ router.get("/", async (req, res) => {
     })
 
     let readNotifications = selectedUser.read_notifications;
-    
-    // console.log(courseIds);
+    marked = JSON.parse(marked)
+
     if (marked) {
         let selectedNotifications = await Notification.find({ "courseId": {$in : courseIds}, "members": userID })
         return res.send(selectedNotifications)
     } else {
         let selectedNotifications = await Notification.find({ "courseId": { $in : courseIds }, "_id": { $nin: readNotifications }, "members": userID  })
-        console.log(selectedNotifications)
         return res.send(selectedNotifications)
     }
 })
@@ -60,6 +59,7 @@ router.post("/", async (req, res) => {
     }
 
     if (readNotifications.includes(notificationID)) {
+        console.log("WERE REMOVING THE NOTIFICATION NOW")
         let update = {$pull: {}};
         update.$pull['read_notifications'] = notificationID
         
@@ -73,8 +73,9 @@ router.post("/", async (req, res) => {
         
         res.send(userUpdate)
     } else {
-        let update = { $push: {} }
-        update.$push['read_notifications'] = notificationID
+        console.log("WERE ADDING THE NOTIFICATION ahahahahahh :D")
+        let update = { $addToSet: {} }
+        update.$addToSet['read_notifications'] = notificationID
 
         let userUpdate = await User.findByIdAndUpdate(userID, update, { new: true }, (err, user) => {
             if (user) {

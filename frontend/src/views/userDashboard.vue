@@ -29,19 +29,19 @@
                     <div class="d-flex flex-items-baseline">
                       <span class="mr-3">
                         <a @click="goProfile()" class="d-inline-block pointer">
-                          <img class="avatar avatar-user" width="32" height="32" src="@/assets/logo.png"/>
+                          <img class="avatar avatar-user" width="32" height="32" :src="notif.avi"/>
                         </a>
                       </span>
                       <div>
-                         Placeholder text
+                         {{ notif.courseName }}
                       </div>
                     </div>
                     <div class="Box mt-2" :class="user.read_notifications.includes(notif._id) ? 'test2': ''">
-                        <a class="cardTitle font-weight-bold">{{ notif.title }}</a>
+                        <a class="cardTitle font-weight-bold" @click="goToResource(notif, true)">{{ notif.title }}</a>
                         <p class="cardInfo">
                           {{notif.content}}
                           <button class="float-right btn btn-light" @click="markRead(notif)"><i class="fas fa-eye"/></button>
-                          <button class="mr-3 float-right btn btn-light" @click="goToResource(notif)"><i class="fas fa-share"/></button>
+                          <button class="mr-3 float-right btn btn-light" @click="goToResource(notif, false)"><i class="fas fa-share"/></button>
                         </p>
                     </div>
                     </div>
@@ -138,10 +138,26 @@ export default {
     goProfile () {
       this.$router.push({ name: 'userProfile' })
     },
-    goToResource (notif) {
-      if (notif.resource.type === 'forum') {
-        this.$router.push({ name: 'forum', params: { courseID: notif.resource._id, threadID: notif.subresource._id } })
+    goToResource (notif, flag = false) {
+      if (flag) {
+        if (notif.resource.type === 'forum') {
+          this.$router.push({ name: 'forum', params: { courseID: notif.resource._id } })
+        } else if (notif.resource.type === 'courses') {
+          console.log('we made it here')
+          this.$router.push({ name: 'course', params: { courseID: notif.resource._id } })
+        }
+      } else {
+        if (notif.resource.type === 'forum' && notif.subresource !== undefined) {
+          this.$router.push({ name: 'forum', params: { courseID: notif.resource._id, sectionID: notif.subresource._id } })
+        } else if (notif.resource.type === 'forum' && notif.subresource === undefined) {
+          this.$router.push({ name: 'forum', params: { courseID: notif.resource._id } })
+        } else if (notif.resource.type === 'courses' && notif.subresource !== undefined) {
+          this.$router.push({ name: 'course', params: { courseID: notif.resource._id, sectionID: notif.subresource._id } })
+        } else if (notif.resource.type === 'courses' && notif.subresource === undefined) {
+          this.$router.push({ name: 'course', params: { courseID: notif.resource._id } })
+        }
       }
+
       // Todo: Talk to alex about routing to Course Content pages, may need to refactor some stuff we did earlier
 
       // else if (notif.resource.type === 'course' && notif.subresource !== undefined) {

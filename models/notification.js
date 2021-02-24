@@ -15,6 +15,10 @@ const notificationSchema = new Schema({
         type: String,
         required: false
     },
+    courseName: {
+        type: String,
+        required: false
+    },
     title: {
         type: String,
         required: true

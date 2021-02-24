@@ -98,6 +98,7 @@ router.post("/", async (req, res) => {
          // create notification for user joining course
          let notifData = {
             courseId: courseSearch._id,
+            courseName: updatedCourse.name,
             title: `You have joined ${updatedCourse.name}`,
             content: `Start working on ${updatedCourse.name} and looking through the content`,
             avi: updatedCourse.image,
@@ -114,6 +115,7 @@ router.post("/", async (req, res) => {
 
          let instructorNotif = {
              courseId: courseSearch._id,
+             courseName: updatedCourse.name,
              title: `New student, ${username}, has joined ${updatedCourse.name}`,
              content: `Your course, ${updatedCourse.name}, now has ${updatedCourse.students.length} students`,
              avi: updatedCourse.image,
