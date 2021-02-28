@@ -1,12 +1,12 @@
 <template>
 <div>
-  <div class="float-right ml-2 mr-2">
+  <div class="float-right m-2">
   <button class="btn btn-primary" @click="goBack">Return</button>
   </div>
   <div class="container" id="student" v-if="!course.instructors.includes(user._id)">
     <h1 class="m-3">{{module.name}}</h1>
     <div v-for="(question, index) in module.content" :key="index">
-      <div v-if="isSubmitted" class="card w-75 m-3" :class="checkAnswer(index, question) ? 'border-success' : 'border-danger'">
+      <div v-if="isSubmitted" class="card w-75 m-3" :class="checkAnswer(index) ? 'border-success' : 'border-danger'">
       <div class="card-body">
           <multipleChoice v-if="question.type === 'multiple-choice'" v-bind:question="question" v-bind:index="index" v-bind:submitted="true"/>
           <trueFalse v-else-if="question.type === 'trueFalse'" v-bind:question="question" v-bind:index="index" v-bind:submitted="true"/>
@@ -25,8 +25,8 @@
     <button v-if="!isSubmitted" class="btn btn-danger float-right mt-3 mr-3" @click="submit({responses: test, courseID: $route.params.courseID, sectionID: $route.params.sectionID, moduleID: $route.params.moduleID}); goBack();">Submit</button>
   </div>
   <div id="instructor" v-else>
-    <button class="btn btn-success float-right ml-2" @click="save({sectionID: $route.params.sectionID, moduleID: module._id, value: module.content})">Save</button>
-    <div class="dropdown show float-right">
+    <button class="btn btn-success float-right m-2" @click="save({sectionID: $route.params.sectionID, moduleID: module._id, value: module.content})">Save</button>
+    <div class="dropdown show float-right m-2">
     <a class="btn btn-primary dropdown-toggle" role="button" id="addContent" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add Question</a>
     <div class="dropdown-menu" aria-labelledby="addContent">
       <a class="dropdown-item" name="multipleChoice" @click="addQuestion({type: 'multiple-choice', sectionID: $route.params.sectionID, moduleID: module._id})">Multiple Choice</a>
@@ -90,7 +90,7 @@ export default {
     goBack () {
       this.$router.push({ name: 'course', params: { sectionID: this.section._id, moduleID: undefined } })
     },
-    checkAnswer (index, question) {
+    checkAnswer (index) {
       return this.userResponse.responses[index].correct
     },
     goToRelation (relationID) {

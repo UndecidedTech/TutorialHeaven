@@ -1,7 +1,7 @@
 <template>
 <div>
   <div id="instructor" v-if="course.instructors.includes(user._id)">
-      <button class="btn btn-danger" @click="removeQuestion({sectionID: section._id, moduleID: module._id, contentID: question._id})"> Remove Question</button>
+      <button class="btn btn-danger mb-2" @click="removeQuestion({sectionID: section._id, moduleID: module._id, contentID: question._id})"> Remove Question</button>
       <div class="input-group">
       <div class="input-group-prepend">
         <span class="input-group-text" id="basic-addon">Question</span>
@@ -14,7 +14,6 @@
       </div>
       <input v-model="question.answer" type="text" name="answer" class="form-control input">
     </div>
-    {{ question }}
   </div>
   <div id="student" v-else>
     <div v-if="submitted">

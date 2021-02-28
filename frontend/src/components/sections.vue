@@ -5,13 +5,14 @@
     <button v-if="course.instructors.includes(user._id)" class="btn btn-primary float-right" data-toggle="modal" data-target="#createSectionModal">Add Section</button>
     <div v-if="course.instructors.includes(user._id)">
     <draggable v-if="course.instructors.includes(user._id)" v-model="course.sections" group="sections" @start="drag=true" @end="drag=false" @update="updateCourse({courseID: course._id, field: 'sections', value: course.sections  })">
-    <section v-for="(section, index) in course.sections" :key="index" class="card align-self-center" style="width: auto;margin: 20px;">
+    <section v-for="(section, index) in course.sections" :key="index" class="card align-self-center mr-0" style="width: auto;margin: 20px;">
         <div class="card-body">
-            <div><b>{{ section.name }}</b></div>
-            <span data-toggle="tooltip" data-placement="top" title="Reply">
-              <i class="fas fa-reply" data-toggle="collapse" :data-target="'#section'+section._id" aria-expanded="false" aria-controls="collapseExample"></i>
-            </span>
-            <button v-if="course.instructors.includes(user._id)" class="btn btn-primary float-right" data-toggle="modal" data-target="#createModule" @click="$router.push({name: 'course', params: { courseID: $route.params.courseID, sectionID: section._id }})"> Add Module </button>
+            <div><b>{{ section.name }}</b>
+            <div class="float-right" data-toggle="tooltip" data-placement="top" title="Dropdown">
+                <i class="fas fa-arrow-down" data-toggle="collapse" :data-target="'#section'+section._id" aria-expanded="false" aria-controls="collapseExample"></i>
+              </div>
+            <button v-if="course.instructors.includes(user._id)" class="mr-4 btn btn-primary float-right" data-toggle="modal" data-target="#createModule" @click="$router.push({name: 'course', params: { courseID: $route.params.courseID, sectionID: section._id }})"> Add Module </button>
+            </div>
             <hr>
             <div class="collapse show" :id="'section'+section._id">
             <div v-for="(module, index) in section.modules" :key="index" class="card-title border border-dark rounded pl-2 pt-3 pb-3">

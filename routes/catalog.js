@@ -24,6 +24,11 @@ const { ObjectId } = require("mongodb");
 
 
 router.get("/", async (req, res) => {
+  
+  if (!req.cookies.token) {
+    courseList = await Course.find({})
+    res.send(courseList)
+  }
 
   let userID = JWT.decode(req.cookies.token).sub
   let searchQuery = req.query

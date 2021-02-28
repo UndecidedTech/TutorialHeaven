@@ -1,5 +1,6 @@
 <template>
   <div class="appBackground">
+    <iframe style="background: #FFFFFF;border: none;border-radius: 2px;box-shadow: 0 2px 10px 0 rgba(70, 76, 79, .2);" width="640" height="480" src="https://charts.mongodb.com/charts-project-0-aqtca/embed/charts?id=60c2c80f-5e2a-45c0-87e8-d146eb57047f&theme=light"></iframe>
     <div v-if="this.$route.params.courseID && !this.$route.params.threadID">
       <div class="d-flex flex-row justify-content-between">
         <input type="text" class="form-control search-bar" placeholder="Search" aria-label="Search" id="querySearch" @keyup="setSearch($event.target.value)">
@@ -34,7 +35,7 @@
             <select id="select" class="form-control input" v-model="newThread.relation">
             <option value="" selected>...</option>
             <optgroup v-for="(section, index) in course.sections" :value="section._id" :key="index" :label="section.name">
-              <option v-for="(module, index) in section.modules" :value="{sectionID: module._id, moduleID: module._id}" :key="index">{{module.type.toUpperCase()}}: {{module.name}}</option>
+              <option v-for="(module, index) in section.modules" :value="{sectionID: section._id, moduleID: module._id}" :key="index">{{module.type.toUpperCase()}}: {{module.name}}</option>
             </optgroup>
             </select>
           </div>

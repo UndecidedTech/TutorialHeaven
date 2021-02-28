@@ -1,10 +1,10 @@
 <template>
-<div class="appBackground">
+<div class="p-4">
   <div class="float-right m-3">
-  <button class="btn btn-primary" @click="goBack">Return</button>
+  <!-- <button class="btn btn-primary" @click="goBack">Return</button> -->
   </div>
   <div v-if="course.instructors.includes(user._id)">
-  <div class="dropdown show pt-2 pr-2 pl-4 float-right">
+  <div class="dropdown show mt-3 ml-3 float-right">
     <a class="btn btn-info dropdown-toggle" role="button" id="addContent" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add Content</a>
     <div class="dropdown-menu" aria-labelledby="addContent">
       <a class="dropdown-item" name="text" @click="addContent({type: $event.target.name, sectionID: section._id, moduleID: course.sections[sectionIndex].modules[moduleIndex]._id})"> Add Text</a>

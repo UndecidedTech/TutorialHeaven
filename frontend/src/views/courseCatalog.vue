@@ -1,21 +1,5 @@
 <template>
 <div class="appBackground" style="padding: 10px;">
-   <!-- <table  style="width:100%">
-  <tr>
-    <th>Course Name</th>
-    <th>Course Subject</th>
-    <th>Number of Students</th>
-    <th>Number of Sections</th>
-    <th>Course ID</th>
-  </tr>
-  <tr v-for="course in this.courseList" :key="course._id">
-    <td>{{ course.name }}</td>
-    <td>{{ course.subject }}</td>
-    <td>{{ course.students.length }}</td>
-    <td>{{ course.sections.length }}</td>
-    <td>{{ course._id }}</td>
-  </tr>
-</table> -->
   <div class="row justify-content-end">
     <input type="text" class="form-control search-bar" placeholder="Search" aria-label="Search" id="querySearch" @keyup="getCourseList({query: $event.target.value, subscribe: subscribe, enrolled: enrolled})">
      <button type="button" :class="subscribe === false ? 'btn btn-light filterBTN' : 'btn btn-info filterBTN'" data-toggle="button" aria-pressed="false" autocomplete="off" @click="subscribeToggle(); getCourseList({query: getSearchValue(), subscribe: subscribe, enrolled: enrolled});">

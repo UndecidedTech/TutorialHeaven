@@ -1,35 +1,26 @@
 <template>
 <div>
-  <div class="flex-container">
-    <div class="flexbox-item flexbox-item-1">
-  <div id="myCarousel" class="col carousel slide" data-ride="carousel">
-    <ol class="carousel-indicators">
-      <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-      <li data-target="#myCarousel" data-slide-to="1"></li>
-      <li data-target="#myCarousel" data-slide-to="2"></li>
-    </ol>
-    <div class="carousel-inner">
-      <div class="carousel-item active">
-        <img class="carouselImage" src="../assets/picture.jpg" alt="">
+  <div class="flex-container pt-5">
+  <div class="flexbox-item flexbox-item-1">
+    <div id="myCarousel" class="col carousel slide p-0" data-ride="carousel">
+      <div class="carousel-inner">
+        <div v-for="(test, index) in courseList" :key="index" class="carousel-item" :class="[index === 0 ? 'active' : '']">
+          <img class="carouselImage" :src="test.image">
+          <div class="carousel-caption caption p-2 pointer" @click="$router.push({ name: 'courseCatalog' })">
+            <h5>{{ test.name }}</h5>
+            <p class="m-0">{{ test.description }}</p>
+          </div>
+        </div>
       </div>
-      <div class="carousel-item">
-        <img class="carouselImage" src="../assets/picture.jpg" alt="" >
-      </div>
-      <div class="carousel-item">
-        <a href="www.google.com">
-        <img class="carouselImage" src="../assets/picture.jpg" alt="">
-        </a>
-      </div>
+      <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+      </a>
+      <a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+      </a>
     </div>
-    <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="sr-only">Previous</span>
-    </a>
-    <a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="sr-only">Next</span>
-    </a>
-  </div>
   </div>
     <div class="flexbox-item flexbox-item-2">
       <div class="card bg-submit text-white">
@@ -62,7 +53,7 @@
 </template>
 <script>
 import axios from 'axios'
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'homePage',
   data () {
@@ -71,13 +62,22 @@ export default {
         email: '',
         password: ''
       },
-      emailForm: undefined
+      emailForm: undefined,
+      carouselList: []
     }
   },
   methods: {
     ...mapActions({
-      signIn: 'user/signIn'
+      signIn: 'user/signIn',
+      getCourseList: 'courses/getCourseList'
+
     }),
+    getCarouselList () {
+      for (let i = 0; i <= this.courseList.length; i++) {
+        this.carouselList.push(this.courseList[i])
+      }
+      return this.carouselList
+    },
     submit () {
       this.signIn(this.user).then(() => {
         this.$router.push({ path: '/userDashboard' })
@@ -109,8 +109,21 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapGetters({
+      courseList: 'courses/courseList'
+    })
+  },
   mounted () {
     this.emailForm = document.getElementById('email')
+  },
+  watch: {
+    getCourse: {
+      immediate: true,
+      handler () {
+        this.getCourseList()
+      }
+    }
   }
 }
 </script>
@@ -121,7 +134,7 @@ export default {
   /* background:black; */
   background-repeat: repeat;
   background-position: center;
-  min-height: 93.7vh;
+  min-height: 93.9vh;
   display: flex;
   justify-content: space-evenly;
 }
@@ -144,5 +157,12 @@ export default {
 }
 .carousel-item {
   height: 550px;
+}
+.caption {
+  background-color: rgba(43, 49, 55, .8);
+  border-radius: 30px;
+}
+.slide {
+  border: 10px solid #24292e;
 }
 </style>

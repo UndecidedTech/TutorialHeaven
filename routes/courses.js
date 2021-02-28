@@ -22,7 +22,6 @@ const singleUpload = upload.single('image');
 // TODO: 
 //  sort by popularity
 //  filter by keyword
-
 router.get("/getCourse/:courseID", async (req, res) => {
     let courseID = req.params.courseID;
     let userID = JWT.decode(req.cookies.token).sub
