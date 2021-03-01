@@ -29,10 +29,10 @@ router.get("/", async (req, res) => {
     marked = JSON.parse(marked)
 
     if (marked) {
-        let selectedNotifications = await Notification.find({ "courseId": {$in : courseIds}, "members": userID })
+        let selectedNotifications = await Notification.find({ "courseId": {$in : courseIds}, "members": userID }, null, {sort: { timestamp: 'desc' }})
         return res.send(selectedNotifications)
     } else {
-        let selectedNotifications = await Notification.find({ "courseId": { $in : courseIds }, "_id": { $nin: readNotifications }, "members": userID  })
+        let selectedNotifications = await Notification.find({ "courseId": { $in : courseIds }, "_id": { $nin: readNotifications }, "members": userID }, null, {sort: { timestamp: 'desc' }})
         return res.send(selectedNotifications)
     }
 })
