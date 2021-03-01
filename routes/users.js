@@ -430,6 +430,24 @@ router.post("/submitAssessment", async (req, res) => {
 
   // check percentage of answers correct and set their score
 
+  let notifData = {
+    courseId: courseID,
+    courseName: selectedCourse.name,
+    title: `${selectedAssessment.name} has been graded`,
+    content: `Go view your grade for ${selectedAssessment.name} in ${selectedCourse.name}.`,
+    avi: selectedCourse.image,
+    resource: {
+      type: "courses",
+      _id: selectedCourse._id
+    },
+    subresource: {
+      type: "assessment",
+      _id: selectedAssessment._id
+    },
+    members: [userID]
+  }
+
+  await new Notification(notifData).save()
 
   // check that user has already started assessment
   let checkUser = await User.findOne({ "_id": userID, "courses": {$elemMatch: { "_id": ObjectId(courseID), "results": { $elemMatch: { "_id": selectedAssessment._id } }}}}, { "courses.results.$": 1}, (err, user) => {
