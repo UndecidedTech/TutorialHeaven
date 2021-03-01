@@ -63,9 +63,10 @@ router.post("/", async (req, res) => {
                 "name": userName
             }
         }
-        if (req.body.moduleID && req.body.sectionID) {
-            console.log("triggered")
+        if (!req.body.moduleID === 'undefined' && !req.body.sectionID === 'undefined') {
             threadData.relation = {sectionId: req.body.sectionID, moduleId: req.body.moduleID}
+        } else {
+          threadData.relation = {}
         }
 
 
