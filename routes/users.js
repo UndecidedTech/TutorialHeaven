@@ -391,6 +391,9 @@ router.post("/submitAssessment", async (req, res) => {
 
   userID = ObjectID(userID)
 
+  let selectedCourse2 = await Course.findOne({ "_id": courseID, "students": userID, "sections": {$elemMatch: { "_id": ObjectId(sectionID), "modules":{ $elemMatch: { "_id": ObjectId(moduleID) } } }} }, (err, course) => {
+    return course.toObject();
+  })
 
   let selectedCourse = await Course.findOne({ "_id": courseID, "students": userID, "sections": {$elemMatch: { "_id": ObjectId(sectionID), "modules":{ $elemMatch: { "_id": ObjectId(moduleID) } } }} }, { "sections.modules.$": 1}, (err, course) => {
     return course.toObject();
@@ -432,13 +435,13 @@ router.post("/submitAssessment", async (req, res) => {
 
   let notifData = {
     courseId: courseID,
-    courseName: selectedCourse.name,
+    courseName: selectedCourse2.name,
     title: `${selectedAssessment.name} has been graded`,
-    content: `Go view your grade for ${selectedAssessment.name} in ${selectedCourse.name}.`,
-    avi: selectedCourse.image,
+    content: `Go view your grade for ${selectedAssessment.name} in ${selectedCourse2.name}.`,
+    avi: selectedCourse2.image,
     resource: {
       type: "courses",
-      _id: selectedCourse._id
+      _id: selectedCourse2._id
     },
     subresource: {
       type: "assessment",
@@ -446,6 +449,8 @@ router.post("/submitAssessment", async (req, res) => {
     },
     members: [userID]
   }
+
+  console.log(notifData);
 
   await new Notification(notifData).save()
 
