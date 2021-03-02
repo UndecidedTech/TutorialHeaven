@@ -21,7 +21,7 @@
             </div>
             <div class="notification-item">
                 <button class="btn float-right mt-5 mr-5" :class="{ readButtonActive: marked, readButton: !marked }" @click="toggleRead()">Read</button>
-                <h1 style="padding-left: 10px; padding-top: 30px;">Notifications</h1>
+                <h1 style="padding-left: 10px; padding-top: 30px; font-weight: bold">Notifications</h1>
                 <hr/>
                 <section class="align-self-center" style="width: auto;margin: 20px;">
                   <div class="mb-3 border-bottom py-3 d-flex flex-column width-full" v-for="(notif, index) in notifications" :key="index">
