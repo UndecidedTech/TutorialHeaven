@@ -32,7 +32,7 @@
                   </span>
                 </div>
             </div>
-              <a class="float-right relationLink" @click="$router.push({ name: 'course', params: {courseID: $route.params.courseID, sectionID: thread.relation.sectionId, moduleID: thread.relation.moduleId } })">Related Material</a>
+              <a v-show="thread.relation" class="float-right relationLink" @click="$router.push({ name: 'course', params: {courseID: $route.params.courseID, sectionID: thread.relation.sectionId, moduleID: thread.relation.moduleId } })">Related Material</a>
             </div>
         </div>
         </div>

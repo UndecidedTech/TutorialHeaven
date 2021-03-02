@@ -28,7 +28,7 @@
                   </span>
                 </div>
             </div>
-            <a class="float-right relationLink" @click="$router.push({ name: 'course', params: {courseID: $route.params.courseID, sectionID: findMainThread().relation.sectionId, moduleID: findMainThread().relation.moduleId } })">Related Material</a>
+            <a v-if="findMainThread().relation" class="float-right relationLink" @click="$router.push({ name: 'course', params: {courseID: $route.params.courseID, sectionID: findMainThread().relation.sectionId, moduleID: findMainThread().relation.moduleId } })">Related Material</a>
             </div>
         </div>
         </div>
