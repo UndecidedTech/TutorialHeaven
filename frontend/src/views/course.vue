@@ -7,7 +7,7 @@
       <div> <a class="list-group-item list-group-item-action pointer" id="sectionItem" role="tab">Statistics</a> </div>
     </div>
   </div>
-  <button class="test1 d-inline" @click="shrink()"><i class="fas fa-angle-double-left" v-if="open"/><i class="fas fa-angle-double-right" v-else/></button>
+  <button class="th-sub d-inline" @click="shrink()"><i class="fas fa-angle-double-left" v-if="open"/><i class="fas fa-angle-double-right" v-else/></button>
   <div class="editor-item">
     <sections v-if="!$route.params.sectionID && !$route.params.moduleID" :sections="course.sections"/>
     <component v-else v-bind:section="course.sections[courseInfo.sectionIndex]" v-bind:sectionIndex="courseInfo.sectionIndex" v-bind:module="course.sections[courseInfo.sectionIndex].modules[courseInfo.moduleIndex]" v-bind:moduleIndex="courseInfo.moduleIndex" :is="componentRender" />
@@ -134,7 +134,7 @@ export default {
   background-color: rgb(89, 177, 180);
   border-color: rgb(89, 177, 180);
 }
-.test1 {
+.th-sub {
   border:1px solid;
   position:relative;
   opacity:.3;
@@ -145,7 +145,7 @@ export default {
   padding: 0;
   background-color: cadetblue;
 }
-.test1:hover {
+.th-sub:hover {
   opacity:1;
 }
 </style>
