@@ -137,7 +137,7 @@ export default {
 .test1 {
   border:1px solid;
   position:relative;
-  opacity:30%;
+  opacity:.3;
   right:0%;
   width: 25px;
   top:45vh;
@@ -146,6 +146,6 @@ export default {
   background-color: cadetblue;
 }
 .test1:hover {
-  opacity:100%;
+  opacity:1;
 }
 </style>
