@@ -76,7 +76,11 @@ export default {
       joinCourse: 'user/joinCourse'
     }),
     selectJoinCourse (course) {
-      this.selectedCourse = course
+      if (this.user) {
+        this.selectedCourse = course
+      } else {
+        this.$router.push({ name: 'userSignUp' })
+      }
     },
     subscribeToggle () {
       if (this.subscribe) {
