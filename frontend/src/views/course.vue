@@ -3,13 +3,15 @@
   <div class="editor-sidebar" v-show="open">
     <div class="p-4"><h1 class="d-inline">Menu</h1></div>
     <div class="list-group" id="list-tab" role="tablist">
-      <div> <a class="list-group-item list-group-item-action pointer" id="sectionItem" role="tab" @click="$router.push({ name: 'forum', params: { courseID: course._id } })">Forum</a> </div>
-      <div> <a class="list-group-item list-group-item-action pointer" id="sectionItem" role="tab">Statistics</a> </div>
+      <div> <a class="list-group-item list-group-item-action pointer" :class="[$route.matched[0].path == '/course/:courseID/:sectionID?/:moduleID?/:contentID?' ? 'th-active' : '']" id="sectionItem" role="tab" @click="$router.push({ name: 'course', params: { courseID: course._id } })">Sections</a> </div>
+      <div> <a class="list-group-item list-group-item-action pointer" :class="[$route.matched[0].path == '/forum/:courseID' ? 'th-active' : '']" id="sectionItem" role="tab" @click="$router.push({ name: 'forum', params: { courseID: course._id } })">Forum</a> </div>
+      <div> <a class="list-group-item list-group-item-action pointer" :class="[$route.matched[0].path == '/course/:courseID/stats' ? 'th-active' : '']" id="sectionItem" role="tab" @click="$router.push({ name: 'courseStats', params: { courseID: course._id } })">Statistics</a> </div>
     </div>
   </div>
   <button class="th-sub d-inline" @click="shrink()"><i class="fas fa-angle-double-left" v-if="open"/><i class="fas fa-angle-double-right" v-else/></button>
   <div class="editor-item">
-    <sections v-if="!$route.params.sectionID && !$route.params.moduleID" :sections="course.sections"/>
+    <statsDashboard v-if="$route.matched[0].path == '/course/:courseID/stats'"/>
+    <sections v-else-if="!$route.params.sectionID && !$route.params.moduleID" :sections="course.sections"/>
     <component v-else v-bind:section="course.sections[courseInfo.sectionIndex]" v-bind:sectionIndex="courseInfo.sectionIndex" v-bind:module="course.sections[courseInfo.sectionIndex].modules[courseInfo.moduleIndex]" v-bind:moduleIndex="courseInfo.moduleIndex" :is="componentRender" />
   </div>
   <div v-if="course.instructors.includes(user._id)" class="modal fade" id="createSectionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -38,12 +40,14 @@ import { mapActions, mapGetters } from 'vuex'
 import sections from '../components/sections'
 import assessment from '../components/assessment'
 import moduleContent from '../components/moduleContent'
+import statsDashboard from '../views/statsDashboard'
 
 export default {
   components: {
     sections,
     moduleContent,
-    assessment
+    assessment,
+    statsDashboard
   },
   name: 'course',
   data () {
@@ -110,6 +114,7 @@ export default {
   created () {
     this.getCourse(this.$route.params.courseID)
     this.getThreads(this.$route.params.courseID)
+    console.log(this.$route.matched)
   }
 }
 </script>
@@ -147,5 +152,9 @@ export default {
 }
 .th-sub:hover {
   opacity:1;
+}
+.th-active {
+  background-color: rgb(89, 177, 180);
+  border-color: rgb(89, 177, 180);
 }
 </style>

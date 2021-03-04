@@ -64,6 +64,9 @@ app.use("/api/forum", forum)
 const notifications = require("./routes/notifications")
 app.use("/api/notifications", notifications)
 
+const statistics = require("./routes/statistics")
+app.use("/api/statistics", statistics)
+
 app.use(express.static("./public"));
 app.listen(port, () => console.log(`Server started on ${port}`));
 

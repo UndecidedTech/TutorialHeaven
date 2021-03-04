@@ -1,17 +1,11 @@
 <template>
 <div>
-  <div class="input-group" id="courseSelect">
-    <div class="input-group-prepend"><span class="input-group-text">Course</span></div>
-      <select class="form-control input" v-model="selectedCourse" @change="updateCourseID">
-        <option value="" selected> Overview </option>
-        <option v-for="(test, index) in user.courses" :key="index" :value="test " :id="test.name">{{test.name}}</option>
-      </select>
-    </div>
-    <div v-if="selectedCourse.role == 'instructor'">
+  <h1 class="text-center">{{course.name}}</h1>
+    <div v-if="course.instructors.includes(user._id)">
       <div class="d-flex flex-row justify-content-around align-items-center">
         <statsCounter :number="course.students.length" :title="'# of Students'"/>
-        <barChart/>
-        <lineChart/>
+        <barChart :chartData="chartData()"/>
+        <lineChart :chartData="chartData()"/>
       </div>
     </div>
 </div>
@@ -31,18 +25,13 @@ export default {
   },
   data () {
     return {
-      selectedCourse: {}
     }
   },
   methods: {
     ...mapActions({
       getCourse: 'courses/getCourse'
     }),
-    updateCourseID () {
-      this.$router.push({ name: 'statsDashboard', params: { courseID: this.selectedCourse._id } })
-      this.getCourse(this.$route.params.courseID)
-    },
-    chartData (c) {
+    chartData () {
       return {
         labels: ['Students', 'Instructors', 'Sections'],
         datasets: [
@@ -51,7 +40,7 @@ export default {
             backgroundColor: 'rgba(248, 121, 121, 0.5)',
             borderColor: 'rgb(0, 0, 0)',
             borderWidth: '1',
-            data: [c.instructors.length, c.students.length, c.sections.length]
+            data: [1, 12, 123]
           }
         ]
       }
@@ -62,6 +51,9 @@ export default {
       user: 'user/user',
       course: 'courses/course'
     })
+  },
+  created () {
+    this.getCourse(this.$route.params.courseID)
   }
 }
 </script>

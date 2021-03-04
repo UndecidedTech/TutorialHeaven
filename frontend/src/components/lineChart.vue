@@ -14,6 +14,7 @@ export default {
   components: {
   },
   props: {
+    chartData: Object
   },
   data () {
     return {
