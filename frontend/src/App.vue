@@ -17,7 +17,7 @@ export default {
 
 <style>
 html,body {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Segoe UI", Roboto, "Helvetica Neue";
 }
 /* .container {
   background-color:#FFFFFF;

@@ -21,11 +21,11 @@
             </div>
             <div class="notification-item">
                 <button class="btn float-right mt-5 mr-5" :class="{ readButtonActive: marked, readButton: !marked }" @click="toggleRead()">Read</button>
-                <h1 style="padding-left: 10px; padding-top: 30px;">Notifications</h1>
+                <h1 style="padding-left: 10px; padding-top: 30px; font-weight: bold">Notifications</h1>
                 <hr/>
                 <section class="align-self-center" style="width: auto;margin: 20px;">
                   <div class="mb-3 border-bottom py-3 d-flex flex-column width-full" v-for="(notif, index) in notifications" :key="index">
-                    <div class="body" :class="user.read_notifications.includes(notif._id) ? 'test': ''">
+                    <div class="body" :class="user.read_notifications.includes(notif._id) ? 'th-notif': ''">
                     <div class="d-flex flex-items-baseline">
                       <span class="mr-3">
                         <a @click="goProfile()" class="d-inline-block pointer">
@@ -36,7 +36,7 @@
                          {{ notif.courseName }}
                       </div>
                     </div>
-                    <div class="Box mt-2" :class="user.read_notifications.includes(notif._id) ? 'test2': ''">
+                    <div class="Box mt-2" :class="user.read_notifications.includes(notif._id) ? 'th-read': ''">
                         <a class="cardTitle font-weight-bold" @click="goToResource(notif, true)">{{ notif.title }}</a>
                         <p class="cardInfo">
                           {{notif.content}}
@@ -258,11 +258,11 @@ export default {
     width: 100%!important;
 }
 
-.test {
-  opacity: 60%;
+.th-notif {
+  opacity: .6;
 }
 
-.test2 {
+.th-read {
   background: #CCCCCC
 }
 

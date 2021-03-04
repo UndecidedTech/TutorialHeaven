@@ -15,7 +15,7 @@
   <div class="card-body">
     <h5 class="card-title">{{ course.name }}</h5>
     <p class="card-text">{{ course.description}}</p>
-    <button v-if="!isUserInCourse(course, user._id)" class="btn btn-success" data-toggle="modal" data-target="#joinConfirmModal" @click="selectJoinCourse({courseID: course._id, name: course.name, subscription: course.subscription})">Join</button>
+    <button v-if="!isUserInCourse(course)" class="btn btn-success" data-toggle="modal" data-target="#joinConfirmModal" @click="selectJoinCourse({courseID: course._id, name: course.name, subscription: course.subscription})">Join</button>
     <button v-else class="btn btn-dark" disabled>Joined</button>
     <!-- <i v-if="course.subscription" class="fas fa-money-bill-alt fa-2x" style="float: right;color: green;"></i> -->
   </div>
@@ -76,7 +76,11 @@ export default {
       joinCourse: 'user/joinCourse'
     }),
     selectJoinCourse (course) {
-      this.selectedCourse = course
+      if (this.user) {
+        this.selectedCourse = course
+      } else {
+        this.$router.push({ name: 'userSignUp' })
+      }
     },
     subscribeToggle () {
       if (this.subscribe) {
@@ -92,10 +96,14 @@ export default {
         this.enrolled = true
       }
     },
-    isUserInCourse (course, userID) {
-      if (course.students.includes(userID) || course.instructors.includes(userID)) {
-        return true
-      } else return false
+    isUserInCourse (course) {
+      if (this.user) {
+        if (course.students.includes(this.user._id) || course.instructors.includes(this.user._id)) {
+          return true
+        } else return false
+      } else {
+        return false
+      }
     },
     getSearchValue () {
       return $('#querySearch').val()
