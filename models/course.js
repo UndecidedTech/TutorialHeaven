@@ -28,6 +28,10 @@ const contentSchema = new Schema({
     relation: {
         type: Schema.Types.ObjectId,
         required: false
+    },
+    subject: {
+        type: String,
+        required: false
     }
 })
 

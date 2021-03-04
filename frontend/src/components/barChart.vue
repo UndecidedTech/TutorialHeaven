@@ -8,10 +8,12 @@ import { Bar, mixins } from 'vue-chartjs'
 const { reactiveProp } = mixins
 
 export default {
-  name: 'statsChart',
+  name: 'barChart',
   extends: Bar,
   mixins: [reactiveProp],
   components: {
+  },
+  props: {
   },
   data () {
     return {
@@ -22,6 +24,18 @@ export default {
         scaleSteps: 1,
         scaleStepWidth: 50,
         scaleStartValue: 0
+      },
+      data: {
+        labels: ['Students', 'Instructors', 'Sections'],
+        datasets: [
+          {
+            label: 'Test',
+            backgroundColor: 'rgba(248, 121, 121, 0.5)',
+            borderColor: 'rgb(0, 0, 0)',
+            borderWidth: '1',
+            data: [10, 20, 40]
+          }
+        ]
       }
     }
   },
@@ -30,7 +44,7 @@ export default {
   computed: {
   },
   mounted () {
-    this.renderChart(this.chartData, this.options)
+    this.renderChart(this.data, this.options)
   }
 }
 </script>

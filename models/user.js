@@ -24,6 +24,10 @@ const resultSchema = new Schema({
         default: undefined,
         required: false
     },
+    subjects: {
+        type: Schema.Types.Mixed,
+        default: {}
+    },
     responses: {
         type: [responseSchema],
         default: [],
@@ -57,6 +61,10 @@ const courseSchema = new Schema({
     timestamp: {
         type: Date,
         default: Date()
+    },
+    grades: {
+        type: [Number],
+        default: []
     }
 })
 

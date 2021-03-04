@@ -91,6 +91,7 @@ export default {
       this.$router.push({ name: 'course', params: { sectionID: this.section._id, moduleID: undefined } })
     },
     checkAnswer (index) {
+      console.log('test', index)
       return this.userResponse.responses[index].correct
     },
     goToRelation (relationID) {

@@ -13,7 +13,7 @@ const rateLimit = require("express-rate-limit");
 const db_ip = process.env.DB_IP;
 const db_user = process.env.DB_USER;
 const db_pass = process.env.DB_PASS;
-const url = `mongodb://${db_user}:${db_pass}@${db_ip}:27017/Dev?authSource=admin`;
+const url = `mongodb://${db_user}:${db_pass}@${db_ip}/Dev?authSource=admin`;
 
 // Express app instantiation
 const app = express();

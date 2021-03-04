@@ -27,10 +27,11 @@ router.get("/", async (req, res) => {
   
   if (!req.cookies.token) {
     courseList = await Course.find({})
-    res.send(courseList)
+    return res.send(courseList)
   }
-
+  
   let userID = JWT.decode(req.cookies.token).sub
+
   let searchQuery = req.query
   let search = {}
 
@@ -62,6 +63,11 @@ router.get("/", async (req, res) => {
     res.send(courseList)
   }
 })
+
+//TODO: carousel endpoint that serves up based on popularity
+// router.get("/carousel", async () => {
+
+// })
 
 /** 
 * @api {post} /catalog Join Course
@@ -108,8 +114,7 @@ router.post("/", async (req, res) => {
             content: `Start working on ${updatedCourse.name} and looking through the content`,
             avi: updatedCourse.image,
             resource: {
-                type: "courses",
-                _id: updatedCourse._id
+                type: "courses"
             },
             members: [userID]
          }
@@ -125,8 +130,7 @@ router.post("/", async (req, res) => {
              content: `Your course, ${updatedCourse.name}, now has ${updatedCourse.students.length} students`,
              avi: updatedCourse.image,
              resource: {
-                 type: "courses",
-                 _id: updatedCourse._id
+                 type: "statistics"
              },
              members: updatedCourse.instructors 
          }

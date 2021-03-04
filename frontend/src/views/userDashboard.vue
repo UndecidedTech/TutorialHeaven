@@ -41,7 +41,7 @@
                         <p class="cardInfo">
                           {{notif.content}}
                           <button class="float-right btn btn-light" @click="markRead(notif)"><i class="fas fa-eye"/></button>
-                          <button class="mr-3 float-right btn btn-light" @click="goToResource(notif, false)"><i class="fas fa-share"/></button>
+                          <button class="mr-3 float-right btn btn-light" @click="goToResource(notif, false)"><i class="fas fa-external-link-alt"/></button>
                         </p>
                     </div>
                     </div>
@@ -138,31 +138,20 @@ export default {
     goProfile () {
       this.$router.push({ name: 'userProfile' })
     },
-    goToResource (notif, flag = false) {
-      if (flag) {
-        if (notif.resource.type === 'forum') {
-          this.$router.push({ name: 'forum', params: { courseID: notif.resource._id } })
-        } else if (notif.resource.type === 'courses') {
-          console.log('we made it here')
-          this.$router.push({ name: 'course', params: { courseID: notif.resource._id } })
-        }
-      } else {
-        if (notif.resource.type === 'forum' && notif.subresource !== undefined) {
-          this.$router.push({ name: 'forum', params: { courseID: notif.resource._id, sectionID: notif.subresource._id } })
-        } else if (notif.resource.type === 'forum' && notif.subresource === undefined) {
-          this.$router.push({ name: 'forum', params: { courseID: notif.resource._id } })
-        } else if (notif.resource.type === 'courses' && notif.subresource !== undefined) {
-          this.$router.push({ name: 'course', params: { courseID: notif.resource._id, sectionID: notif.subresource._id } })
-        } else if (notif.resource.type === 'courses' && notif.subresource === undefined) {
-          this.$router.push({ name: 'course', params: { courseID: notif.resource._id } })
-        }
+    goToResource (notif) {
+      if (notif.resource.type === 'forum' && notif.resource._id !== undefined) {
+        this.$router.push({ name: 'forum', params: { courseID: notif.courseId, threadID: notif.resource._id } })
+      } else if (notif.resource.type === 'forum' && notif.resource._id === undefined) {
+        this.$router.push({ name: 'forum', params: { courseID: notif.courseId, threadID: notif.resource._id } })
+      } else if (notif.resource.type === 'courses' && notif.resource._id !== undefined) {
+        this.$router.push({ name: 'course', params: { courseID: notif.courseId, sectionID: notif.resource._id } })
+      } else if (notif.resource.type === 'courses' && notif.resource._id !== undefined && notif.subresource._id !== undefined) {
+        this.$router.push({ name: 'course', params: { courseID: notif.courseId, sectionID: notif.resource._id, moduleID: notif.subresource._id } })
+      } else if (notif.resource.type === 'courses' && notif.resource._id === undefined) {
+        this.$router.push({ name: 'course', params: { courseID: notif.courseId } })
+      } else if (notif.resource.type === 'statistics' && notif.resource._id === undefined) {
+        this.$router.push({ name: 'statistics', params: { courseID: notif.courseId } })
       }
-
-      // Todo: Talk to alex about routing to Course Content pages, may need to refactor some stuff we did earlier
-
-      // else if (notif.resource.type === 'course' && notif.subresource !== undefined) {
-      //   this.$router.push({name: 'moduleContent', })
-      // }
     },
     toggleRead () {
       if (this.marked === false) {

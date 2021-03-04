@@ -386,12 +386,14 @@ router.post("/submitAssessment", async (req, res) => {
   // let contentID = req.body.contentID;
   let moduleID = req.body.moduleID;
   let responses = req.body.responses;
-
   let userID = JWT.decode(req.cookies.token).sub;
 
-  userID = ObjectID(userID)
 
-  let selectedCourse2 = await Course.findOne({ "_id": courseID, "students": userID, "sections": {$elemMatch: { "_id": ObjectId(sectionID), "modules":{ $elemMatch: { "_id": ObjectId(moduleID) } } }} }, (err, course) => {
+  // userID = ObjectID(userID)
+
+
+  let selectedCourse2 = await Course.findOne({ "_id": courseID, "students": userID }, (err, course) => {
+    console.log(course)
     return course.toObject();
   })
 
@@ -418,16 +420,27 @@ router.post("/submitAssessment", async (req, res) => {
       "value": response.value
     }
   })
+  let subjects = {}
+
   let correctCount = 0;
   for (let i = 0; i < responses.length; i++) {
-    console.log("Check AnswerLoop: ", responses[i].value, selectedAssessment.content[i].answer);
+    console.log(selectedAssessment.content[i].subject)
+    if (!(`${selectedAssessment.content[i].subject}` in subjects)) {
+      subjects[`${selectedAssessment.content[i].subject}`] = [0,0]
+    }
+
     if (responses[i].value === selectedAssessment.content[i].answer) {
       responses[i]["correct"] = true;
+      subjects[selectedAssessment.content[i].subject][0]++
+      subjects[selectedAssessment.content[i].subject][1]++
       correctCount++;
     } else {
+      subjects[selectedAssessment.content[i].subject][1]++
       responses[i]["correct"] = false;
     }
   }
+
+
 
   let score = Math.ceil(((correctCount/responses.length) * 100));
 
@@ -441,7 +454,7 @@ router.post("/submitAssessment", async (req, res) => {
     avi: selectedCourse2.image,
     resource: {
       type: "courses",
-      _id: selectedCourse2._id
+      _id: sectionID
     },
     subresource: {
       type: "assessment",
@@ -479,6 +492,7 @@ router.post("/submitAssessment", async (req, res) => {
     update.$set["courses.$[course].results.$[result].responses"] = responses;
     update.$set["courses.$[course].results.$[result].submitted"] = true;
     update.$set["courses.$[course].results.$[result].score"] = score;
+    update.$set["courses.$[course].results.$[result].subjects"] = subjects;
 
     let userUpdate = await User.findOneAndUpdate({"_id": userID}, update, { "fields": {"password": 0, "resetPasswordToken": 0, "resetPasswordExpires": 0}, new: true, arrayFilters: [{"course._id": courseID }, { "result._id": ObjectId(moduleID)}]}, (err, user) => {
       return user
@@ -495,7 +509,8 @@ router.post("/submitAssessment", async (req, res) => {
       "_id": selectedAssessment._id,
       "score": score,
       "responses": responses,
-      "submitted": true 
+      "submitted": true,
+      "subjects": subjects
     }
   
     let userUpdate = await User.findOneAndUpdate({"_id": userID}, update, { "fields": { "password": 0, "resetPasswordToken": 0, "resetPasswordExpires": 0 }, new: true, arrayFilters: [{ "course._id": courseID }]}, (err, user) => {

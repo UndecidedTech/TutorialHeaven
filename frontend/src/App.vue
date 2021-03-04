@@ -16,9 +16,6 @@ export default {
 </script>
 
 <style>
-.appBackground {
-  background-color:#FFFFFF;
-}
 html,body {
   font-family: 'Roboto', sans-serif;
 }
@@ -32,6 +29,7 @@ html,body {
 #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  max-height: 100%;
 }
 
 .pointer {

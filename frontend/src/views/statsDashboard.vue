@@ -1,5 +1,5 @@
 <template>
-<div class="appBackground">
+<div>
   <div class="input-group" id="courseSelect">
     <div class="input-group-prepend"><span class="input-group-text">Course</span></div>
       <select class="form-control input" v-model="selectedCourse" @change="updateCourseID">
@@ -8,37 +8,25 @@
       </select>
     </div>
     <div v-if="selectedCourse.role == 'instructor'">
-      <div class="d-flex flex-row justify-content-around">
-        <statsCounter :number="course.instructors.length" :title="'# of Instructors'"/>
+      <div class="d-flex flex-row justify-content-around align-items-center">
         <statsCounter :number="course.students.length" :title="'# of Students'"/>
-        <statsCounter :number="course.sections.length" :title="'# of Sections'"/>
+        <barChart/>
+        <lineChart/>
       </div>
-      <statsChart :chart-data="chartData(course)"/>
-      Instructor stats not implemented yet!
-      <br/>
-      Number of Instructors {{course.instructors.length}}
-      <br/>
-      Number of Students {{course.students.length}}
-      <br>
-      Number of Sections {{course.sections.length}}
-    </div>
-    <div v-else>
-      <div v-for="(result, index) in selectedCourse.results" :key="index">
-        {{ result._id }} {{ result.score }}
-      </div>
-      {{ selectedCourse }}
     </div>
 </div>
 </template>
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import statsChart from '../components/statsChart'
+import barChart from '../components/barChart'
+import lineChart from '../components/lineChart'
 import statsCounter from '../components/statsCounter'
 
 export default {
   name: 'statsDashboard',
   components: {
-    statsChart,
+    barChart,
+    lineChart,
     statsCounter
   },
   data () {
@@ -59,8 +47,10 @@ export default {
         labels: ['Students', 'Instructors', 'Sections'],
         datasets: [
           {
-            label: 'Data One',
-            backgroundColor: '#f87979',
+            label: 'Test',
+            backgroundColor: 'rgba(248, 121, 121, 0.5)',
+            borderColor: 'rgb(0, 0, 0)',
+            borderWidth: '1',
             data: [c.instructors.length, c.students.length, c.sections.length]
           }
         ]
