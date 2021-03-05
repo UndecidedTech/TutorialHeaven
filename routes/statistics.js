@@ -28,7 +28,8 @@ router.get("/:courseID/", async (req, res) => {
                 let assessmentObj = {
                     "_id": module._id,
                     "name": module.name,
-                    "description": module.description  
+                    "description": module.description,
+                    "results": []
                 }
                 assessments.push(assessmentObj)
                 assessmentIds.push(module._id)
@@ -36,13 +37,27 @@ router.get("/:courseID/", async (req, res) => {
         })
     })
 
+    let table = [["Name", "Section", "Avg Score", "Rating" ]];
 
-
+    let scores = []
+    // students array to work with
     const Students = await User.find({ "courses._id": courseID }, "", { lean: true })
 
+    // LEARNED SOMETHING NEW, THE _id HAS A "toString" method on it and a "equals" method
 
-
-    console.log(Students);
+    await Students.forEach((student) => {
+        student.courses.forEach((course) => {
+            if (course._id.equals(courseID)) {
+                course.results.forEach((result) => {
+                    assessments.find((assessment) => {
+                        if (assessment._id.equals(result._id)) {
+                            assessment.results.push(result.score)
+                        }
+                    })
+                })
+            }
+        })
+    })
 
     console.log("Assessments: ", assessments)
 
