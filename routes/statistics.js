@@ -5,6 +5,11 @@ const JWT = require("jsonwebtoken");
 const User = require("../models/user");
 const { ObjectId } = require("mongodb");
 
+function getStandardDeviation (array) {
+    const n = array.length
+    const mean = array.reduce((a, b) => a + b) / n
+    return Math.sqrt(array.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / n)
+}
 
 router.get("/:courseID/", async (req, res) => {
     let courseID = req.params.courseID;
@@ -20,7 +25,7 @@ router.get("/:courseID/", async (req, res) => {
     // console.log("course: ", selectedCourse)
 
     let assessments = [];
-    let assessmentIds = []
+    let assessmentIds = [];
 
     selectedCourse.sections.forEach((section) => {
         section.modules.forEach((module) => {
@@ -28,7 +33,7 @@ router.get("/:courseID/", async (req, res) => {
                 let assessmentObj = {
                     "_id": module._id,
                     "name": module.name,
-                    "description": module.description,
+                    "section": section.name,
                     "results": []
                 }
                 assessments.push(assessmentObj)
@@ -59,10 +64,62 @@ router.get("/:courseID/", async (req, res) => {
         })
     })
 
+    // results are getting set properly
     console.log("Assessments: ", assessments)
 
-    res.send("success");
+    assessments.forEach((assessment) => {
+        let sum = assessment.results.reduce((a, b) => a + b, 0)
+        let avg = (sum / assessment.results.length) || 0
+
+        assessment["avgScore"] = avg
+        // calculate how many questions there are, 
+
+        //weighted score with 50% of the weight being the STD DEV.
+
+        // 1-10 rating
+        // score 50% of deviation
+        // equation: (avg * .5) + ()
+        let stdDev = getStandardDeviation(assessment.results)
+        console.log(stdDev);
+        
+        assessment["rating"] = ratingCalc(avg, stdDev)
+
+        table.push([assessment.name, assessment.section, assessment.avgScore, assessment.rating])
+    })
+
+    console.log("After AVG: ", assessments)
+
+    res.send({"assessments": table, "studentsCount": Students.length});
 })
 
+function ratingCalc(avg, stdDev) {
+    if (avg < 60) {
+        return "Poor"
+    } else if (avg >= 60 && avg < 70) {
+        if (stdDev >= 15) {
+            return "Poor"
+        } else {
+            return "Poor"
+        }
+    } else if (avg >= 70 && avg < 80) {
+        if (stdDev >= 15) {
+            return "Fair"
+        } else {
+            return "Good"
+        }
+    } else if (avg >= 80 && avg < 90) {
+        if (stdDev >= 10) {
+            return "Fair"
+        } else {
+            return "Good"
+        }
+    } else if (avg >= 90 && avg <= 100) {
+        if (stdDev >= 10) {
+            return "Fair"
+        } else {
+            return "Too Easy"
+        }
+    }
+}
 
 module.exports = router;
