@@ -1,11 +1,14 @@
 <template>
 <div>
-  <h1 class="text-center">{{course.name}}</h1>
+  <h1 class="text-center mt-3">{{course.name}}</h1>
     <div v-if="course.instructors.includes(user._id)">
-      <div class="d-flex flex-row justify-content-around align-items-center">
+      <div class="d-flex flex-row flex-wrap justify-content-around align-items-center">
         <statsCounter :number="course.students.length" :title="'# of Students'"/>
         <barChart :chartData="chartData()"/>
-        <lineChart :chartData="chartData()"/>
+        <lineChart :chartData="chartData()" :chartTitle="'Growth Chart'"/>
+        <pieChart :chartData="chartData()" :chartTitle="'Average User Score'"/>
+        <thTable :tableData="stats.assessments" :tableName="'Quiz Performance'"/>
+        <thTable :tableData="[['Growth Rate', 'Test', 'IDK'],['10','Test','IDK']]" :tableName="'Growth Rate'"/>
       </div>
     </div>
 </div>
@@ -15,13 +18,17 @@ import { mapGetters, mapActions } from 'vuex'
 import barChart from '../components/barChart'
 import lineChart from '../components/lineChart'
 import statsCounter from '../components/statsCounter'
+import thTable from '../components/thTable'
+import pieChart from '../components/pieChart'
 
 export default {
   name: 'statsDashboard',
   components: {
     barChart,
     lineChart,
-    statsCounter
+    statsCounter,
+    thTable,
+    pieChart
   },
   data () {
     return {
@@ -29,18 +36,22 @@ export default {
   },
   methods: {
     ...mapActions({
-      getCourse: 'courses/getCourse'
+      getCourse: 'courses/getCourse',
+      getStats: 'statistics/getStats'
     }),
     chartData () {
       return {
-        labels: ['Students', 'Instructors', 'Sections'],
+        labels: ['A', 'B', 'C', 'D', 'F'],
         datasets: [
           {
-            label: 'Test',
-            backgroundColor: 'rgba(248, 121, 121, 0.5)',
-            borderColor: 'rgb(0, 0, 0)',
+            label: 'data',
+            backgroundColor: [
+              'rgb(255, 99, 132)',
+              'rgb(54, 162, 235)',
+              'rgb(255, 205, 86)'
+            ],
             borderWidth: '1',
-            data: [1, 12, 123]
+            data: this.stats.grades
           }
         ]
       }
@@ -49,11 +60,13 @@ export default {
   computed: {
     ...mapGetters({
       user: 'user/user',
-      course: 'courses/course'
+      course: 'courses/course',
+      stats: 'statistics/stats'
     })
   },
   created () {
     this.getCourse(this.$route.params.courseID)
+    this.getStats(this.$route.params.courseID)
   }
 }
 </script>

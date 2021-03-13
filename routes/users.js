@@ -471,7 +471,22 @@ router.post("/submitAssessment", async (req, res) => {
   let checkUser = await User.findOne({ "_id": userID, "courses": {$elemMatch: { "_id": ObjectId(courseID), "results": { $elemMatch: { "_id": selectedAssessment._id } }}}}, { "courses.results.$": 1}, (err, user) => {
     return user;
   })
+
+  let grade = undefined;
+
   if (checkUser !== null){
+    // get user results and pass to array for finding Avg Score in the course
+    let results = []
+    checkUser.courses[0].results.forEach((result) => {
+      results.push(result.score)
+    })
+    results.push(score)
+    console.log("results: ", results)
+    // calculate average
+    grade = await getAvg(results);
+
+    console.log("Average Grade: ", results)
+    console.log("Alex is null here??????????");
     checkUser = checkUser.courses[0].results.find((result) => {
       let resID = result._id.toString();
       console.log(result); 
@@ -480,19 +495,22 @@ router.post("/submitAssessment", async (req, res) => {
         return result;
       }
     })
+  } else {
+    let results = [score];
+    grade = await getAvg(results)
   }
-  
-
-  console.log("User Check Stage: ", checkUser);
-
 
   if (checkUser !== null && checkUser.submitted === false) {
-  
-    let update = {$set: {} }
+    
+    let update = {$set: {}, $push: {}}
     update.$set["courses.$[course].results.$[result].responses"] = responses;
     update.$set["courses.$[course].results.$[result].submitted"] = true;
     update.$set["courses.$[course].results.$[result].score"] = score;
     update.$set["courses.$[course].results.$[result].subjects"] = subjects;
+    update.$addToSet["courses.$[course].grades"] = {
+      timestamp: new Date(),
+      score: grade
+    }
 
     let userUpdate = await User.findOneAndUpdate({"_id": userID}, update, { "fields": {"password": 0, "resetPasswordToken": 0, "resetPasswordExpires": 0}, new: true, arrayFilters: [{"course._id": courseID }, { "result._id": ObjectId(moduleID)}]}, (err, user) => {
       return user
@@ -504,7 +522,7 @@ router.post("/submitAssessment", async (req, res) => {
     res.send("Assignment already submitted");
   } else {
     console.log("NEVER STARTED SAVE");  
-    let update = {$addToSet: {} };
+    let update = {$addToSet: {}, $push: {} };
     update.$addToSet["courses.$[course].results"] = {
       "_id": selectedAssessment._id,
       "score": score,
@@ -512,11 +530,14 @@ router.post("/submitAssessment", async (req, res) => {
       "submitted": true,
       "subjects": subjects
     }
-  
+    update.$addToSet["courses.$[course].grades"] = {
+      timestamp: new Date(),
+      score: grade
+    }
+    
     let userUpdate = await User.findOneAndUpdate({"_id": userID}, update, { "fields": { "password": 0, "resetPasswordToken": 0, "resetPasswordExpires": 0 }, new: true, arrayFilters: [{ "course._id": courseID }]}, (err, user) => {
       return user.toObject();
     })
-    
     
     return res.send(userUpdate.toObject());
   }
@@ -530,5 +551,10 @@ function generateUpdate(field, value) {
   return update;
 }
 
+function getAvg(array) {
+  let sum = array.reduce((a, b) => a + b, 0);
+  let n = array.length;
+  return (Math.ceil(sum/n))
+}
 
 module.exports = router;
