@@ -77,8 +77,9 @@ router.get("/", async (req, res) => {
                                     if (!(key in subjects)) {
                                         subjects[key] = [0,0]
                                     }
-                                    subjects[key][0] += results[key][0];
-                                    subjects[key][1] += results[key][1];
+                                    // TODO this will break until the quizzes have subjects
+                                    subjects[key][0] += result[key][0];
+                                    subjects[key][1] += result[key][1];
                                 }
                                 assessment.results.push(result.score)
                             }
@@ -88,6 +89,7 @@ router.get("/", async (req, res) => {
                 })
             })
 
+            console.log("Subjects(?): ", subjects);
             assessments.forEach((assessment) => {
                 let sum = assessment.results.reduce((a, b) => a + b, 0)
                 let avg = (sum / assessment.results.length) || 0
