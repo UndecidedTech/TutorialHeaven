@@ -14,7 +14,8 @@ export default {
   components: {
   },
   props: {
-    chartData: Object
+    chartData: Object,
+    chartTitle: String
   },
   data () {
     return {
@@ -24,7 +25,11 @@ export default {
         scaleOverride: true,
         scaleSteps: 1,
         scaleStepWidth: 50,
-        scaleStartValue: 0
+        scaleStartValue: 0,
+        title: {
+          display: true,
+          text: this.chartTitle
+        }
       }
     }
   },

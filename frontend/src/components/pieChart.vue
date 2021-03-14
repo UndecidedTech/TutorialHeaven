@@ -4,12 +4,12 @@
 </div>
 
 <script>
-import { Line, mixins } from 'vue-chartjs'
+import { Pie, mixins } from 'vue-chartjs'
 const { reactiveProp } = mixins
 
 export default {
-  name: 'lineChart',
-  extends: Line,
+  name: 'pieChart',
+  extends: Pie,
   mixins: [reactiveProp],
   components: {
   },
@@ -29,27 +29,7 @@ export default {
         title: {
           display: true,
           text: this.chartTitle
-        },
-        tooltips: {
-          mode: 'index',
-          intersect: false
-        },
-        hover: {
-          mode: 'nearest',
-          intersect: true
         }
-      },
-      data: {
-        labels: ['Students', 'Instructors', 'Sections'],
-        datasets: [
-          {
-            label: 'Test',
-            backgroundColor: 'rgba(248, 121, 121, 0.5)',
-            borderColor: 'rgb(0, 0, 0)',
-            borderWidth: '1',
-            data: [10, 20, 40]
-          }
-        ]
       }
     }
   },
@@ -58,7 +38,7 @@ export default {
   computed: {
   },
   mounted () {
-    this.renderChart(this.data, this.options)
+    this.renderChart(this.chartData, this.options)
   }
 }
 </script>
