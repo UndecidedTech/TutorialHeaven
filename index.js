@@ -8,6 +8,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
 const rateLimit = require("express-rate-limit");
+const history = require("connect-history-api-fallback");
 
 // connection string info
 const db_ip = process.env.DB_IP;
@@ -22,6 +23,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
+app.use(history())
 app.use(cors({
     "origin": ["http://localhost:8081", "http://localhost:8080"],
     "credentials": true,
