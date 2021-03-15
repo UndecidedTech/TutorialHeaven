@@ -4,18 +4,16 @@
     <div v-if="course.instructors.includes(user._id)">
       <div class="d-flex flex-row flex-wrap justify-content-around align-items-center">
         <statsCounter :number="course.students.length" :title="'# of Students'"/>
-        <barChart :chartData="chartData()"/>
         <lineChart :chartData="chartData()" :chartTitle="'Growth Chart'"/>
         <pieChart :chartData="chartData()" :chartTitle="'Average User Score'"/>
         <thTable :tableData="stats.assessments" :tableName="'Quiz Performance'"/>
-        <thTable :tableData="[['Growth Rate', 'Test', 'IDK'],['10','Test','IDK']]" :tableName="'Growth Rate'"/>
+        <thTable :tableData="stats.subjects" :tableName="'Subject Performance'"/>
       </div>
     </div>
 </div>
 </template>
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import barChart from '../components/barChart'
 import lineChart from '../components/lineChart'
 import statsCounter from '../components/statsCounter'
 import thTable from '../components/thTable'
@@ -24,7 +22,6 @@ import pieChart from '../components/pieChart'
 export default {
   name: 'statsDashboard',
   components: {
-    barChart,
     lineChart,
     statsCounter,
     thTable,

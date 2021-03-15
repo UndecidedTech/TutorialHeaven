@@ -34,6 +34,7 @@ router.get("/", async (req, res) => {
 
 
 router.post("/", async (req, res) => {
+  console.log(req.body)
     singleUpload(req, res, async (err) => {
         if (err) {
             return res.status(422).send({ errors: [{title: 'Image Upload Error', detail: err.message }] })
@@ -47,7 +48,6 @@ router.post("/", async (req, res) => {
             }
             return user.toObject()
         })
-        console.log(selectedUser);
         // console.log("User Return: ", userData)
 
         

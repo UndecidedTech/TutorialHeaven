@@ -5,7 +5,7 @@
     <div id="myCarousel" class="col carousel slide p-0" data-ride="carousel">
       <div class="carousel-inner">
         <div v-for="(test, index) in courseList" :key="index" class="carousel-item" :class="[index === 0 ? 'active' : '']">
-          <img class="carouselImage" :src="test.image">
+          <img class="carouselImage" width="100%" height="100%" :src="test.image">
           <div class="carousel-caption caption p-2 pointer" @click="$router.push({ name: 'courseCatalog' })">
             <h5>{{ test.name }}</h5>
             <p class="m-0">{{ test.description }}</p>

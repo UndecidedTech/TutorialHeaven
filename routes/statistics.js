@@ -55,7 +55,7 @@ router.get("/", async (req, res) => {
                 })
             })
 
-            let table = [["Name", "Section", "Avg Score", "Rating" ]];
+            let quizTable = [["Name", "Section", "Avg Score", "Rating" ]];
 
             // students array to work with
             const Students = await User.find({ "courses": { $elemMatch: { "_id": courseID, "role": "student" }}}, "", { lean: true })
@@ -63,6 +63,12 @@ router.get("/", async (req, res) => {
             // LEARNED SOMETHING NEW, THE _id HAS A "toString" method on it and a "equals" method
             let scores = [];
             let subjects = {};
+
+            selectedCourse.subjects.forEach((subject) => {
+                subjects[subject] = [0,0]
+            })
+
+            console.log(subjects);
 
             await Students.forEach((student) => {
                 student.courses.forEach((course) => {
@@ -73,13 +79,9 @@ router.get("/", async (req, res) => {
                             if (assessment._id.equals(result._id)) {
                                 // loop through keys in result
                                 for (key in result.subjects) {
-                                    // check key isn't already in subjects
-                                    if (!(key in subjects)) {
-                                        subjects[key] = [0,0]
-                                    }
                                     // TODO this will break until the quizzes have subjects
-                                    subjects[key][0] += result[key][0];
-                                    subjects[key][1] += result[key][1];
+                                    subjects[key][0] += result.subjects[key][0];
+                                    subjects[key][1] += result.subjects[key][1];
                                 }
                                 assessment.results.push(result.score)
                             }
@@ -88,6 +90,25 @@ router.get("/", async (req, res) => {
                     }
                 })
             })
+
+            let subjectsTable = [["Subject", "Appearance", "Performance", "Rating"]]
+            
+
+            //calculate number of subject questions
+            let questionSum = 0;
+
+            for (key in subjects) {
+                questionSum += subjects[key][1]
+            }
+
+            console.log("number of questions: ", questionSum);
+
+
+            //build subjects table
+            for (key in subjects) {
+                subjectsTable.push([key, `${Math.ceil(subjects[key][0] / questionSum) * 100}%`, `${performanceCalc(Math.ceil(subjects[key][0] / subjects[key][1]) * 100)}`, subjectRating((Math.ceil(subjects[key][0] / subjects[key][1]) * 100))])
+            }
+
 
             console.log("Subjects(?): ", subjects);
             assessments.forEach((assessment) => {
@@ -100,9 +121,9 @@ router.get("/", async (req, res) => {
                 
                 assessment["rating"] = ratingCalc(avg, stdDev)
 
-                table.push([assessment.name, assessment.section, assessment.avgScore, assessment.rating])
+                quizTable.push([assessment.name, assessment.section, assessment.avgScore, assessment.rating])
             })
-            return res.send({"assessments": table, "studentsCount": Students.length, "grades": sortGrades(scores)});
+            return res.send({"assessments": quizTable, "studentsCount": Students.length, "grades": sortGrades(scores), "subjects": subjectsTable});
         } else {
             let selectedStudent = await Users.findOne({"courses": { $elemMatch: { "_id": courseID, "role": "student" }}})
             let currentGrade = selectedStudent.courses.forEach((course) => {
@@ -117,6 +138,13 @@ router.get("/", async (req, res) => {
         console.error(e)
     }
 })
+
+function performanceCalc(value) {
+    if (isNaN(value))
+        return "0%"
+    else
+        return `${value}%`
+}
 
 function ratingCalc(avg, stdDev) {
     if (avg < 60) {
@@ -143,8 +171,21 @@ function ratingCalc(avg, stdDev) {
         if (stdDev >= 10) {
             return "Fair"
         } else {
-            return "Too Easy"
+            return "Good"
         }
+    }
+}
+
+function subjectRating(ratio) {
+    console.log(ratio)
+    if (isNaN(ratio))
+        return "Poor"
+    if (ratio >= 70) {
+        return "Good"
+    } else if (ratio >= 50 && ratio < 70) {
+        return "Fair"
+    } else if (ratio < 50) {
+        return "Poor"
     }
 }
 

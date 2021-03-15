@@ -164,6 +164,13 @@ export default {
           commit('SET_COURSE_LIST', res.data)
         }
       }
+    },
+    async postSubject ({ commit }, subject) {
+      console.log(subject)
+      const res = await axios.post('/api/courses/settings', subject)
+      if (res.status === 200) {
+        commit('SET_COURSE', res.data)
+      }
     }
   }
 }

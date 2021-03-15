@@ -45,6 +45,11 @@
           <option value="">...</option>
           <option v-for="(test, index) in relationCompute" :key="index" :value="test._id" :id="test.name">{{test.name}}</option>
         </select>
+        <div class=" ml-3 input-group-prepend"><span class="input-group-text">Subject</span></div>
+        <select class="form-control input" v-model="question.subject">
+          <option value="">...</option>
+          <option v-for="(subject, index) in course.subjects" :key="index" :value="subject">{{subject}}</option>
+        </select>
         </div>
       </div>
     </div>

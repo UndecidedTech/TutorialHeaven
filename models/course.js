@@ -96,7 +96,7 @@ const courseSchema = new Schema({
         default: [] 
     },
     subjects: {
-        type: Array,
+        type: [String],
         default: []
     },
     sections: [sectionSchema],

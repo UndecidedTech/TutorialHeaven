@@ -556,6 +556,37 @@ router.post("/deleteModuleContent", async (req, res) => {
     }
 })
 
+router.post("/settings", async (req, res) => {
+    let userID = JWT.decode(req.cookies.token).sub;
+    let courseID = req.body.courseID;
+    let subject = req.body.subject;
+
+    console.log(req.body);
+
+    let selectedCourse = await Course.findById(courseID, (err, course) => {
+        console.log(course);
+        return course.toObject()
+    });
+
+    // check user is instructor
+    if (selectedCourse.instructors.includes(userID)){
+
+        if (selectedCourse.subjects.includes(subject)) {
+            let update = {$pull: {}};
+            update.$pull["subjects"] = subject;
+            let settingsUpdate = await Course.findOneAndUpdate({ "_id": courseID }, update, { new: true })
+            console.log(settingsUpdate)
+            return res.send(settingsUpdate)
+        } else {
+            let update = { $addToSet: {}}
+            update.$addToSet["subjects"] = subject;
+            let settingsUpdate = await Course.findOneAndUpdate({ "_id": courseID }, update, { new: true })
+            console.log(settingsUpdate)
+            return res.send(settingsUpdate)
+        }
+    }
+})
+
 
 //useful helper function for generating MongoDB updates
 function generateUpdate(field, value) {
