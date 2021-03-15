@@ -1,6 +1,6 @@
 <template>
 <div class="flex-container">
-  <div class="editor-sidebar d-flex flex-column justify-content-between" v-show="open">
+  <div class="editor-sidebar d-flex flex-column justify-content-between" v-if="isShown">
     <div>
     <div class="p-4"><h1 class="d-inline">Menu</h1></div>
     <div class="list-group" id="list-tab" role="tablist">
@@ -11,7 +11,7 @@
     </div>
     <div> <a class="list-group-item list-group-item-action pointer fa-2x" :class="[$route.matched[0].path == '/course/:courseID/settings' ? 'th-active' : '']" @click="$router.push({ name: 'courseSettings', params: { courseID: course._id } })"><i class="fas fa-cogs"></i>  Settings</a></div>
   </div>
-  <button class="th-sub d-inline" @click="shrink()"><i v-if="open" class="fas fa-angle-double-left"/><i v-else class="fas fa-angle-double-right"/></button>
+  <button class="th-sub d-inline" @click="shrink()"><i class="fas " :class="isShown ? 'fa-arrow-left' : 'fa-arrow-right'"/></button>
   <div class="editor-item">
     <statsDashboard v-if="$route.matched[0].path == '/course/:courseID/stats'"/>
     <courseSettings v-else-if="$route.matched[0].path == '/course/:courseID/settings'"/>
@@ -65,7 +65,7 @@ export default {
         name: '',
         courseID: this.$route.params.courseID
       },
-      open: true,
+      isShown: true,
       activeSection: 0
     }
   },
@@ -79,10 +79,10 @@ export default {
       getThreads: 'forum/getThreads'
     }),
     shrink () {
-      if (this.open) {
-        this.open = false
+      if (this.isShown) {
+        this.isShown = false
       } else {
-        this.open = true
+        this.isShown = true
       }
     }
   },
