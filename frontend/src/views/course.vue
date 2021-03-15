@@ -11,7 +11,7 @@
     </div>
     <div> <a class="list-group-item list-group-item-action pointer fa-2x" :class="[$route.matched[0].path == '/course/:courseID/settings' ? 'th-active' : '']" @click="$router.push({ name: 'courseSettings', params: { courseID: course._id } })"><i class="fas fa-cogs"></i>  Settings</a></div>
   </div>
-  <button class="th-sub d-inline" @click="shrink()"><i class="fas " :class="isShown ? 'fa-arrow-left' : 'fa-arrow-right'"/></button>
+  <button class="th-sub d-inline" @click="shrink()"><font-awesome-icon v-if="isShown" :icon="['fas', 'angle-double-left']"/><font-awesome-icon v-else :icon="['fas', 'angle-double-right']"/> </button>
   <div class="editor-item">
     <statsDashboard v-if="$route.matched[0].path == '/course/:courseID/stats'"/>
     <courseSettings v-else-if="$route.matched[0].path == '/course/:courseID/settings'"/>
