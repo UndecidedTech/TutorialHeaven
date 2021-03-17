@@ -4,6 +4,15 @@
     <div v-if="course.instructors.includes(user._id)">
       <div class="d-flex flex-row flex-wrap justify-content-around align-items-center">
         <statsCounter :number="course.students.length" :title="'# of Students'"/>
+        <lineChart :chartData="chartData('growthChart')" :chartTitle="'Growth Chart'"/>
+        <pieChart :chartData="chartData('AvgUserScore')" :chartTitle="'Average User Score'"/>
+        <thTable :tableData="stats.assessments" :tableName="'Quiz Performance'"/>
+        <thTable :tableData="stats.subjects" :tableName="'Subject Performance'"/>
+      </div>
+    </div>
+    <div v-else>
+      <div class="d-flex flex-row flex-wrap justify-content-around align-items-center">
+        <statsCounter :number="course.students.length" :title="'# of Students'"/>
         <lineChart :chartData="chartData()" :chartTitle="'Growth Chart'"/>
         <pieChart :chartData="chartData()" :chartTitle="'Average User Score'"/>
         <thTable :tableData="stats.assessments" :tableName="'Quiz Performance'"/>
@@ -36,21 +45,38 @@ export default {
       getCourse: 'courses/getCourse',
       getStats: 'statistics/getStats'
     }),
-    chartData () {
-      return {
-        labels: ['A', 'B', 'C', 'D', 'F'],
-        datasets: [
-          {
-            label: 'data',
-            backgroundColor: [
-              'rgb(255, 99, 132)',
-              'rgb(54, 162, 235)',
-              'rgb(255, 205, 86)'
-            ],
-            borderWidth: '1',
-            data: this.stats.grades
-          }
-        ]
+    chartData (type) {
+      if (type === 'AvgUserScore') {
+        return {
+          labels: ['A', 'B', 'C', 'D', 'F'],
+          datasets: [
+            {
+              label: 'data',
+              backgroundColor: [
+                'rgb(255, 99, 132)',
+                'rgb(54, 162, 235)',
+                'rgb(255, 205, 86)',
+                'rgb(50, 168, 82)',
+                'rgb(150, 131, 216)'
+              ],
+              borderWidth: '1',
+              data: this.stats.grades
+            }
+          ]
+        }
+      } else if (type === 'growthChart') {
+        return {
+          labels: ['Students', 'Instructors', 'Sections'],
+          datasets: [
+            {
+              label: '# of Students',
+              backgroundColor: 'rgba(248, 121, 121, 0.5)',
+              borderColor: 'rgb(0, 0, 0)',
+              borderWidth: '1',
+              data: [10, 20, 40]
+            }
+          ]
+        }
       }
     }
   },
