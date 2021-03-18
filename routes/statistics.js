@@ -4,6 +4,7 @@ const Course = require("../models/course");
 const JWT = require("jsonwebtoken");
 const User = require("../models/user");
 const { ObjectId } = require("mongodb");
+const moment = require("moment");
 
 function getStandardDeviation (array) {
     const n = array.length
@@ -91,7 +92,7 @@ router.get("/", async (req, res) => {
                 })
             })
 
-            let subjectsTable = [["Subject", "Appearance", "Performance", "Rating"]]
+            let subjectsTable = [["Subject", "Appearance Rate", "Performance", "Rating"]]
             
 
             //calculate number of subject questions
@@ -125,19 +126,121 @@ router.get("/", async (req, res) => {
             })
             return res.send({"assessments": quizTable, "studentsCount": Students.length, "grades": sortGrades(scores), "subjects": subjectsTable});
         } else {
-            let selectedStudent = await Users.findOne({"courses": { $elemMatch: { "_id": courseID, "role": "student" }}})
-            let currentGrade = selectedStudent.courses.forEach((course) => {
+            let selectedStudent = await User.findOne({"courses": { $elemMatch: { "_id": courseID, "role": "student" }}})
+            
+            let selectedCourse = await Course.findById(courseID, (course) => {
+                if (course){
+                    return course.toObject()
+                }
+            })
+            
+            // get current grade
+            let currentGrade;
+            await selectedStudent.courses.forEach((course) => {
                 if (course._id.equals(courseID)) {
-                    course.grades[course.grades.length - 1].score
+                    if (course.grades.length > 0)
+                        currentGrade = course.grades[course.grades.length - 1].score
+                    else
+                        currentGrade = "N/A"
                 }
             })
 
-            res.send({currentGrade})
+            // Grade Growth Chart
+            let gradeHistory = [[], []]
+            await selectedStudent.courses.forEach((course) => {
+                if (course._id.equals(courseID)) {
+                    let maxLength = course.grades.length < 6 ? course.grades.length : 6; 
+                    for (let i = 1; i <= maxLength; i++) {
+                        // dont run first time through
+                        if (i > 1) {
+                            // filter duplicate score 
+                            if (sameDay(course.grades[course.grades.length - (i - 1)].timestamp, course.grades[course.grades.length - i].timestamp)) {
+                                gradeHistory[0].pop()
+                                gradeHistory[1].pop()
+                            }
+                        }
+
+                        // fix timestamp formatting
+                        let formatTime = `${moment(course.grades[course.grades.length - i].timestamp).format("l")}`
+                        gradeHistory[0].push(formatTime);
+                        
+                        //scores
+                        gradeHistory[1].push(course.grades[course.grades.length - i].score)
+                    }
+                }
+            })
+
+            //reverse scores
+            gradeHistory[0] = gradeHistory[0].reverse();
+            gradeHistory[1] = gradeHistory[1].reverse();
+
+            // subject performance
+            let assessments = [];
+            let assessmentIds = [];
+
+            selectedCourse.sections.forEach((section) => {
+                section.modules.forEach((module) => {
+                    if (module.type === "assessment") {
+                        let assessmentObj = {
+                            "_id": module._id,
+                            "name": module.name,
+                            "section": section.name,
+                            "results": []
+                        }
+                        assessments.push(assessmentObj)
+                        assessmentIds.push(module._id)
+                    }
+                })
+            })
+
+            let quizTable = [["Name", "Section", "Avg Score", "Rating" ]];
+
+            let scores = []
+            let subjects = {};
+
+            selectedCourse.subjects.forEach((subject) => {
+                subjects[subject] = [0,0]
+            })
+
+            console.log("subjects: ", subjects)
+
+            selectedStudent.courses.forEach((course) => {
+                if (course._id.equals(courseID)) {
+                  scores.push(course.grades[course.grades.length - 1].score)
+                  course.results.forEach((result) => {
+                      assessments.forEach((assessment) => {
+                        if (assessment._id.equals(result._id)) {
+                            // loop through keys in result
+                            for (key in result.subjects) {
+                                // TODO this will break until the quizzes have subjects
+                                subjects[key][0] += result.subjects[key][0];
+                                subjects[key][1] += result.subjects[key][1];
+                            }
+                            assessment.results.push(result.score)
+                        }
+                      })
+                  })
+                }
+            })
+
+            console.log(currentGrade, gradeHistory, scores, subjects)
+
+            res.send({currentGrade, gradeHistory })
         }
     } catch (e) {
         console.error(e)
     }
 })
+
+function sameDay(d1, d2) {
+    if (d1 !== undefined) {
+        return d1.getFullYear() === d2.getFullYear() &&
+          d1.getMonth() === d2.getMonth() &&
+          d1.getDate() === d2.getDate();
+    } else {
+        return true
+    }
+  }
 
 function performanceCalc(value) {
     if (isNaN(value))

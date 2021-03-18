@@ -1,6 +1,6 @@
 
 <div>
-<canvas id="myChart" width="200" height="200"></canvas>
+<canvas id="myChart" :width="width" :height="height"></canvas>
 </div>
 
 <script>
@@ -15,7 +15,15 @@ export default {
   },
   props: {
     chartData: Object,
-    chartTitle: String
+    chartTitle: String,
+    width: {
+      type: Number,
+      default: 200
+    },
+    height: {
+      type: Number,
+      default: 200
+    }
   },
   data () {
     return {

@@ -53,7 +53,7 @@ const courseSchema = new Schema({
         required: true
     },
     subject: {
-        type: Array,
+        type: [String],
         required: true
     },
     role: {

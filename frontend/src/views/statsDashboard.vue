@@ -12,11 +12,11 @@
     </div>
     <div v-else>
       <div class="d-flex flex-row flex-wrap justify-content-around align-items-center">
-        <statsCounter :number="course.students.length" :title="'# of Students'"/>
-        <lineChart :chartData="chartData()" :chartTitle="'Growth Chart'"/>
-        <pieChart :chartData="chartData()" :chartTitle="'Average User Score'"/>
-        <thTable :tableData="stats.assessments" :tableName="'Quiz Performance'"/>
-        <thTable :tableData="stats.subjects" :tableName="'Subject Performance'"/>
+        <lineChart :chartData="chartData('gradeHistory')" :chartTitle="'Grade History Chart'" :width="800" :height="400"/>
+        <statsCounter :number="stats.currentGrade" :title="'Current Grade'"/>
+        <!-- <pieChart :chartData="chartData()" :chartTitle="'Average User Score'"/> -->
+        <!-- <thTable :tableData="stats.assessments" :tableName="'Quiz Performance'"/> -->
+        <!-- <thTable :tableData="stats.subjects" :tableName="'Subject Performance'"/> -->
       </div>
     </div>
 </div>
@@ -74,6 +74,19 @@ export default {
               borderColor: 'rgb(0, 0, 0)',
               borderWidth: '1',
               data: [10, 20, 40]
+            }
+          ]
+        }
+      } else if (type === 'gradeHistory') {
+        return {
+          labels: this.stats.gradeHistory[0],
+          datasets: [
+            {
+              label: 'Grade History',
+              backgroundColor: 'rgba(248, 121, 121, 0.5)',
+              borderColor: 'rgb(0, 0, 0)',
+              borderWidth: '1',
+              data: this.stats.gradeHistory[1]
             }
           ]
         }
