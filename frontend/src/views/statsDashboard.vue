@@ -4,7 +4,7 @@
     <div v-if="course.instructors.includes(user._id)">
       <div class="d-flex flex-row flex-wrap justify-content-around align-items-center">
         <statsCounter :number="course.students.length" :title="'# of Students'"/>
-        <lineChart :chartData="chartData('growthChart')" :chartTitle="'Growth Chart'"/>
+        <lineChart :chartData="chartData('growthChart')" :chartTitle="'Growth Chart'" :width="800" :height="400"/>
         <pieChart :chartData="chartData('AvgUserScore')" :chartTitle="'Average User Score'"/>
         <thTable :tableData="stats.assessments" :tableName="'Quiz Performance'"/>
         <thTable :tableData="stats.subjects" :tableName="'Subject Performance'"/>
@@ -14,7 +14,6 @@
       <div class="d-flex flex-row flex-wrap justify-content-around align-items-center">
         <lineChart :chartData="chartData('gradeHistory')" :chartTitle="'Grade History Chart'" :width="800" :height="400"/>
         <statsCounter :number="stats.currentGrade" :title="'Current Grade'"/>
-        <!-- <pieChart :chartData="chartData()" :chartTitle="'Average User Score'"/> -->
         <thTable :tableData="stats.quizTable" :tableName="'Quiz Performance'"/>
         <thTable :tableData="stats.subjects" :tableName="'Subject Performance'"/>
       </div>
@@ -66,14 +65,14 @@ export default {
         }
       } else if (type === 'growthChart') {
         return {
-          labels: ['Students', 'Instructors', 'Sections'],
+          labels: this.stats.months[0],
           datasets: [
             {
               label: '# of Students',
               backgroundColor: 'rgba(248, 121, 121, 0.5)',
               borderColor: 'rgb(0, 0, 0)',
               borderWidth: '1',
-              data: [10, 20, 40]
+              data: this.stats.months[1]
             }
           ]
         }

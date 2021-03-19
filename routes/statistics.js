@@ -3,6 +3,7 @@ const router = express.Router();
 const Course = require("../models/course");
 const JWT = require("jsonwebtoken");
 const User = require("../models/user");
+const Notification = require("../models/notification")
 const { ObjectId } = require("mongodb");
 const moment = require("moment");
 
@@ -124,7 +125,16 @@ router.get("/", async (req, res) => {
 
                 quizTable.push([assessment.name, assessment.section, assessment.avgScore, assessment.rating])
             })
-            return res.send({"assessments": quizTable, "studentsCount": Students.length, "grades": sortGrades(scores), "subjects": subjectsTable});
+
+
+            // build growth chart from notifications
+            let startOfYear = moment().startOf("year")
+            let joinNotifs = await Notification.find({"courseId": courseID, "title": /^New student,/, timestamp: { $gt: startOfYear } }, "timestamp", { lean: true })
+            console.log(joinNotifs[0])
+
+            let userJoin = sortMonth(joinNotifs)
+
+            return res.send({"assessments": quizTable, "studentsCount": Students.length, "grades": sortGrades(scores), "subjects": subjectsTable,  "months": userJoin});
         } else {
             let selectedStudent = await User.findOne({"courses": { $elemMatch: { "_id": courseID, "role": "student" }}})
             
@@ -334,6 +344,68 @@ function sortGrades(array) {
     }
 
     return gradesArray
+}
+
+function sortMonth(array) {
+    console.log(array)
+
+    let currMonth = moment().format("MMMM")
+    console.log("currentMonth: ", currMonth)
+
+    let monthNames = ["January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"];
+
+    const isMonth = (element) => element === currMonth
+    let monthIndex = monthNames.findIndex(isMonth)
+
+
+    // filter array to return a count for the month or undefined
+
+    let sortedMonths = [[...monthNames],[]]
+
+
+    let tempArray = []
+
+    console.log(sortedMonths);
+
+    // array.map((notif) => {
+    //     let month = moment(notif.timestamp).format("MMMM")
+    //     console.log(month)
+
+    //     return {
+    //         month,
+    //         "count": 1
+    //     }
+    // })
+
+    array.forEach(notif => {
+        let month = moment(notif.timestamp).format("MMMM");
+        tempArray.push({ month })
+    })
+
+    console.log(tempArray)
+
+    for (let i = 0; i < monthIndex + 1; i++) {
+        console.log("i: ", i, monthNames[i])
+        // initialize count at 0
+        if (i < monthIndex + 1) {
+            count = 0
+        }
+        sortedMonths[1].push(count);
+
+        // iterate for every occurence
+        for (let o = 0; o < tempArray.length; o++) {
+            if (monthNames[i] === tempArray[o].month) {
+                sortedMonths[1][i] += 1
+            }
+        }
+
+    }
+
+    console.log(sortedMonths)
+    
+    return sortedMonths
+
 }
 
 module.exports = router;
