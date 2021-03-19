@@ -556,7 +556,13 @@ router.post("/deleteModuleContent", async (req, res) => {
     }
 })
 
-router.post("/settings", async (req, res) => {
+router.post("/settings/image", async (req, res) => {
+    let courseID = req.body.courseID;
+    let userID = JWT.decode(req.cookies.token).sub;
+    let 
+})
+
+router.post("/settings/subjects", async (req, res) => {
     let userID = JWT.decode(req.cookies.token).sub;
     let courseID = req.body.courseID;
     let subject = req.body.subject;

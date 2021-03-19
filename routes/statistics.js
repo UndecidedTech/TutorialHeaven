@@ -358,32 +358,15 @@ function sortMonth(array) {
     const isMonth = (element) => element === currMonth
     let monthIndex = monthNames.findIndex(isMonth)
 
-
     // filter array to return a count for the month or undefined
-
     let sortedMonths = [[...monthNames],[]]
 
-
     let tempArray = []
-
-    console.log(sortedMonths);
-
-    // array.map((notif) => {
-    //     let month = moment(notif.timestamp).format("MMMM")
-    //     console.log(month)
-
-    //     return {
-    //         month,
-    //         "count": 1
-    //     }
-    // })
 
     array.forEach(notif => {
         let month = moment(notif.timestamp).format("MMMM");
         tempArray.push({ month })
     })
-
-    console.log(tempArray)
 
     for (let i = 0; i < monthIndex + 1; i++) {
         console.log("i: ", i, monthNames[i])
@@ -399,13 +382,9 @@ function sortMonth(array) {
                 sortedMonths[1][i] += 1
             }
         }
-
     }
 
-    console.log(sortedMonths)
-    
     return sortedMonths
-
 }
 
 module.exports = router;
