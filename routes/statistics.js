@@ -223,9 +223,20 @@ router.get("/", async (req, res) => {
                 }
             })
 
-            console.log(currentGrade, gradeHistory, scores, subjects)
+            assessments.forEach((assessment) => {
+                console.log(assessment);
+                // assessment["avgScore"] = avg
 
-            res.send({currentGrade, gradeHistory })
+                // let stdDev = getStandardDeviation(assessment.results)
+                
+                // assessment["rating"] = ratingCalc(avg, stdDev)
+
+                quizTable.push([assessment.name, assessment.section, assessment.results, assessment.rating])
+            })
+
+            console.log(currentGrade, gradeHistory, quizTable, subjects)
+
+            res.send({currentGrade, gradeHistory, quizTable })
         }
     } catch (e) {
         console.error(e)

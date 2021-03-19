@@ -15,8 +15,8 @@
         <lineChart :chartData="chartData('gradeHistory')" :chartTitle="'Grade History Chart'" :width="800" :height="400"/>
         <statsCounter :number="stats.currentGrade" :title="'Current Grade'"/>
         <!-- <pieChart :chartData="chartData()" :chartTitle="'Average User Score'"/> -->
-        <!-- <thTable :tableData="stats.assessments" :tableName="'Quiz Performance'"/> -->
-        <!-- <thTable :tableData="stats.subjects" :tableName="'Subject Performance'"/> -->
+        <thTable :tableData="stats.quizTable" :tableName="'Quiz Performance'"/>
+        <thTable :tableData="stats.subjects" :tableName="'Subject Performance'"/>
       </div>
     </div>
 </div>
