@@ -178,6 +178,10 @@ router.get("/", async (req, res) => {
             let assessments = [];
             let assessmentIds = [];
 
+            let subjectsTable = [["Subject", "Appearance Rate", "Performance", "Rating"]]
+
+            
+
             selectedCourse.sections.forEach((section) => {
                 section.modules.forEach((module) => {
                     if (module.type === "assessment") {
@@ -223,20 +227,30 @@ router.get("/", async (req, res) => {
                 }
             })
 
+            let questionSum = 0;
+
+            for (key in subjects) {
+                questionSum += subjects[key][1]
+            }
+
+            for (key in subjects) {
+                subjectsTable.push([key, `${Math.ceil(subjects[key][0] / questionSum) * 100}%`, `${performanceCalc(Math.ceil(subjects[key][0] / subjects[key][1]) * 100)}`, subjectRating((Math.ceil(subjects[key][0] / subjects[key][1]) * 100))])
+            }
+
             assessments.forEach((assessment) => {
                 console.log(assessment);
                 // assessment["avgScore"] = avg
 
                 // let stdDev = getStandardDeviation(assessment.results)
                 
-                // assessment["rating"] = ratingCalc(avg, stdDev)
+                assessment["rating"] = ratingCalc(assessment.results[0])
 
-                quizTable.push([assessment.name, assessment.section, assessment.results, assessment.rating])
+                quizTable.push([assessment.name, assessment.section, assessment.results[0], assessment.rating])
             })
 
-            console.log(currentGrade, gradeHistory, quizTable, subjects)
+            console.log(currentGrade, gradeHistory, quizTable, subjectsTable)
 
-            res.send({currentGrade, gradeHistory, quizTable })
+            res.send({ currentGrade, gradeHistory, quizTable, subjects: subjectsTable })
         }
     } catch (e) {
         console.error(e)
