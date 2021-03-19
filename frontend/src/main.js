@@ -5,10 +5,10 @@ import 'bootstrap'
 import 'bootstrap/dist/css/bootstrap.css'
 import store from './store/index'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faUserSecret } from '@fortawesome/free-solid-svg-icons'
+import { faTimes, faAngleDoubleLeft, faAngleDoubleRight } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-library.add(faUserSecret)
+library.add(faTimes, faAngleDoubleLeft, faAngleDoubleRight)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 // axios.defaults.withCredentials = true

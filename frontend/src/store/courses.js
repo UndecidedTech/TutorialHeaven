@@ -10,7 +10,9 @@ export default {
       type: '',
       index: 0
     },
-    courseList: []
+    courseList: [],
+    instructors: [],
+    students: []
   },
 
   getters: {
@@ -22,6 +24,12 @@ export default {
     },
     courseList (state) {
       return state.courseList
+    },
+    instructors (state) {
+      return state.instructors
+    },
+    students (state) {
+      return state.students
     }
   },
   mutations: {
@@ -34,6 +42,10 @@ export default {
     },
     SET_COURSE_LIST (state, courseList) {
       state.courseList = courseList
+    },
+    SET_USERNAMES (state, value) {
+      state.instructors = value.Instructors
+      state.students = value.Students
     }
   },
 
@@ -170,6 +182,13 @@ export default {
       const res = await axios.post('/api/courses/settings', subject)
       if (res.status === 200) {
         commit('SET_COURSE', res.data)
+      }
+    },
+    async getUserNames ({ commit }, courseID) {
+      console.log('here', courseID)
+      const res = await axios.get('/api/courses/settings', { params: { courseID } })
+      if (res.status === 200) {
+        commit('SET_USERNAMES', res.data)
       }
     }
   }
