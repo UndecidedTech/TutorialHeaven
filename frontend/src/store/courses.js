@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { update } from '../../../models/user'
 
 axios.defaults.withCredentials = true
 
