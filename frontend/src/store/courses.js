@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { update } from '../../../models/user'
 
 axios.defaults.withCredentials = true
 
@@ -188,6 +189,19 @@ export default {
       console.log('here', courseID)
       const res = await axios.get('/api/courses/settings', { params: { courseID } })
       if (res.status === 200) {
+        commit('SET_USERNAMES', res.data)
+      }
+    },
+    async updateSettings ({ commit, state }, updates) {
+      const data = {}
+      for (const key in updates) {
+        if (updates[key] === true) {
+          data[key] = state.course[key]
+        }
+      }
+      const res = await axios.post('/api/courses/settings', data)
+      if (res.status === 200) {
+        commit('SET_COURSE', res.data.course)
         commit('SET_USERNAMES', res.data)
       }
     }
