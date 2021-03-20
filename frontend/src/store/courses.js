@@ -192,14 +192,14 @@ export default {
         commit('SET_USERNAMES', res.data)
       }
     },
-    async updateSettings ({ commit, state }, updates) {
-      const data = {}
-      for (const key in updates) {
-        if (updates[key] === true) {
-          data[key] = state.course[key]
+    async updateSettings ({ commit, state }, courseID, data) {
+      const updates = {}
+      for (const key in data) {
+        if (data[key] === true) {
+          updates[key] = state.course[key]
         }
       }
-      const res = await axios.post('/api/courses/settings', data)
+      const res = await axios.post(`/api/courses/settings/${courseID}`, updates)
       if (res.status === 200) {
         commit('SET_COURSE', res.data.course)
         commit('SET_USERNAMES', res.data)
