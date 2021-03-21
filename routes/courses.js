@@ -8,6 +8,7 @@ const multiparty = require("multiparty");
 const Forum = require("../models/forum");
 
 const upload = require("../services/uploadImage");
+const { update } = require("../models/course");
 const singleUpload = upload.single('image');
 
 /** 
@@ -556,40 +557,6 @@ router.post("/deleteModuleContent", async (req, res) => {
     }
 })
 
-router.post("/settings/:courseID", async (req, res) => {
-    let courseID = req.params.courseID;
-    let userID = JWT.decode(req.cookies.token).sub;
-    let updates = req.body
-
-    // query course
-    let selectedCourse = await Course.findById(courseID, (err, course) => {
-        if (course)
-            return course.toObject()
-        else
-            return course
-    })
-    // check course exists
-    if (selectedCourse === null)
-        return res.status(500).send("Course not found")
-
-    // check is an instructor
-    if (selectedCourse.instructors.includes(userID)) {
-        singleUpload(req, res, async function(err) {
-            if (err) {
-                return res.status(422).send({ errors: [{ title: 'Image Upload Error', detail: err.message }] });
-            }
-            let update = { "$set": { "image": req.file.location } };
-            let updatedCourse = await Course.findByIdAndUpdate(courseID, update).lean();
-            if (updatedCourse) {
-                return res.send(updatedCourse);
-            } else {
-                res.status(404).send("Course not found");
-            }
-        })
-    } else {
-        return res.status(404).send("Not authorized to perform this action")
-    }
-})
 
 router.post("/settings/subjects", async (req, res) => {
     let userID = JWT.decode(req.cookies.token).sub;
@@ -778,6 +745,54 @@ router.get("/settings", async (req, res) => {
     }
 })
 
+router.post("/settings/:courseID", async (req, res) => {
+    let courseID = req.params.courseID;
+    let userID = JWT.decode(req.cookies.token).sub;
+    // list of updates to be set
+    let updates = req.body
+
+    // query course
+    let selectedCourse = await Course.findById(courseID, (err, course) => {
+        if (course)
+            return course.toObject()
+        else
+            return course
+    })
+    // check course exists
+    if (selectedCourse === null)
+        return res.status(500).send("Course not found")
+
+    // check is an instructor
+    if (selectedCourse.instructors.includes(userID)) {
+        // upload image if necessary
+        if (updates.image) {
+            singleUpload(req, res, async function(err) {
+                if (err) {
+                    return res.status(422).send({ errors: [{ title: 'Image Upload Error', detail: err.message }] });
+                }
+                let update = genericCourseUpdate(updates)
+                update.$set["image"] = req.file.location;
+                let updatedCourse = await Course.findByIdAndUpdate(courseID, update).lean();
+                if (updatedCourse) {
+                    return res.send(updatedCourse);
+                } else {
+                    res.status(404).send("Course not found");
+                }
+            })
+        } else {
+            let update = genericCourseUpdate(updates)
+            let updatedCourse = await Course.findByIdAndUpdate(courseID, update).lean();
+            if (updatedCourse) {
+                return res.send(updatedCourse);
+            } else {
+                res.status(404).send("Course not found");
+            }
+        }
+    } else {
+        return res.status(404).send("Not authorized to perform this action")
+    }
+})
+
 //useful helper function for generating MongoDB updates
 function generateUpdate(field, value) {
     const update = {"$set": {}}
@@ -785,6 +800,16 @@ function generateUpdate(field, value) {
         update.$set[field] = value;
     }
     return update;
+}
+
+function genericCourseUpdate (updates = {}) {
+    let returnUpdate = {"$set": {}}
+    for (let key in updates) {
+        if (key !== "image")
+            returnUpdate.$set[key] = updates[key]
+    }
+
+    return returnUpdate
 }
 
 
