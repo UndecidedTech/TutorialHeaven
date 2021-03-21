@@ -5,14 +5,14 @@
       <img :src="course.image" alt="" class="img-thumbnail w-10 h-10 mb-3">
       <div id="avatarDiv" class="custom-file ml-4">
         <label for="avatar"  class="custom-file-label"></label>
-        <input id="avatar" name="avatar" type="file" required >
+        <input id="avatar" name="image" type="file" @change="updateMade($event.target.name)">
       </div>
         <div class="row main-container">
           <div class="left-container">
             <div class="half-containers">
               <div class="form-group">
                 <label for="courseName">Course Name</label>
-                <input type="text" class="font-weight-bold form-control" id="courseName" name="courseName" placeholder="" :value="course.name" required>
+                <input type="text" class="font-weight-bold form-control" id="courseName" name="name" placeholder="" :value="course.name" @change="updateMade($event.target.name)">
               </div>
             </div>
             <div class="half-containers">
@@ -25,7 +25,7 @@
           <div class="right-container">
             <div class="form-group">
               <label for="description">Description</label>
-              <div class="form-floating w-100 transTest"> <textarea class="form-control" placeholder="Leave a comment here" id="description" name="description" rows="10"></textarea></div>
+              <div class="form-floating w-100 transTest"> <textarea class="form-control" placeholder="Leave a comment here" id="description" name="description" rows="10" @change="updateMade($event.target.name)"></textarea></div>
             </div>
           </div>
         </div>
@@ -79,9 +79,7 @@ export default {
   },
   data () {
     return {
-      subjectInput: '',
-      updates: {
-        name: true
+      update: {
       }
     }
   },
@@ -92,6 +90,10 @@ export default {
     }),
     cl (event) {
       console.log(event)
+    },
+    updateMade (type) {
+      console.log(type)
+      this.update[type] = true
     }
   },
   computed: {
