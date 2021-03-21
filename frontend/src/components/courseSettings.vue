@@ -79,7 +79,10 @@ export default {
   },
   data () {
     return {
-      subjectInput: ''
+      subjectInput: '',
+      updates: {
+        name: true
+      }
     }
   },
   methods: {
