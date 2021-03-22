@@ -793,6 +793,22 @@ router.post("/settings/:courseID", async (req, res) => {
     }
 })
 
+router.get("/settings/instructors/", async (req, res) => {
+    console.log("Instructor?")
+    let courseID = req.params.courseID;
+    let instructors = req.query.instructors;
+
+    let userList = await User.find({"_id": { $nin: instructors }}, "", {lean: true})
+    
+    if (userList === null){
+        return res.status(500).send("Course not found")
+    }
+
+    console.log(courseID);
+
+    return res.send(userList)
+})
+
 //useful helper function for generating MongoDB updates
 function generateUpdate(field, value) {
     const update = {"$set": {}}
