@@ -35,7 +35,6 @@ export default {
   mutations: {
     SET_COURSE (state, course) {
       state.course = course
-      console.log('Course Set')
     },
     SET_SELECTEDMODULE (state, value) {
       state.selectedModule = value
@@ -46,6 +45,21 @@ export default {
     SET_USERNAMES (state, value) {
       state.instructors = value.Instructors
       state.students = value.Students
+    },
+    REM_FROM_USERSLIST (state, data) {
+      console.log(state[data.type], data.index)
+      state[data.type].splice(data.index, 1)
+    },
+    REM_FROM_COURSE (state, data) {
+      state.course[data.type].splice(data.index, 1)
+    },
+    ADD_TO_COURSE (state, data) {
+      state.course[data.type].push(data.value)
+    },
+    ADD_USERNAMES (state, data) {
+      if (data.type === 'instructors') {
+        state.instructors.push({ name: data.value })
+      }
     }
   },
 

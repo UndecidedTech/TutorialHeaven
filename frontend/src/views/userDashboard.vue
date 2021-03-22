@@ -177,6 +177,7 @@ export default {
   },
   mounted () {
     $('#createCourseModal').on('hidden.bs.modal', (evt) => {
+      console.log('test')
       this.closeModal()
     })
   }
