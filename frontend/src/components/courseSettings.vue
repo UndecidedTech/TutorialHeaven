@@ -1,6 +1,7 @@
 <template>
 <div class="d-flex justify-content-center align-items-stretch">
-  <div class="flexbox-item w-75">
+  {{isSaved()}} {{update}}
+  <div class="flexbox-item w-75" :class="[isSaved() ? 'saved' : 'notSaved']">
       <h1 class="text-center mt-3">Course Settings</h1>
       <img v-show="!imgPreview" id="courseImage" :src="course.image" alt="" width="300px" height="400px" class="img-thumbnail mb-3">
       <img v-show="imgPreview" id="imagePreview" src="" alt="" width="300px" height="400px" class="img-thumbnail mb-3">
@@ -49,7 +50,7 @@
             </div>
             </div>
           </div>
-      <button class="btn btn-success">Save Changes</button>
+      <button class="btn btn-success" @click="saveSettings()">Save Changes</button>
       <span class="p-3"></span>
       <button class="btn btn-danger" data-toggle="modal" data-target="#deleteCourse">Delete Course</button>
       <div class="modal" tabindex="-1" role="dialog" id="deleteCourse">
@@ -143,16 +144,15 @@ export default {
   data () {
     return {
       imgPreview: false,
-      update: {
-      },
-      tempInput: '',
-      saved: true
+      update: {},
+      tempInput: ''
     }
   },
   methods: {
     ...mapActions({
       postSubject: 'courses/postSubject',
-      getUserNames: 'courses/getUserNames'
+      getUserNames: 'courses/getUserNames',
+      updateSettings: 'courses/updateSettings'
     }),
     ...mapMutations({
       setUserList: 'courses/REM_FROM_USERSLIST',
@@ -194,7 +194,6 @@ export default {
         const index = this.course[type].findIndex(ele => ele === id)
         this.setCourseList({ type, index })
       }
-      this.saved = false
     },
     addItem (type, value) {
       console.log(value)
@@ -211,7 +210,19 @@ export default {
       } else if (type === 'category') {
         this.addToCourse({ type, value })
       }
-      this.saved = false
+    },
+    isSaved () {
+      if (Object.keys(this.update).length === 0) {
+        return true
+      }
+      return false
+    },
+    async saveSettings () {
+      console.log('frontend', this.update)
+      const res = await this.updateSettings(this.update)
+      if (res.status === 200) {
+        this.update = {}
+      }
     }
   },
   computed: {
@@ -274,5 +285,14 @@ export default {
 
 .half-containers {
   flex: 1;
+}
+
+.saved {
+  border: #28a745 solid 3px;
+  border-radius: 10px;
+}
+.notSaved {
+  border: #dc3545 solid 3px;
+  border-radius: 10px;
 }
 </style>
