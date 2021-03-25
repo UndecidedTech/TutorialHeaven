@@ -6,6 +6,7 @@ const User = require("../models/user");
 const { ObjectId } = require("mongodb");
 const multiparty = require("multiparty");
 const Forum = require("../models/forum");
+const Notification = require("../models/notification");
 
 const upload = require("../services/uploadImage");
 const { update } = require("../models/course");
@@ -800,6 +801,20 @@ router.post("/settings/:courseID", async (req, res) => {
                         }
                         // update step
                         await User.findByIdAndUpdate(instructorID, {$addToSet: {"courses": userCourse }}, {new: true})
+
+                        let notifData = {
+                            courseId: courseID,
+                            courseName: updates.name || selectedCourse.name,
+                            title: `You have been added as an instructor for ${updates.name || selectedCourse.name}.`,
+                            content: `Start contributing to ${updates.name || selectedCourse.name} and looking through the course!`,
+                            avi: req.file.location || selectedCourse.image,
+                            resource: {
+                                type: "courses"
+                            },
+                            members: [instructorID]
+                        }
+    
+                        await new Notification(notifData).save()
                     })
                     
                     // remove instructors step
@@ -848,6 +863,20 @@ router.post("/settings/:courseID", async (req, res) => {
                     }
                     // update step
                     await User.findByIdAndUpdate(instructorID, {$addToSet: {"courses": userCourse }}, {new: true})
+                    
+                    let notifData = {
+                        courseId: courseID,
+                        courseName: updates.name || selectedCourse.name,
+                        title: `You have been added as an instructor for ${updates.name || selectedCourse.name}.`,
+                        content: `Start contributing to ${updates.name || selectedCourse.name} and looking through the course!`,
+                        avi: selectedCourse.image,
+                        resource: {
+                            type: "courses"
+                        },
+                        members: [instructorID]
+                    }
+
+                    await new Notification(notifData).save()
                 })
                 
                 // remove instructors step
