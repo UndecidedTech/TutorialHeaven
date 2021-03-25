@@ -23,13 +23,17 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
-app.use(history())
 app.use(cors({
     "origin": ["http://localhost:8081", "http://localhost:8080"],
     "credentials": true,
     "methods": ["OPTIONS", "GET", "POST", "PUT"]
   }));
 
+  console.log(process.env.NODE_ENV)
+
+if (process.env.NODE_ENV === "production") {
+  app.use(history())
+}
 
 mongoose.connect(url, {"useNewUrlParser": true, "useUnifiedTopology": true, "useFindAndModify": false});
 mongoose.Promise = global.Promise;

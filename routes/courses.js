@@ -76,13 +76,12 @@ router.post("/createCourse", async (req, res) => {
        let courseData = {
           "image": req.file.location,
           "name": req.body.name,
-          "subject": [req.body.subject],
+          "category": [req.body.category],
           "subscription": req.body.subscription,
           "description": req.body.description,
           "instructors": [userId],
           "created_by": userId 
         };
-
 
         let courseObject = await new Course(courseData).save();
 
@@ -95,7 +94,7 @@ router.post("/createCourse", async (req, res) => {
         let userCourse = {
             "name": req.body.name,
             "role": "instructor",
-            "subject": [req.body.subject],
+            "category": [req.body.category],
             "creator": true,
             "_id": courseObject.toObject()._id
         }
@@ -747,7 +746,8 @@ router.get("/settings", async (req, res) => {
 
 router.post("/settings/:courseID", async (req, res) => {
     let courseID = req.params.courseID;
-    let userID = JWT.decode(req.cookies.token).sub;
+    // Check userID
+    // let userID = JWT.decode(req.cookies.token).sub;
     // list of updates to be set
     let updates = req.body
 
@@ -763,40 +763,118 @@ router.post("/settings/:courseID", async (req, res) => {
         return res.status(500).send("Course not found")
 
     // check is an instructor
-    if (selectedCourse.instructors.includes(userID)) {
+    // if (selectedCourse.instructors.includes(userID)) {
         // upload image if necessary
         if (updates.image) {
             singleUpload(req, res, async function(err) {
                 if (err) {
                     return res.status(422).send({ errors: [{ title: 'Image Upload Error', detail: err.message }] });
                 }
+
+                // check if instructors is there
+                // diff instructors
                 let update = genericCourseUpdate(updates)
+                // instructor update
+                if (updates.instructors) {
+                    let currInstructors = selectedCourse.instructors;                
+                    let removeInstructors = []
+                    for (let i = 0; i < currInstructors.length; i++) {
+                        if (!updates.instructors.includes(currInstructors[i].toString()))
+                            removeInstructors.push(currInstructors[i].toString())
+                    }
+    
+                    // add new instructors
+                    let addedInstructors = updates.instructors.filter(x => !currInstructors.includes(x));
+                    console.log("added instructors: ", addedInstructors)
+                    console.log("removed instructors: ", removeInstructors)
+    
+                    // add instructors step
+    
+                    addedInstructors.forEach(async (instructorID) => {
+                        let userCourse = {
+                            "name": updates.name || selectedCourse.name,
+                            "role": "instructor",
+                            "category": updates.category || selectedCourse.category,
+                            "creator": false,
+                            "_id": courseID
+                        }
+                        // update step
+                        await User.findByIdAndUpdate(instructorID, {$addToSet: {"courses": userCourse }}, {new: true})
+                    })
+                    
+                    // remove instructors step
+    
+                    removeInstructors.forEach(async (instructorID) => {
+                        // update step
+                        await User.findByIdAndUpdate(instructorID, {$pull: { "courses": { "_id": courseID }}}, { new: true })
+                    })
+    
+                    update.instructors = {$set: { "instructors": updates.instructors }}
+                }
+
                 update.$set["image"] = req.file.location;
-                let updatedCourse = await Course.findByIdAndUpdate(courseID, update).lean();
+                let updatedCourse = await Course.findByIdAndUpdate(courseID, update, {new: true});
                 if (updatedCourse) {
-                    return res.send(updatedCourse);
+                    return res.send(updatedCourse.toObject());
                 } else {
                     res.status(404).send("Course not found");
                 }
             })
         } else {
             let update = genericCourseUpdate(updates)
-            let updatedCourse = await Course.findByIdAndUpdate(courseID, update).lean();
+            // diff instructors 
+            if (updates.instructors) {
+                let currInstructors = selectedCourse.instructors;                
+                let removeInstructors = []
+                for (let i = 0; i < currInstructors.length; i++) {
+                    if (!updates.instructors.includes(currInstructors[i].toString()))
+                        removeInstructors.push(currInstructors[i].toString())
+                }
+
+                // add new instructors
+                let addedInstructors = updates.instructors.filter(x => !currInstructors.includes(x));
+                console.log("added instructors: ", addedInstructors)
+                console.log("removed instructors: ", removeInstructors)
+
+                // add instructors step
+
+                addedInstructors.forEach(async (instructorID) => {
+                    let userCourse = {
+                        "name": updates.name || selectedCourse.name,
+                        "role": "instructor",
+                        "category": updates.category || selectedCourse.category,
+                        "creator": false,
+                        "_id": courseID
+                    }
+                    // update step
+                    await User.findByIdAndUpdate(instructorID, {$addToSet: {"courses": userCourse }}, {new: true})
+                })
+                
+                // remove instructors step
+
+                removeInstructors.forEach(async (instructorID) => {
+                    // update step
+                    await User.findByIdAndUpdate(instructorID, {$pull: { "courses": { "_id": courseID }}}, { new: true })
+                })
+
+                update.$set["instructors"] = updates.instructors
+            }
+            let updatedCourse = await Course.findByIdAndUpdate(courseID, update, { new: true });
             if (updatedCourse) {
-                return res.send(updatedCourse);
+                return res.send(updatedCourse.toObject());
             } else {
                 res.status(404).send("Course not found");
             }
         }
-    } else {
-        return res.status(404).send("Not authorized to perform this action")
-    }
+    // } else {
+    //     return res.status(404).send("Not authorized to perform this action")
+    // }
 })
 
 router.get("/settings/instructors/", async (req, res) => {
     console.log("Instructor?")
     let courseID = req.params.courseID;
-    let instructors = req.query.instructors;
+    let instructors = req.query.instructors || [];
 
     let userList = await User.find({"_id": { $nin: instructors }}, "", {lean: true})
     
@@ -821,8 +899,10 @@ function generateUpdate(field, value) {
 function genericCourseUpdate (updates = {}) {
     let returnUpdate = {"$set": {}}
     for (let key in updates) {
-        if (key !== "image")
+        console.log("key: ", key)
+        if (key !== "image" && key !== "instructors" && key !== "students") {
             returnUpdate.$set[key] = updates[key]
+        }
     }
 
     return returnUpdate
