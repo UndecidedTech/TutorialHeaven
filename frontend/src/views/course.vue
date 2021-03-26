@@ -1,16 +1,21 @@
 <template>
 <div class="flex-container">
-  <div class="editor-sidebar" v-show="open">
+  <div class="editor-sidebar d-flex flex-column justify-content-between" v-if="isShown">
+    <div>
     <div class="p-4"><h1 class="d-inline">Menu</h1></div>
     <div class="list-group" id="list-tab" role="tablist">
-      <div> <a class="list-group-item list-group-item-action pointer" :class="[$route.matched[0].path == '/course/:courseID/:sectionID?/:moduleID?/:contentID?' ? 'th-active' : '']" id="sectionItem" role="tab" @click="$router.push({ name: 'course', params: { courseID: course._id } })">Sections</a> </div>
-      <div> <a class="list-group-item list-group-item-action pointer" :class="[$route.matched[0].path == '/forum/:courseID' ? 'th-active' : '']" id="sectionItem" role="tab" @click="$router.push({ name: 'forum', params: { courseID: course._id } })">Forum</a> </div>
-      <div> <a class="list-group-item list-group-item-action pointer" :class="[$route.matched[0].path == '/course/:courseID/stats' ? 'th-active' : '']" id="sectionItem" role="tab" @click="$router.push({ name: 'courseStats', params: { courseID: course._id } })">Statistics</a> </div>
+      <div> <a class="list-group-item list-group-item-action pointer font-weight-bold" :class="[$route.matched[0].path == '/course/:courseID/:sectionID?/:moduleID?/:contentID?' ? 'th-active' : '']" id="sectionItem" role="tab" @click="$router.push({ name: 'course', params: { courseID: course._id } })">Sections</a> </div>
+      <div> <a class="list-group-item list-group-item-action pointer font-weight-bold" :class="[$route.matched[0].path == '/course/:courseID/forum/:threadID' ? 'th-active' : '']" id="sectionItem" role="tab" @click="$router.push({ name: 'forum', params: { courseID: course._id } })">Forum</a> </div>
+      <div> <a class="list-group-item list-group-item-action pointer font-weight-bold" :class="[$route.matched[0].path == '/course/:courseID/stats' ? 'th-active' : '']" id="sectionItem" role="tab" @click="$router.push({ name: 'courseStats', params: { courseID: course._id } })">Statistics</a> </div>
     </div>
+    </div>
+    <div> <a class="list-group-item list-group-item-action pointer fa-2x" :class="[$route.matched[0].path == '/course/:courseID/settings' ? 'th-active' : '']" @click="$router.push({ name: 'courseSettings', params: { courseID: course._id } })"><i class="fas fa-cogs"></i>  Settings</a></div>
   </div>
-  <button class="th-sub d-inline" @click="shrink()"><i class="fas fa-angle-double-left" v-if="open"/><i class="fas fa-angle-double-right" v-else/></button>
+  <button class="th-sub d-inline" @click="shrink()"><font-awesome-icon v-if="isShown" :icon="['fas', 'angle-double-left']"/><font-awesome-icon v-else :icon="['fas', 'angle-double-right']"/> </button>
   <div class="editor-item">
     <statsDashboard v-if="$route.matched[0].path == '/course/:courseID/stats'"/>
+    <courseSettings v-else-if="$route.matched[0].path == '/course/:courseID/settings'"/>
+    <forum v-else-if="$route.matched[0].path == '/course/:courseID/forum/:threadID?'"/>
     <sections v-else-if="!$route.params.sectionID && !$route.params.moduleID" :sections="course.sections"/>
     <component v-else v-bind:section="course.sections[courseInfo.sectionIndex]" v-bind:sectionIndex="courseInfo.sectionIndex" v-bind:module="course.sections[courseInfo.sectionIndex].modules[courseInfo.moduleIndex]" v-bind:moduleIndex="courseInfo.moduleIndex" :is="componentRender" />
   </div>
@@ -41,13 +46,17 @@ import sections from '../components/sections'
 import assessment from '../components/assessment'
 import moduleContent from '../components/moduleContent'
 import statsDashboard from '../views/statsDashboard'
+import courseSettings from '../components/courseSettings'
+import forum from '../views/forum'
 
 export default {
   components: {
     sections,
     moduleContent,
     assessment,
-    statsDashboard
+    statsDashboard,
+    courseSettings,
+    forum
   },
   name: 'course',
   data () {
@@ -56,7 +65,7 @@ export default {
         name: '',
         courseID: this.$route.params.courseID
       },
-      open: true,
+      isShown: true,
       activeSection: 0
     }
   },
@@ -70,10 +79,10 @@ export default {
       getThreads: 'forum/getThreads'
     }),
     shrink () {
-      if (this.open) {
-        this.open = false
+      if (this.isShown) {
+        this.isShown = false
       } else {
-        this.open = true
+        this.isShown = true
       }
     }
   },
@@ -156,5 +165,10 @@ export default {
 .th-active {
   background-color: rgb(89, 177, 180);
   border-color: rgb(89, 177, 180);
+}
+.th-bottom{
+  position: absolute;
+  bottom: 0;
+  width: 100%;
 }
 </style>

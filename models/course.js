@@ -1,8 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const contentSchema = new Schema({
-    type: {
+const contentSchema = new Schema({    type: {
         enum: ["text", "multiple-choice", "open-ended", "matching", "trueFalse"],
         type: String,
         required: true
@@ -92,8 +91,12 @@ const courseSchema = new Schema({
         required: false,
         default: "https://tutorialheaven.s3.us-east-2.amazonaws.com/defaultAvatar.png"
     },
-    subject: {
+    category: {
         type: Array,
+        default: [] 
+    },
+    subjects: {
+        type: [String],
         default: []
     },
     sections: [sectionSchema],

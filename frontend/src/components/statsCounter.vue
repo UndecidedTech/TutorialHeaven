@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div class="card mx-auto bg-secondary" style="width: 18rem;">
+  <div class="card mx-auto bg-color" style="width: 18rem;">
   <div class="card-body">
     <div class="text-center"><i class="fas fa-user-graduate fa-2x"></i></div>
     <h5 class="card-title text-center">{{ title }}</h5>
@@ -32,5 +32,8 @@ export default {
 <style scoped lang="css">
 .th-center {
   text-align: center
+}
+.bg-color {
+  background-color: cadetblue;
 }
 </style>

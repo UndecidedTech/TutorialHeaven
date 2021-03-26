@@ -1,6 +1,6 @@
 <template>
 <div class="p-0 d-flex flex-column align-items-center">
-  <div class="card d-flex threadCard mb-3 mt-3">
+  <div class="card threadCard mb-3 mt-3">
         <div class="row row-0 justify-content-center">
         <div class="col-md-3">
             <img
@@ -153,5 +153,8 @@ export default {
 }
 .red {
   color: #ff253a
+}
+.threadCard {
+  width: 100%;
 }
 </style>

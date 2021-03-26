@@ -44,6 +44,7 @@ export default {
       fd.append('title', newThread.title)
       fd.append('sectionID', newThread.relation.sectionID)
       fd.append('moduleID', newThread.relation.moduleID)
+      console.log(fd)
       const res = await axios.post('/api/forum', fd)
       if (res.status === 200) {
         commit('SET_THREADS', res.data)

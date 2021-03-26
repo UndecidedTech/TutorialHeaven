@@ -35,13 +35,25 @@ const resultSchema = new Schema({
     }
 })
 
+const gradeSchema = new Schema({
+    timestamp:{
+        type: Date,
+        required: false,
+        default: Date()
+    },
+    score: {
+        type: Number,
+        required: true
+    }
+})
+
 const courseSchema = new Schema({
     name: {
         type: String,
         required: true
     },
     subject: {
-        type: Array,
+        type: [String],
         required: true
     },
     role: {
@@ -63,7 +75,7 @@ const courseSchema = new Schema({
         default: Date()
     },
     grades: {
-        type: [Number],
+        type: [gradeSchema],
         default: []
     }
 })

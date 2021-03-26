@@ -8,6 +8,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
 const rateLimit = require("express-rate-limit");
+const history = require("connect-history-api-fallback");
 
 // connection string info
 const db_ip = process.env.DB_IP;
@@ -28,6 +29,11 @@ app.use(cors({
     "methods": ["OPTIONS", "GET", "POST", "PUT"]
   }));
 
+  console.log(process.env.NODE_ENV)
+
+if (process.env.NODE_ENV === "production") {
+  app.use(history())
+}
 
 mongoose.connect(url, {"useNewUrlParser": true, "useUnifiedTopology": true, "useFindAndModify": false});
 mongoose.Promise = global.Promise;

@@ -1,29 +1,21 @@
 
 <div>
-<canvas id="myChart" :width="width" :height="height"></canvas>
+<canvas id="myChart" width="200" height="200"></canvas>
 </div>
 
 <script>
-import { Line, mixins } from 'vue-chartjs'
+import { Pie, mixins } from 'vue-chartjs'
 const { reactiveProp } = mixins
 
 export default {
-  name: 'lineChart',
-  extends: Line,
+  name: 'pieChart',
+  extends: Pie,
   mixins: [reactiveProp],
   components: {
   },
   props: {
     chartData: Object,
-    chartTitle: String,
-    width: {
-      type: Number,
-      default: 200
-    },
-    height: {
-      type: Number,
-      default: 200
-    }
+    chartTitle: String
   },
   data () {
     return {
@@ -37,14 +29,6 @@ export default {
         title: {
           display: true,
           text: this.chartTitle
-        },
-        tooltips: {
-          mode: 'index',
-          intersect: false
-        },
-        hover: {
-          mode: 'nearest',
-          intersect: true
         }
       }
     }

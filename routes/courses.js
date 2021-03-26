@@ -6,8 +6,10 @@ const User = require("../models/user");
 const { ObjectId } = require("mongodb");
 const multiparty = require("multiparty");
 const Forum = require("../models/forum");
+const Notification = require("../models/notification");
 
 const upload = require("../services/uploadImage");
+const { update } = require("../models/course");
 const singleUpload = upload.single('image');
 
 /** 
@@ -75,13 +77,12 @@ router.post("/createCourse", async (req, res) => {
        let courseData = {
           "image": req.file.location,
           "name": req.body.name,
-          "subject": [req.body.subject],
+          "category": [req.body.category],
           "subscription": req.body.subscription,
           "description": req.body.description,
           "instructors": [userId],
           "created_by": userId 
         };
-
 
         let courseObject = await new Course(courseData).save();
 
@@ -94,7 +95,7 @@ router.post("/createCourse", async (req, res) => {
         let userCourse = {
             "name": req.body.name,
             "role": "instructor",
-            "subject": [req.body.subject],
+            "category": [req.body.category],
             "creator": true,
             "_id": courseObject.toObject()._id
         }
@@ -557,6 +558,364 @@ router.post("/deleteModuleContent", async (req, res) => {
 })
 
 
+router.post("/settings/subjects", async (req, res) => {
+    let userID = JWT.decode(req.cookies.token).sub;
+    let courseID = req.body.courseID;
+    let subject = req.body.subject;
+
+    console.log(req.body);
+
+    let selectedCourse = await Course.findById(courseID, (err, course) => {
+        console.log(course);
+        return course.toObject()
+    });
+
+    // check user is instructor
+    if (selectedCourse.instructors.includes(userID)){
+        if (selectedCourse.subjects.includes(subject)) {
+            let update = {$pull: {}};
+            update.$pull["subjects"] = subject;
+            let settingsUpdate = await Course.findOneAndUpdate({ "_id": courseID }, update, { new: true })
+            console.log(settingsUpdate)
+            return res.send(settingsUpdate)
+        } else {
+            let update = { $addToSet: {}}
+            update.$addToSet["subjects"] = subject;
+            let settingsUpdate = await Course.findOneAndUpdate({ "_id": courseID }, update, { new: true })
+            console.log(settingsUpdate)
+            return res.send(settingsUpdate)
+        }
+    } else {
+        return res.status(500).send("User is not permitted to perform this action")
+    }
+})
+
+router.post("/settings/name", async (req, res) => {
+    let userID = JWT.decode(req.cookies.token).sub;
+    let courseID = req.body.courseID;
+    let name = req.body.name;
+
+    let selectedCourse = await Course.findById(courseID, (err, course) => {
+        console.log(course);
+        return course.toObject()
+    });
+    // check user is instructor
+    if (selectedCourse.instructors.includes(userID)){
+        let update = generateUpdate("name", name)
+        let settingsUpdate = await Course.findOneAndUpdate({ "_id": courseID }, update, { new: true })
+        return res.send(settingsUpdate)
+    } else {
+        return res.status(500).send("User is not permitted to perform this action")
+    }
+})
+
+router.post("/settings/description", async (req, res) => {
+    let userID = JWT.decode(req.cookies.token).sub;
+    let courseID = req.body.courseID;
+    let description = req.body.description;
+
+    let selectedCourse = await Course.findById(courseID, (err, course) => {
+        console.log(course);
+        return course.toObject()
+    });
+    // check user is instructor
+    if (selectedCourse.instructors.includes(userID)){
+        let update = generateUpdate("description", description)
+        let settingsUpdate = await Course.findOneAndUpdate({ "_id": courseID }, update, { new: true })
+        return res.send(settingsUpdate)
+    } else {
+        return res.status(500).send("User is not permitted to perform this action")
+    }
+})
+
+router.post("/settings/students", async (req, res) => {
+    let userID = JWT.decode(req.cookies.token).sub;
+    let courseID = req.body.courseID;
+    let studentID = req.body.studentID;
+
+    let selectedCourse = await Course.findById(courseID, (err, course) => {
+        console.log(course);
+        return course.toObject()
+    });
+
+    if (selectedCourse.instructors.includes(userID)) {
+        if (selectedCourse.students.includes(studentID)){
+            let update = {$pull: {}};
+            update.$pull["students.$"] = studentID;
+            let settingsUpdate = await Course.findOneAndUpdate({ "_id": courseID, "students._id": studentID }, update, { new: true })
+            let Students = await User.find({"_id": { $in: selectedCourse.students }}, "", {lean: true})
+        
+            Students = Students.map((student) => {
+                return {
+                    "name": `${student.firstname} ${student.lastname}`,
+                    "_id": student._id
+                }
+            })
+            
+            return res.send({ settingsUpdate, Students })
+        } else {
+            return res.status(500).send("Student doesn't exist in the course")
+        }
+    } else {
+        return res.status(500).send("User is not permitted to perform this action")
+    }
+})
+
+router.post("/settings/instructors", async (req, res) => {
+    let userID = JWT.decode(req.cookies.token).sub;
+    let courseID = req.body.courseID;
+    let instructorID = req.body.instructorID;
+
+    let selectedCourse = await Course.findById(courseID, (err, course) => {
+        console.log(course);
+        return course.toObject()
+    });
+
+    if (selectedCourse.instructors.includes(userID)) {
+        if (selectedCourse.instructors.includes(instructorID)){
+            let update = {$pull: {}};
+            update.$pull["students.$"] = studentID;
+            let settingsUpdate = await Course.findOneAndUpdate({ "_id": courseID, "students._id": studentID }, update, { new: true })
+    
+            let Instructors = await User.find({"_id": { $in: selectedCourse.instructors }}, "", {lean: true})
+            
+            Instructors = Instructors.map((instructor) => {
+                return {
+                    "name": `${instructor.firstname} ${instructor.lastname}`,
+                    "_id": instructor._id
+                }
+            })
+
+            return res.send({settingsUpdate, Instructors})
+        } else {
+            let update = {$addToSet: {}};
+            update.$addToSet["instructors.$"] = instructorID;
+            let settingsUpdate = await Course.findOneAndUpdate({ "_id": courseID, "instructors._id": studentID }, update, { new: true })
+            let Instructors = await User.find({"_id": { $in: selectedCourse.instructors }}, "", {lean: true})
+            
+            Instructors = Instructors.map((instructor) => {
+                return {
+                    "name": `${instructor.firstname} ${instructor.lastname}`,
+                    "_id": instructor._id
+                }
+            })
+
+            return res.send({settingsUpdate, Instructors})
+        }
+    } else {
+        return res.status(500).send("User is not permitted to perform this action")
+    }
+})
+
+router.get("/settings", async (req, res) => {
+    let userID = JWT.decode(req.cookies.token).sub;
+    let courseID = req.query.courseID;
+
+    console.log(courseID);
+
+    let selectedCourse = await Course.findById(courseID, (err, course) => {
+        console.log(course);
+        return course.toObject()
+    });
+
+    if (selectedCourse.instructors.includes(userID)) {
+        let Students = await User.find({"_id": { $in: selectedCourse.students }}, "", {lean: true})
+        
+        Students = Students.map((student) => {
+            return {
+                "name": `${student.firstname} ${student.lastname}`,
+                "_id": student._id
+            }
+        })
+
+        let Instructors = await User.find({"_id": { $in: selectedCourse.instructors }}, "", {lean: true})
+        
+        Instructors = Instructors.map((instructor) => {
+            return {
+                "name": `${instructor.firstname} ${instructor.lastname}`,
+                "_id": instructor._id
+            }
+        })
+
+        console.log("Students: ", Students, "Instructors:", Instructors)
+
+        return res.send({ Students, Instructors })
+    } else {
+        return res.status(500).send("User is not permitted to perform this action")
+    }
+})
+
+router.post("/settings/:courseID", async (req, res) => {
+    let courseID = req.params.courseID;
+    // Check userID
+    // let userID = JWT.decode(req.cookies.token).sub;
+    // list of updates to be set
+    let updates = req.body
+
+    // query course
+    let selectedCourse = await Course.findById(courseID, (err, course) => {
+        if (course)
+            return course.toObject()
+        else
+            return course
+    })
+    // check course exists
+    if (selectedCourse === null)
+        return res.status(500).send("Course not found")
+
+    // check is an instructor
+    // if (selectedCourse.instructors.includes(userID)) {
+        // upload image if necessary
+        if (updates.image) {
+            singleUpload(req, res, async function(err) {
+                if (err) {
+                    return res.status(422).send({ errors: [{ title: 'Image Upload Error', detail: err.message }] });
+                }
+
+                // check if instructors is there
+                // diff instructors
+                let update = genericCourseUpdate(updates)
+                // instructor update
+                if (updates.instructors) {
+                    let currInstructors = selectedCourse.instructors;                
+                    let removeInstructors = []
+                    for (let i = 0; i < currInstructors.length; i++) {
+                        if (!updates.instructors.includes(currInstructors[i].toString()))
+                            removeInstructors.push(currInstructors[i].toString())
+                    }
+    
+                    // add new instructors
+                    let addedInstructors = updates.instructors.filter(x => !currInstructors.includes(x));
+                    console.log("added instructors: ", addedInstructors)
+                    console.log("removed instructors: ", removeInstructors)
+    
+                    // add instructors step
+    
+                    addedInstructors.forEach(async (instructorID) => {
+                        let userCourse = {
+                            "name": updates.name || selectedCourse.name,
+                            "role": "instructor",
+                            "category": updates.category || selectedCourse.category,
+                            "creator": false,
+                            "_id": courseID
+                        }
+                        // update step
+                        await User.findByIdAndUpdate(instructorID, {$addToSet: {"courses": userCourse }}, {new: true})
+
+                        let notifData = {
+                            courseId: courseID,
+                            courseName: updates.name || selectedCourse.name,
+                            title: `You have been added as an instructor for ${updates.name || selectedCourse.name}.`,
+                            content: `Start contributing to ${updates.name || selectedCourse.name} and looking through the course!`,
+                            avi: req.file.location || selectedCourse.image,
+                            resource: {
+                                type: "courses"
+                            },
+                            members: [instructorID]
+                        }
+    
+                        await new Notification(notifData).save()
+                    })
+                    
+                    // remove instructors step
+    
+                    removeInstructors.forEach(async (instructorID) => {
+                        // update step
+                        await User.findByIdAndUpdate(instructorID, {$pull: { "courses": { "_id": courseID }}}, { new: true })
+                    })
+    
+                    update.instructors = {$set: { "instructors": updates.instructors }}
+                }
+
+                update.$set["image"] = req.file.location;
+                let updatedCourse = await Course.findByIdAndUpdate(courseID, update, {new: true});
+                if (updatedCourse) {
+                    return res.send(updatedCourse.toObject());
+                } else {
+                    res.status(404).send("Course not found");
+                }
+            })
+        } else {
+            let update = genericCourseUpdate(updates)
+            // diff instructors 
+            if (updates.instructors) {
+                let currInstructors = selectedCourse.instructors;                
+                let removeInstructors = []
+                for (let i = 0; i < currInstructors.length; i++) {
+                    if (!updates.instructors.includes(currInstructors[i].toString()))
+                        removeInstructors.push(currInstructors[i].toString())
+                }
+
+                // add new instructors
+                let addedInstructors = updates.instructors.filter(x => !currInstructors.includes(x));
+                console.log("added instructors: ", addedInstructors)
+                console.log("removed instructors: ", removeInstructors)
+
+                // add instructors step
+
+                addedInstructors.forEach(async (instructorID) => {
+                    let userCourse = {
+                        "name": updates.name || selectedCourse.name,
+                        "role": "instructor",
+                        "category": updates.category || selectedCourse.category,
+                        "creator": false,
+                        "_id": courseID
+                    }
+                    // update step
+                    await User.findByIdAndUpdate(instructorID, {$addToSet: {"courses": userCourse }}, {new: true})
+                    
+                    let notifData = {
+                        courseId: courseID,
+                        courseName: updates.name || selectedCourse.name,
+                        title: `You have been added as an instructor for ${updates.name || selectedCourse.name}.`,
+                        content: `Start contributing to ${updates.name || selectedCourse.name} and looking through the course!`,
+                        avi: selectedCourse.image,
+                        resource: {
+                            type: "courses"
+                        },
+                        members: [instructorID]
+                    }
+
+                    await new Notification(notifData).save()
+                })
+                
+                // remove instructors step
+
+                removeInstructors.forEach(async (instructorID) => {
+                    // update step
+                    await User.findByIdAndUpdate(instructorID, {$pull: { "courses": { "_id": courseID }}}, { new: true })
+                })
+
+                update.$set["instructors"] = updates.instructors
+            }
+            let updatedCourse = await Course.findByIdAndUpdate(courseID, update, { new: true });
+            if (updatedCourse) {
+                return res.send(updatedCourse.toObject());
+            } else {
+                res.status(404).send("Course not found");
+            }
+        }
+    // } else {
+    //     return res.status(404).send("Not authorized to perform this action")
+    // }
+})
+
+router.get("/settings/instructors/", async (req, res) => {
+    console.log("Instructor?")
+    let courseID = req.params.courseID;
+    let instructors = req.query.instructors || [];
+
+    let userList = await User.find({"_id": { $nin: instructors }}, "", {lean: true})
+    
+    if (userList === null){
+        return res.status(500).send("Course not found")
+    }
+
+    console.log(courseID);
+
+    return res.send(userList)
+})
+
 //useful helper function for generating MongoDB updates
 function generateUpdate(field, value) {
     const update = {"$set": {}}
@@ -564,6 +923,18 @@ function generateUpdate(field, value) {
         update.$set[field] = value;
     }
     return update;
+}
+
+function genericCourseUpdate (updates = {}) {
+    let returnUpdate = {"$set": {}}
+    for (let key in updates) {
+        console.log("key: ", key)
+        if (key !== "image" && key !== "instructors" && key !== "students") {
+            returnUpdate.$set[key] = updates[key]
+        }
+    }
+
+    return returnUpdate
 }
 
 
