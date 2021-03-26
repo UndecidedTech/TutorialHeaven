@@ -10,7 +10,7 @@
       <div class="card-body">
           <multipleChoice v-if="question.type === 'multiple-choice'" v-bind:question="question" v-bind:index="index" v-bind:submitted="true"/>
           <trueFalse v-else-if="question.type === 'trueFalse'" v-bind:question="question" v-bind:index="index" v-bind:submitted="true"/>
-          <openQuestion v-else-if="question.type === 'openQuestion'" v-bind:question="question" v-bind:index="index" v-bind:submitted="true"/>
+          <openQuestion v-else-if="question.type === 'open-ended'" v-bind:question="question" v-bind:index="index" v-bind:submitted="true"/>
           <button v-if="question.relation" class="btn btn-warning"  @click="goToRelation(question.relation)">Related Material</button>
         </div>
       </div>
@@ -18,7 +18,7 @@
       <div class="card-body">
         <multipleChoice v-if="question.type === 'multiple-choice'" v-bind:question="question" v-bind:index="index"/>
         <trueFalse v-else-if="question.type === 'trueFalse'" v-bind:question="question" v-bind:index="index"/>
-        <openQuestion v-else-if="question.type === 'openQuestion'" v-bind:question="question" v-bind:index="index"/>
+        <openQuestion v-else-if="question.type === 'open-ended'" v-bind:question="question" v-bind:index="index"/>
       </div>
     </div>
     </div>
