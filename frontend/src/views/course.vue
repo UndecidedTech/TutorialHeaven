@@ -9,7 +9,7 @@
       <div> <a class="list-group-item list-group-item-action pointer font-weight-bold" :class="[$route.matched[0].path == '/course/:courseID/stats' ? 'th-active' : '']" id="sectionItem" role="tab" @click="$router.push({ name: 'courseStats', params: { courseID: course._id } })">Statistics</a> </div>
     </div>
     </div>
-    <div> <a class="list-group-item list-group-item-action pointer fa-2x" :class="[$route.matched[0].path == '/course/:courseID/settings' ? 'th-active' : '']" @click="$router.push({ name: 'courseSettings', params: { courseID: course._id } })"><i class="fas fa-cogs"></i>  Settings</a></div>
+    <div v-if="course.instructors.includes(user._id)"> <a class="list-group-item list-group-item-action pointer fa-2x" :class="[$route.matched[0].path == '/course/:courseID/settings' ? 'th-active' : '']" @click="$router.push({ name: 'courseSettings', params: { courseID: course._id } })"><i class="fas fa-cogs"></i>  Settings</a></div>
   </div>
   <button class="th-sub d-inline" @click="shrink()"><font-awesome-icon v-if="isShown" :icon="['fas', 'angle-double-left']"/><font-awesome-icon v-else :icon="['fas', 'angle-double-right']"/> </button>
   <div class="editor-item">

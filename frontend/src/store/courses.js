@@ -77,7 +77,7 @@ export default {
       commit('SET_COURSE', res.data)
     },
     async getCourse ({ commit }, courseID) {
-      console.log(courseID)
+      console.log('Getting course', courseID)
       const res = await axios.get(`/api/courses/getCourse/${courseID}`)
       if (res.status === 200) {
         commit('SET_COURSE', res.data)
@@ -205,7 +205,7 @@ export default {
         commit('SET_USERNAMES', res.data)
       }
     },
-    async updateSettings ({ _, state }, data) {
+    async updateSettings ({ _, state, dispatch }, data) {
       const updates = {}
       for (const key in data) {
         if (data[key] === true) {
@@ -219,12 +219,12 @@ export default {
         }
       }
       console.log('backend', updates)
-      // const res = await axios.post(`/api/courses/settings/${state.course._id}`, updates)
-      // if (res.status === 200) {
-      //   this.getUserNames(state.course._id)
-      //   console.log('response', res.data)
-      //   return res
-      // }
+      const res = await axios.post(`/api/courses/settings/${state.course._id}`, updates)
+      if (res.status === 200) {
+        dispatch('getUserNames', state.course._id)
+        console.log('response', res.data)
+        return res
+      }
     }
   }
 }

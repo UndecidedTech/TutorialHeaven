@@ -11,10 +11,10 @@
                     <div v-if="course.role ==='instructor'">
                       <a class="classLink">
                       <div class="d-inline fa-2x"><i class="fas fa-graduation-cap pr-2"></i></div>{{ course.name }}</a>
-                      <button @click="editCourse(course.name, course._id)" type="button" class="btn btn-sm editCourseButton">+</button>
+                      <button @click="editCourse(course._id)" type="button" class="btn btn-sm editCourseButton">+</button>
                     </div>
                     <div v-else>
-                      <a class="classLink pointer" @click="viewCourse(course.name, course._id)">
+                      <a class="classLink pointer" @click="viewCourse(course._id)">
                       <div class="d-inline fa-2x"><i class="fas fa-book pr-2"></i></div>{{ course.name }}</a>
                     </div>
                 </div>
@@ -63,13 +63,18 @@
               <input v-model="newCourse.name" id="courseName" type="text" class="form-control" required>
               <label for="courseDescription">Description</label>
               <textarea v-model="newCourse.description" rows="5" cols="48"/>
-              <label for="subject">Subject</label>
-              <select v-model="newCourse.subject" class="custom-select" id="subject" required>
-              <option value="Greek History">Greek History</option>
-              <option value="Roman History">Roman History</option>
-              <option value="Japanese History">Japanese History</option>
-              <option value="Other">Other</option>
-              </select>
+              <div>
+                <label for="newCategory">Category </label>
+                <div id="newCategory" class="input-group mb-3">
+                  <input type="text" v-model="tempInput" class="form-control" id="newCategory" placeholder="Category" aria-label="Category" aria-describedby="Category">
+                  <div class="input-group-append">
+                    <button @click="addItem('categories', tempInput)" class="btn btn-primary" type="button">Add</button>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div v-for="(category, index) in newCourse.categories" :key="index" class="card m-1"><div class="card-body m-2 p-0 th-center">{{category}}<font-awesome-icon @click="removeItem('categories', category)" style="color: red;" class="float-right center icon m-2" :icon="['fas','times']"/></div></div>
+              </div>
               <label for="fileUpload">Image Upload</label>
               <form>
                 <div class="custom-file">
@@ -101,10 +106,11 @@ export default {
         image: null,
         description: null,
         name: null,
-        subject: null,
+        categories: [],
         subscription: false
       },
-      marked: false
+      marked: false,
+      tempInput: ''
     }
   },
   methods: {
@@ -114,11 +120,11 @@ export default {
       getNotifications: 'user/getNotifications',
       markRead: 'user/markRead'
     }),
-    editCourse (courseName, id) {
-      this.$router.push({ name: 'course', params: { courseName: courseName, courseID: id } })
+    editCourse (id) {
+      this.$router.push({ name: 'course', params: { courseID: id } })
     },
-    viewCourse (courseName, id) {
-      this.$router.push({ name: 'course', params: { courseName: courseName, courseID: id } })
+    viewCourse (id) {
+      this.$router.push({ name: 'course', params: { courseID: id } })
     },
     selectedFile (event) {
       console.log('triggered')
@@ -127,6 +133,7 @@ export default {
     },
     closeModal () {
       this.newCourse = {
+        categories: [],
         image: null,
         description: null,
         name: null,
@@ -161,6 +168,22 @@ export default {
       }
 
       this.getNotifications({ userID: this.user._id, marked: this.marked })
+    },
+    addItem (type, value) {
+      console.log(value)
+      if (type === 'categories' && value !== '') {
+        if (!this.course.categories.includes(value)) {
+          this.newCourse.categories.push(value)
+        }
+      }
+    },
+    removeItem (type, id) {
+      console.log(type, id)
+      if (type === 'categories') {
+        const index = this.newCourse.categories.indexOf(id)
+        console.log('index', index)
+        this.newCourse.categories.splice(index)
+      }
     }
   },
   computed: {
