@@ -1,6 +1,5 @@
 <template>
 <div class="d-flex justify-content-center align-items-stretch">
-  {{isSaved()}} {{update}}
   <div class="flexbox-item w-75" :class="[isSaved() ? 'saved' : 'notSaved']">
       <h1 class="text-center mt-3">Course Settings</h1>
       <img v-show="!imgPreview" id="courseImage" :src="course.image" alt="" width="300px" height="400px" class="img-thumbnail mb-3">
@@ -38,7 +37,7 @@
         </div>
         <div class="row">
           <div class="col-md-6 mb-3">
-            <div class="card test" style="width: 100%;">
+            <div class="card test" style="width: 100%;max-height: 300px;overflow: auto;">
               <h5 class="card-header">Students</h5>
               <div v-for="(student, index) in studentsName" :key="index" class="card m-1"><div class="card-body m-2 p-0">{{student.name}}<font-awesome-icon @click="removeItem('students', student._id)" style="color: red;" class="float-right center icon m-2 pointer" :icon="['fas','times']"/></div></div>
             </div>
