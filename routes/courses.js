@@ -926,10 +926,10 @@ function generateUpdate(field, value) {
 }
 
 function genericCourseUpdate (updates = {}) {
+    allowedKeys = ["name", "description", "categories", "subjects"]
     let returnUpdate = {"$set": {}}
     for (let key in updates) {
-        console.log("key: ", key)
-        if (key !== "image" && key !== "instructors" && key !== "students") {
+        if (allowedKeys.includes(key)) {
             returnUpdate.$set[key] = updates[key]
         }
     }
