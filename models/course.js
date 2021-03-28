@@ -91,7 +91,7 @@ const courseSchema = new Schema({
         required: false,
         default: "https://tutorialheaven.s3.us-east-2.amazonaws.com/defaultAvatar.png"
     },
-    category: {
+    categories: {
         type: Array,
         default: [] 
     },

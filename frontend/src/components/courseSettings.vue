@@ -21,7 +21,7 @@
             <div class="half-containers">
               <div class="card">
                 <h5 class="card-header">Categories <button class="btn btn-sm btn-primary float-right" data-toggle="modal" data-target="#addCategory">Add</button></h5>
-                <div v-for="(category, index) in course.category" :key="index" class="card m-1"><div class="card-body m-2 p-0 th-center">{{category}}<font-awesome-icon @click="removeItem('category', category)" style="color: red;" class="float-right center icon m-2" :icon="['fas','times']"/></div></div>
+                <div v-for="(category, index) in course.categories" :key="index" class="card m-1"><div class="card-body m-2 p-0 th-center">{{category}}<font-awesome-icon @click="removeItem('categories', category)" style="color: red;" class="float-right center icon m-2" :icon="['fas','times']"/></div></div>
               </div>
             </div>
           </div>
@@ -83,7 +83,7 @@
               <input id="newCategory" v-model="tempInput" type="text" name="category">
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-success" data-dismiss="modal" @click="addItem('category', tempInput)">Add</button>
+              <button type="button" class="btn btn-success" data-dismiss="modal" @click="addItem('categories', tempInput)">Add</button>
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
           </div>
@@ -190,7 +190,7 @@ export default {
       } else if (type === 'subjects') {
         const index = this.course[type].findIndex(ele => ele === id)
         this.setCourseList({ type, index })
-      } else if (type === 'category') {
+      } else if (type === 'categories') {
         const index = this.course[type].findIndex(ele => ele === id)
         this.setCourseList({ type, index })
       }
@@ -198,7 +198,7 @@ export default {
     addItem (type, value) {
       console.log(value)
       this.update[type] = true
-      console.log(this.update)
+      console.log('update: ', this.update)
       if (type === 'instructors') {
         this.addUsernames({ type, value })
         this.addToCourse({ type, value })
@@ -207,7 +207,7 @@ export default {
       } else if (type === 'subjects') {
         console.log(value)
         this.addToCourse({ type, value })
-      } else if (type === 'category') {
+      } else if (type === 'categories') {
         this.addToCourse({ type, value })
       }
     },
