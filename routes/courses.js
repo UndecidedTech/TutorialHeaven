@@ -77,7 +77,7 @@ router.post("/createCourse", async (req, res) => {
        let courseData = {
           "image": req.file.location,
           "name": req.body.name,
-          "category": [req.body.category],
+          "categories": req.body.categories,
           "subscription": req.body.subscription,
           "description": req.body.description,
           "instructors": [userId],
@@ -95,7 +95,7 @@ router.post("/createCourse", async (req, res) => {
         let userCourse = {
             "name": req.body.name,
             "role": "instructor",
-            "category": [req.body.category],
+            "categories": req.body.categories,
             "creator": true,
             "_id": courseObject.toObject()._id
         }
