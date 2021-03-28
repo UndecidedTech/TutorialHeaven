@@ -120,7 +120,10 @@
             </div>
             <div class="modal-body">
               <label for="newInstructor">Instructor</label>
-              <input id="newInstructor" type="text" name="instructor" v-model="tempInput">
+              <select class="form-control input" id="newInstructor">
+              <option value="">...</option>
+              <option v-for="(test, index) in _" :key="index" :value="test._id" :id="test.name">{{test.name}}</option>
+              </select>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-success" data-dismiss="modal" @click="addItem('instructors', tempInput)">Add</button>

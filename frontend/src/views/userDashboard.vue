@@ -11,10 +11,10 @@
                     <div v-if="course.role ==='instructor'">
                       <a class="classLink">
                       <div class="d-inline fa-2x"><i class="fas fa-graduation-cap pr-2"></i></div>{{ course.name }}</a>
-                      <button @click="editCourse(course.name, course._id)" type="button" class="btn btn-sm editCourseButton">+</button>
+                      <button @click="editCourse(course._id)" type="button" class="btn btn-sm editCourseButton">+</button>
                     </div>
                     <div v-else>
-                      <a class="classLink pointer" @click="viewCourse(course.name, course._id)">
+                      <a class="classLink pointer" @click="viewCourse(course._id)">
                       <div class="d-inline fa-2x"><i class="fas fa-book pr-2"></i></div>{{ course.name }}</a>
                     </div>
                 </div>
@@ -120,11 +120,11 @@ export default {
       getNotifications: 'user/getNotifications',
       markRead: 'user/markRead'
     }),
-    editCourse (courseName, id) {
-      this.$router.push({ name: 'course', params: { courseName: courseName, courseID: id } })
+    editCourse (id) {
+      this.$router.push({ name: 'course', params: { courseID: id } })
     },
-    viewCourse (courseName, id) {
-      this.$router.push({ name: 'course', params: { courseName: courseName, courseID: id } })
+    viewCourse (id) {
+      this.$router.push({ name: 'course', params: { courseID: id } })
     },
     selectedFile (event) {
       console.log('triggered')
