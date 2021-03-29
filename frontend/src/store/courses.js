@@ -77,7 +77,7 @@ export default {
       commit('SET_COURSE', res.data)
     },
     async getCourse ({ commit }, courseID) {
-      console.log(courseID)
+      console.log('Getting course', courseID)
       const res = await axios.get(`/api/courses/getCourse/${courseID}`)
       if (res.status === 200) {
         commit('SET_COURSE', res.data)

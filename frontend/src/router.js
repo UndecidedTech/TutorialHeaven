@@ -20,12 +20,12 @@ const routes = [
   { path: '/userSignUp', component: userSignUp, name: 'userSignUp' },
   { path: '/userDashboard', component: userDashboard, name: 'userDashboard' },
   { path: '/course/:courseID/stats', component: course, name: 'courseStats', params: true },
-  { path: '*', component: notFound },
   { path: '/reset/:token', component: userReset, name: 'userReset', params: true },
   { path: '/courseCatalog', component: courseCatalog, name: 'courseCatalog' },
   { path: '/course/:courseID/forum/:threadID?', component: course, name: 'forum', params: true },
-  { path: '/course/:courseID/settings', component: course, name: 'courseSettings', params: true, beforeRouteLeave (to, from, next) { console.log('BEFORE UPDATE'); next() } },
-  { path: '/course/:courseID/:sectionID?/:moduleID?/:contentID?', component: course, name: 'course', params: true }
+  { path: '/course/:courseID/settings', component: course, name: 'courseSettings', params: true },
+  { path: '/course/:courseID/:sectionID?/:moduleID?/:contentID?', component: course, name: 'course', params: true },
+  { path: '*', component: notFound }
 
 ]
 

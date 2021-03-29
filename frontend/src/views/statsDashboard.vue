@@ -68,7 +68,7 @@ export default {
           labels: this.stats.months[0],
           datasets: [
             {
-              label: '# of Students',
+              label: '# of Students that joined per month',
               backgroundColor: 'rgba(248, 121, 121, 0.5)',
               borderColor: 'rgb(0, 0, 0)',
               borderWidth: '1',
