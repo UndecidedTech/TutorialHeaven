@@ -118,7 +118,7 @@ router.get("/", async (req, res) => {
 
             //build subjects table
             for (key in subjects) {
-                subjectsTable.push([key, `${appearanceCalc(questionSum[key][0], questionSum[key][1])}`, `${performanceCalc(Math.ceil(subjects[key][0] / subjects[key][1]) * 100)}`, subjectRating((Math.ceil(subjects[key][0] / subjects[key][1]) * 100))])
+                subjectsTable.push([key, `${appearanceCalc(questionSum[key][0], questionSum[key][1])}`, `${performanceCalc(subjects[key][0], subjects[key][1])}`, subjectRating((Math.ceil(subjects[key][0] / subjects[key][1]) * 100))])
             }
 
             assessments.forEach((assessment) => {
@@ -250,7 +250,7 @@ router.get("/", async (req, res) => {
             }
 
             for (key in subjects) {
-                subjectsTable.push([key, `${appearanceCalc(subjects[key][0], questionSum)}`, `${performanceCalc(Math.ceil(subjects[key][0] / subjects[key][1]) * 100)}`, subjectRating((Math.ceil(subjects[key][0] / subjects[key][1]) * 100))])
+                subjectsTable.push([key, `${appearanceCalc(subjects[key][0], questionSum)}`, `${performanceCalc(subjects[key][0], subjects[key][1])}`, subjectRating((Math.ceil(subjects[key][0] / subjects[key][1]) * 100))])
             }
 
             assessments.forEach((assessment) => {
@@ -280,11 +280,13 @@ function sameDay(d1, d2) {
     }
   }
 
-function performanceCalc(value) {
-    if (isNaN(value))
-        return "0%"
-    else
-        return `${value}%`
+function performanceCalc(value, total) {
+  console.log(value, total)
+  if (value > 0) {
+    return `${Math.round((value / total) * 100)}%`
+  } else {
+    return "0%"
+  }
 }
 
 function ratingCalc(avg, stdDev) {

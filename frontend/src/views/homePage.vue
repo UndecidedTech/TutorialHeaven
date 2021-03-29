@@ -134,9 +134,10 @@ export default {
   /* background:black; */
   background-repeat: repeat;
   background-position: center;
-  min-height: 93.9vh;
+  height: calc(100vh - 58px);
   display: flex;
   justify-content: space-evenly;
+  overflow-y: hidden;
 }
 .flexbox-item {
   width: 300px;
