@@ -142,8 +142,9 @@ router.get("/", async (req, res) => {
 
             return res.send({"assessments": quizTable, "studentsCount": Students.length, "grades": sortGrades(scores), "subjects": subjectsTable,  "months": userJoin});
         } else {
-            let selectedStudent = await User.findOne({"courses": { $elemMatch: { "_id": courseID, "role": "student" }}})
-            
+            let selectedStudent = await User.findOne({"_id": userID, "courses": { $elemMatch: { "_id": courseID, "role": "student" }}})
+            console.log(selectedStudent)
+
             let selectedCourse = await Course.findById(courseID, (course) => {
                 if (course){
                     return course.toObject()
@@ -153,6 +154,7 @@ router.get("/", async (req, res) => {
             // get current grade
             let currentGrade;
             await selectedStudent.courses.forEach((course) => {
+                console.log(course)
                 if (course._id.equals(courseID)) {
                     if (course.grades.length > 0)
                         currentGrade = course.grades[course.grades.length - 1].score
