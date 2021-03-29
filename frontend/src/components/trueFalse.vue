@@ -20,11 +20,11 @@
     <div v-if="submitted">
       <span class="font-weight-bold">{{index + 1}}. {{ question.question }}</span>
       <div class="custom-control custom-radio">
-        <input type="radio" class="custom-control-input submitted-input" :id="'true'+question._id" :name="question._id" value="true" disabled>
+        <input type="radio" class="custom-control-input submitted-input true-false" :id="'true'+question._id" :name="question._id" :checked="checkSubmitted('true')" disabled>
         <label class="custom-control-label" for="true">True</label>
       </div>
       <div class="custom-control custom-radio">
-        <input type="radio" class="custom-control-input submitted-input" :id="'false'+question._id" value="false" :name="question._id" disabled>
+        <input type="radio" class="custom-control-input submitted-input true-false" :id="'false'+question._id" :checked="checkSubmitted('false')" :name="question._id" disabled>
         <label class="custom-control-label" for="false">False</label>
       </div>
     </div>
@@ -44,7 +44,6 @@
 </template>
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import $ from 'jquery'
 
 export default {
   name: 'trueFalse',
@@ -65,8 +64,15 @@ export default {
     ...mapActions({
       addQuestion: 'courses/createAssessmentContent',
       removeQuestion: 'courses/deleteAssessmentContent'
-    })
-
+    }),
+    checkSubmitted (bool) {
+      console.log('Index: ', this.index, 'response value: ', this.userResponse.responses[this.index].value, 'bool? ', bool)
+      if (this.userResponse.responses[this.index].value === bool) {
+        return true
+      } else {
+        return false
+      }
+    }
   },
   computed: {
     ...mapGetters({
@@ -89,17 +95,6 @@ export default {
     }
   },
   mounted () {
-    if (this.submitted) {
-      $('.submitted-input').each((index, element) => {
-        const jElement = $(element)
-        const eleValue = element.value
-        this.userResponse.responses.forEach(response => {
-          if (response.value === eleValue) {
-            jElement.prop('checked', true)
-          }
-        })
-      })
-    }
   }
 }
 </script>

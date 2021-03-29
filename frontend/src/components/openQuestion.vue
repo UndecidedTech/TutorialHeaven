@@ -19,7 +19,7 @@
     <div v-if="submitted">
       <span class="font-weight-bold">{{index + 1}}. {{ question.question }}</span>
        <div>
-         <input v-model="question.value" type="text" disabled/>
+         <input v-model="userResponse.responses[this.index].value" type="text" disabled/>
        </div>
     </div>
     <div v-else>

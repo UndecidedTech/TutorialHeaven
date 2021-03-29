@@ -28,12 +28,12 @@
     <div v-if="submitted">
       <span class="font-weight-bold">{{index + 1}}. {{ question.question }}</span>
         <div class="custom-control custom-radio">
-          <input type="radio" class="custom-control-input submitted-input" :value="question.answer" :id="question.answer" :name="'option'+question._id" v-model="question.value" disabled>
+          <input type="radio" class="custom-control-input submitted-input" :checked="checkSubmitted(question.answer)" :id="question.answer" :name="'option'+question._id" disabled>
           <label class="custom-control-label" :for="question.answer">{{ question.answer }}</label>
         </div>
         <div v-for="(incorrectAnswer, index) in question.choices" :key="index">
           <div class="custom-control custom-radio">
-          <input type="radio" class="custom-control-input submitted-input" :value="incorrectAnswer.value" :id="incorrectAnswer.value" :name="'option'+question._id" v-model="question.value" disabled>
+          <input type="radio" class="custom-control-input submitted-input" :checked="checkSubmitted(incorrectAnswer.value)" :id="incorrectAnswer.value" :name="'option'+question._id" disabled>
           <label class="custom-control-label" :for="incorrectAnswer.value"> {{ incorrectAnswer.value }}</label>
           </div>
         </div>
@@ -56,7 +56,7 @@
 </template>
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import $ from 'jquery'
+// import $ from 'jquery'
 
 export default {
   name: 'multipleChoice',
@@ -81,6 +81,13 @@ export default {
     }),
     addIncorrectAnswer (index) {
       this.module.content[index].choices.push({ value: '' })
+    },
+    checkSubmitted (value) {
+      if (this.userResponse.responses[this.index].value === value) {
+        return true
+      } else {
+        return false
+      }
     }
   },
   computed: {
@@ -105,15 +112,15 @@ export default {
   },
   mounted () {
     if (this.submitted) {
-      $('.submitted-input').each((index, element) => {
-        const jElement = $(element)
-        const eleValue = element.value
-        this.userResponse.responses.forEach(response => {
-          if (response.value === eleValue) {
-            jElement.prop('checked', true)
-          }
-        })
-      })
+      // $('.submitted-input').each((index, element) => {
+      //   const jElement = $(element)
+      //   const eleValue = element.value
+      //   this.userResponse.responses.forEach(response => {
+      //     if (response.value === eleValue) {
+      //       jElement.prop('checked', true)
+      //     }
+      //   })
+      // })
     }
   }
 }
