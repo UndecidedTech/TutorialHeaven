@@ -37,7 +37,7 @@
           <div class="card-body">
               <div class=""><b>{{ section.name }}</b>
               <div class="float-right" data-toggle="tooltip" data-placement="top" title="Dropdown">
-                <font-awesome-icon :icon="expanded[section._id] === true ? ['fas', 'arrow-up' ] : ['fas', 'arrow-down']" data-toggle="collapse" :data-target="'#section'+section._id" aria-expanded="false" aria-controls="collapseExample"/>
+                <font-awesome-icon :icon="this.expanded[section._id] === true ? ['fas', 'arrow-down' ]: ['fas', 'arrow-up']" @click="expandSection(`section${section._id}`)" data-toggle="collapse" :data-target="'#section'+section._id" aria-expanded="false" aria-controls="collapseExample"/>
               </div>
               </div>
               <hr>
