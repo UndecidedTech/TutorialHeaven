@@ -42,20 +42,39 @@ router.get("/", async (req, res) => {
             let assessments = [];
             let assessmentIds = [];
 
+            let questionSum = {};
+            let numberOfQuestions = 0;
+
+            selectedCourse.subjects.forEach((subject) => {
+              questionSum[subject] = [0,0]
+            })
+
             selectedCourse.sections.forEach((section) => {
                 section.modules.forEach((module) => {
                     if (module.type === "assessment") {
-                        let assessmentObj = {
-                            "_id": module._id,
-                            "name": module.name,
-                            "section": section.name,
-                            "results": []
+                      numberOfQuestions += module.content.length;
+                      module.content.forEach((question) => {
+                        if (question.subject) {
+                          questionSum[question.subject][0] += 1;
                         }
-                        assessments.push(assessmentObj)
-                        assessmentIds.push(module._id)
+                      })
+
+                      let assessmentObj = {
+                          "_id": module._id,
+                          "name": module.name,
+                          "section": section.name,
+                          "results": []
+                      }
+                      assessments.push(assessmentObj)
+                      assessmentIds.push(module._id)
                     }
                 })
             })
+
+            //calculate number of subject questions
+            for (let key in questionSum) {
+              questionSum[key][1] = numberOfQuestions
+            }
 
             let quizTable = [["Name", "Section", "Avg Score", "Rating" ]];
 
@@ -70,13 +89,12 @@ router.get("/", async (req, res) => {
                 subjects[subject] = [0,0]
             })
 
-            console.log(subjects);
-
             await Students.forEach((student) => {
                 student.courses.forEach((course) => {
                     if (course._id.equals(courseID)) {
-                      scores.push(course.grades[course.grades.length - 1].score)
-                      course.results.forEach((result) => {
+                      if (course.grades && course.grades.length > 0) {
+                        scores.push(course.grades[course.grades.length - 1].score)
+                        course.results.forEach((result) => {
                           assessments.find((assessment) => {
                             if (assessment._id.equals(result._id)) {
                                 // loop through keys in result
@@ -88,7 +106,8 @@ router.get("/", async (req, res) => {
                                 assessment.results.push(result.score)
                             }
                           })
-                      })
+                        })
+                      }
                     }
                 })
             })
@@ -96,23 +115,12 @@ router.get("/", async (req, res) => {
             let subjectsTable = [["Subject", "Appearance Rate", "Performance", "Rating"]]
             
 
-            //calculate number of subject questions
-            let questionSum = 0;
-
-            for (key in subjects) {
-                questionSum += subjects[key][1]
-            }
-
-            console.log("number of questions: ", questionSum);
-
 
             //build subjects table
             for (key in subjects) {
-                subjectsTable.push([key, `${Math.ceil(subjects[key][0] / questionSum) * 100}%`, `${performanceCalc(Math.ceil(subjects[key][0] / subjects[key][1]) * 100)}`, subjectRating((Math.ceil(subjects[key][0] / subjects[key][1]) * 100))])
+                subjectsTable.push([key, `${appearanceCalc(questionSum[key][0], questionSum[key][1])}`, `${performanceCalc(Math.ceil(subjects[key][0] / subjects[key][1]) * 100)}`, subjectRating((Math.ceil(subjects[key][0] / subjects[key][1]) * 100))])
             }
 
-
-            console.log("Subjects(?): ", subjects);
             assessments.forEach((assessment) => {
                 let sum = assessment.results.reduce((a, b) => a + b, 0)
                 let avg = (sum / assessment.results.length) || 0
@@ -126,11 +134,9 @@ router.get("/", async (req, res) => {
                 quizTable.push([assessment.name, assessment.section, assessment.avgScore, assessment.rating])
             })
 
-
             // build growth chart from notifications
             let startOfYear = moment().startOf("year")
             let joinNotifs = await Notification.find({"courseId": courseID, "title": /^New student,/, timestamp: { $gt: startOfYear } }, "timestamp", { lean: true })
-            console.log(joinNotifs[0])
 
             let userJoin = sortMonth(joinNotifs)
 
@@ -216,12 +222,11 @@ router.get("/", async (req, res) => {
                 subjects[subject] = [0,0]
             })
 
-            console.log("subjects: ", subjects)
-
             selectedStudent.courses.forEach((course) => {
                 if (course._id.equals(courseID)) {
-                  scores.push(course.grades[course.grades.length - 1].score)
-                  course.results.forEach((result) => {
+                  if  (course.grades.length > 0) {
+                    scores.push(course.grades[course.grades.length - 1].score)
+                    course.results.forEach((result) => {
                       assessments.forEach((assessment) => {
                         if (assessment._id.equals(result._id)) {
                             // loop through keys in result
@@ -233,22 +238,22 @@ router.get("/", async (req, res) => {
                             assessment.results.push(result.score)
                         }
                       })
-                  })
+                    })
+                  }
                 }
             })
 
             let questionSum = 0;
-
+            
             for (key in subjects) {
                 questionSum += subjects[key][1]
             }
 
             for (key in subjects) {
-                subjectsTable.push([key, `${Math.ceil(subjects[key][0] / questionSum) * 100}%`, `${performanceCalc(Math.ceil(subjects[key][0] / subjects[key][1]) * 100)}`, subjectRating((Math.ceil(subjects[key][0] / subjects[key][1]) * 100))])
+                subjectsTable.push([key, `${appearanceCalc(subjects[key][0], questionSum)}`, `${performanceCalc(Math.ceil(subjects[key][0] / subjects[key][1]) * 100)}`, subjectRating((Math.ceil(subjects[key][0] / subjects[key][1]) * 100))])
             }
 
             assessments.forEach((assessment) => {
-                console.log(assessment);
                 // assessment["avgScore"] = avg
 
                 // let stdDev = getStandardDeviation(assessment.results)
@@ -257,8 +262,6 @@ router.get("/", async (req, res) => {
 
                 quizTable.push([assessment.name, assessment.section, assessment.results[0], assessment.rating])
             })
-
-            console.log(currentGrade, gradeHistory, quizTable, subjectsTable)
 
             res.send({ currentGrade, gradeHistory, quizTable, subjects: subjectsTable })
         }
@@ -315,7 +318,6 @@ function ratingCalc(avg, stdDev) {
 }
 
 function subjectRating(ratio) {
-    console.log(ratio)
     if (isNaN(ratio))
         return "Poor"
     if (ratio >= 70) {
@@ -347,10 +349,8 @@ function sortGrades(array) {
 }
 
 function sortMonth(array) {
-    console.log(array)
 
     let currMonth = moment().format("MMMM")
-    console.log("currentMonth: ", currMonth)
 
     let monthNames = ["January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"];
@@ -369,7 +369,6 @@ function sortMonth(array) {
     })
 
     for (let i = 0; i < monthIndex + 1; i++) {
-        console.log("i: ", i, monthNames[i])
         // initialize count at 0
         if (i < monthIndex + 1) {
             count = 0
@@ -385,6 +384,14 @@ function sortMonth(array) {
     }
 
     return sortedMonths
+}
+
+function appearanceCalc(value, total) {
+    if (value > 0) {
+      return `${Math.round((value / total) * 100)}%`
+    } else {
+      return "0%"
+    }
 }
 
 module.exports = router;

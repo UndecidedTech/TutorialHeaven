@@ -172,7 +172,7 @@ export default {
     addItem (type, value) {
       console.log(value)
       if (type === 'categories' && value !== '') {
-        if (!this.course.categories.includes(value)) {
+        if (!this.newCourse.categories.includes(value)) {
           this.newCourse.categories.push(value)
         }
       }
