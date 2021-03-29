@@ -9,7 +9,7 @@
         <div class="card-body">
             <div><b>{{ section.name }}</b>
             <div class="float-right" data-toggle="tooltip" data-placement="top" title="Dropdown">
-                <font-awesome-icon :icon="this.expanded[section._id] === true ? ['fas', 'arrow-down' ]: ['fas', 'arrow-up']" @click="expandSection(`section${section._id}`)" data-toggle="collapse" :data-target="'#section'+section._id" aria-expanded="false" aria-controls="collapseExample"/>
+                <font-awesome-icon :icon="expanded[section._id] === true ? ['fas', 'arrow-up' ] : ['fas', 'arrow-down']" data-toggle="collapse" :data-target="'#section'+section._id" aria-expanded="false" aria-controls="collapseExample"/>
               </div>
             <button v-if="course.instructors.includes(user._id)" class="mr-4 btn btn-primary float-right" data-toggle="modal" data-target="#createModule" @click="$router.push({name: 'course', params: { courseID: $route.params.courseID, sectionID: section._id }})"> Add Module </button>
             </div>
