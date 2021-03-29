@@ -9,7 +9,7 @@
         <div class="card-body">
             <div><b>{{ section.name }}</b>
             <div class="float-right" data-toggle="tooltip" data-placement="top" title="Dropdown">
-                <i class="fas fa-arrow-down" data-toggle="collapse" :data-target="'#section'+section._id" aria-expanded="false" aria-controls="collapseExample"></i>
+                <font-awesome-icon :icon="this.expanded[section._id] === true ? ['fas', 'arrow-down' ]: ['fas', 'arrow-up']" @click="expandSection(`section${section._id}`)" data-toggle="collapse" :data-target="'#section'+section._id" aria-expanded="false" aria-controls="collapseExample"/>
               </div>
             <button v-if="course.instructors.includes(user._id)" class="mr-4 btn btn-primary float-right" data-toggle="modal" data-target="#createModule" @click="$router.push({name: 'course', params: { courseID: $route.params.courseID, sectionID: section._id }})"> Add Module </button>
             </div>
@@ -33,11 +33,11 @@
     </draggable>
     </div>
     <div class="pr-4" v-else v-for="(section, index) in course.sections" :key="index">
-      <section class="card align-self-center" style="width: auto;margin: 20px;">
+      <section v-if="loaded" class="card align-self-center" style="width: auto;margin: 20px;">
           <div class="card-body">
               <div class=""><b>{{ section.name }}</b>
               <div class="float-right" data-toggle="tooltip" data-placement="top" title="Dropdown">
-                <i class="fas fa-arrow-down" data-toggle="collapse" :data-target="'#section'+section._id" aria-expanded="false" aria-controls="collapseExample"></i>
+                <font-awesome-icon :icon="expanded[section._id] === true ? ['fas', 'arrow-up' ] : ['fas', 'arrow-down']" data-toggle="collapse" :data-target="'#section'+section._id" aria-expanded="false" aria-controls="collapseExample"/>
               </div>
               </div>
               <hr>
@@ -106,6 +106,7 @@
 </div>
 </template>
 <script>
+import $ from 'jquery'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 import draggable from 'vuedraggable'
 export default {
@@ -122,7 +123,9 @@ export default {
         name: '',
         courseID: this.$route.params.courseID
       },
-      arrowPosition: []
+      arrowPosition: [],
+      expanded: {},
+      loaded: false
     }
   },
   methods: {
@@ -166,6 +169,25 @@ export default {
       user: 'user/user',
       course: 'courses/course',
       userCourses: 'user/userCourses'
+    })
+  },
+  created () {
+    this.course.sections.forEach((section) => {
+      this.$set(this.expanded, section._id, true)
+    })
+
+    this.loaded = true
+  },
+  mounted () {
+    this.course.sections.forEach((section) => {
+      console.log('section', section._id)
+      $(`#section${section._id}`).on('show.bs.collapse hide.bs.collapse', (e) => {
+        console.log('event: ', e.target.id.slice(7))
+        const currId = e.target.id.slice(7)
+
+        this.expanded[currId] = !this.expanded[currId]
+        console.log(this.expanded[currId])
+      })
     })
   }
 }
