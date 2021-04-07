@@ -163,13 +163,10 @@ export default {
       addUsernames: 'courses/ADD_USERNAMES'
     }),
     updateMade (type) {
-      console.log(type)
       this.update[type] = true
-      console.log(this.update)
     },
     imagePreview (file) {
       this.imgPreview = true
-      console.log(file)
       const reader = new FileReader()
       reader.onload = function (e) {
         document.getElementById('imagePreview').src = e.target.result
@@ -178,7 +175,6 @@ export default {
     },
     removeItem (type, id) {
       this.update[type] = true
-      console.log(this.update)
       if (type === 'instructors') {
         const indexList = this.instructorsName.findIndex(ele => ele._id === id)
         this.setUserList({ type, index: indexList })
@@ -198,16 +194,13 @@ export default {
       }
     },
     addItem (type, value) {
-      console.log(value)
       this.update[type] = true
-      console.log('update: ', this.update)
       if (type === 'instructors') {
         this.addUsernames({ type, value })
         this.addToCourse({ type, value })
       } else if (type === 'students') {
         this.addToCourse({ type, value })
       } else if (type === 'subjects') {
-        console.log(value)
         this.addToCourse({ type, value })
       } else if (type === 'categories') {
         this.addToCourse({ type, value })
@@ -220,7 +213,6 @@ export default {
       return false
     },
     async saveSettings () {
-      console.log('frontend', this.update)
       const res = await this.updateSettings(this.update)
       if (res.status === 200) {
         this.update = {}

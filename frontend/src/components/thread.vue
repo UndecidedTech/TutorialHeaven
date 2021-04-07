@@ -99,16 +99,13 @@ export default {
       const posts = this.findMainThread().posts
       if (this.currentPage === 1) {
         const sliceFloor = this.currentPage - 1
-        console.log('floor', sliceFloor)
         return posts.slice(sliceFloor, this.currentPage * 5)
       } else {
         const sliceFloor = (this.currentPage - 1) * 5
-        console.log(sliceFloor, (this.currentPage * 5) - 1)
         return posts.slice(sliceFloor, (this.currentPage * 5))
       }
     },
     setCurrentPage (e) {
-      console.log('currentPage = ', e)
       this.currentPage = e
     }
   },

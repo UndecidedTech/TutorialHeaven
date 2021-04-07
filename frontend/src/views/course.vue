@@ -123,7 +123,6 @@ export default {
   created () {
     this.getCourse(this.$route.params.courseID)
     this.getThreads(this.$route.params.courseID)
-    console.log(this.$route.matched)
   }
 }
 </script>

@@ -66,7 +66,6 @@ export default {
       removeQuestion: 'courses/deleteAssessmentContent'
     }),
     checkSubmitted (bool) {
-      console.log('Index: ', this.index, 'response value: ', this.userResponse.responses[this.index].value, 'bool? ', bool)
       if (this.userResponse.responses[this.index].value === bool) {
         return true
       } else {

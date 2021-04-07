@@ -45,7 +45,6 @@ export default {
       await axios.get(`/api/users/reset/${this.$route.params.token}`)
         .catch(error => {
           if (error.response) {
-            console.log(error.response)
             this.expired = true
           }
         })
@@ -57,14 +56,12 @@ export default {
         })
 
         if (res.status === 200) {
-          console.log(res.data)
           this.$router.push({ name: 'homePage' })
         }
       }
     }
   },
   mounted () {
-    console.log(this.$route.params.token)
     this.checkResetLink()
   }
 }

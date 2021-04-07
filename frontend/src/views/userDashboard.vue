@@ -127,9 +127,7 @@ export default {
       this.$router.push({ name: 'course', params: { courseID: id } })
     },
     selectedFile (event) {
-      console.log('triggered')
       this.newCourse.image = event.target.files[0]
-      console.log(this.newCourse.image)
     },
     closeModal () {
       this.newCourse = {
@@ -170,7 +168,6 @@ export default {
       this.getNotifications({ userID: this.user._id, marked: this.marked })
     },
     addItem (type, value) {
-      console.log(value)
       if (type === 'categories' && value !== '') {
         if (!this.newCourse.categories.includes(value)) {
           this.newCourse.categories.push(value)
@@ -178,10 +175,8 @@ export default {
       }
     },
     removeItem (type, id) {
-      console.log(type, id)
       if (type === 'categories') {
         const index = this.newCourse.categories.indexOf(id)
-        console.log('index', index)
         this.newCourse.categories.splice(index)
       }
     }
@@ -196,11 +191,9 @@ export default {
   created () {
     this.getCourses(this.user._id)
     this.getNotifications({ userID: this.user._id })
-    // console.log(this.courses)
   },
   mounted () {
     $('#createCourseModal').on('hidden.bs.modal', (evt) => {
-      console.log('test')
       this.closeModal()
     })
   }

@@ -152,7 +152,6 @@ export default {
           return result
         }
       })
-      console.log(resultScore)
       if (typeof resultScore !== 'undefined') {
         if (typeof resultScore.score === 'undefined') {
           return { value: 'Not Started', submitted: resultScore.submitted }
@@ -180,13 +179,9 @@ export default {
   },
   mounted () {
     this.course.sections.forEach((section) => {
-      console.log('section', section._id)
       $(`#section${section._id}`).on('show.bs.collapse hide.bs.collapse', (e) => {
-        console.log('event: ', e.target.id.slice(7))
         const currId = e.target.id.slice(7)
-
         this.expanded[currId] = !this.expanded[currId]
-        console.log(this.expanded[currId])
       })
     })
   }
