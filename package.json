@@ -20,7 +20,7 @@
     "express": "^4.17.1",
     "express-rate-limit": "^5.2.3",
     "express-validator": "^6.9.2",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "moment": "^2.29.1",
     "mongodb": "^3.6.3",
     "mongoose": "^5.11.14",
